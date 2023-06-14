@@ -59,69 +59,73 @@
 </header>
 
 <div class="section-container">
-    <div class="container">
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="section-container-spacer text-center">
-            <h1 class="h2">Contact me</h1>
-          </div>
-          
-          <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-               <form action="" class="reveal-content">
-                  <div class="row">
-                    <div class="col-md-7">
-                      <div class="form-group">
-                        <input type="email" class="form-control" id="email" placeholder="Email">
-                      </div>
-                      <div class="form-group">
-                        <input type="text" class="form-control" id="subject" placeholder="Subject">
-                      </div>
-                      <div class="form-group">
-                        <textarea class="form-control" rows="5" placeholder="Enter your message"></textarea>
-                      </div>
-                      <button type="submit" class="btn btn-default btn-lg">Send</button>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="section-container-spacer text-center">
+          <h1 class="h2">Contact me</h1>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1">
+             <form action="https://formspree.io/f/mqkorpdd" method="POST" id="contactForm" class="reveal-content">
+                <div class="row">
+                  <div class="col-md-7">
+                    <div class="form-group">
+                      <input type="email" name="email" class="form-control" id="email" placeholder="Email">
                     </div>
-                    <div class="col-md-5 address-container">
-                      <ul class="list-unstyled">
-                        <li>
-                          <span class="fa-icon">
-                            <i class="fa fa-phone" aria-hidden="true"></i>
-                          </span>
-                          + 44 7956028983
-                        </li>
-                        <li>
-                          <span class="fa-icon">
-                            <i class="fa fa-at" aria-hidden="true"></i>
-                          </span>
-                          euangoodbrand@gmail.com
-                        </li>
-                        <li>
-                          <span class="fa-icon">
-                            <i class="fa fa fa-map-marker" aria-hidden="true"></i>
-                          </span>
-                          Stafford/Sheffield, UK
-                        </li>
-                      </ul>
-                      <h3>Connect!</h3>
-                      <a href="https://www.linkedin.com/in/euangoodbrand/" title="" class="fa-icon">
-                        <i class="fa fa-linkedin"></i>
-                      </a>
-                      <a href="https://github.com/euangoodbrand" title="" class="fa-icon">
-                        <i class="fa fa-github"></i>
-                      </a>
-
+                    <div class="form-group">
+                      <input type="text" name="subject" class="form-control" id="subject" placeholder="Subject">
                     </div>
+                    <div class="form-group">
+                      <textarea class="form-control" name="message" rows="5" placeholder="Enter your message"></textarea>
+                    </div>
+                    <input type="hidden" name="_subject" id="emailSubject" value="">
+                    <button type="submit" class="btn btn-default btn-lg">Send</button>
                   </div>
-                </form>
-            </div>
-
+                  <div class="col-md-5 address-container">
+                    <ul class="list-unstyled">
+                      <li>
+                        <span class="fa-icon">
+                          <i class="fa fa-phone" aria-hidden="true"></i>
+                        </span>
+                        + 44 7956028983
+                      </li>
+                      <li>
+                        <span class="fa-icon">
+                          <i class="fa fa-at" aria-hidden="true"></i>
+                        </span>
+                        euangoodbrand@gmail.com
+                      </li>
+                      <li>
+                        <span class="fa-icon">
+                          <i class="fa fa fa-map-marker" aria-hidden="true"></i>
+                        </span>
+                        Stafford/Sheffield, UK
+                      </li>
+                    </ul>
+                    <h3>Connect!</h3>
+                    <a href="https://www.linkedin.com/in/euangoodbrand/" title="" class="fa-icon">
+                      <i class="fa fa-linkedin"></i>
+                    </a>
+                    <a href="https://github.com/euangoodbrand" title="" class="fa-icon">
+                      <i class="fa fa-github"></i>
+                    </a>
+                  </div>
+                </div>
+              </form>
+              <script>
+                document.getElementById('contactForm').addEventListener('submit', function() {
+                  document.getElementById('emailSubject').value = document.getElementById('subject').value;
+                });
+              </script>
           </div>
-         
-       </div>
-      </div>
+        </div>
+     </div>
     </div>
   </div>
+</div>
+
 
 
 <footer class="footer-container text-center">
