@@ -29,9 +29,32 @@
   .navbar-header {
     height: 80px;
   }
+
+  body {
+    background-size: cover;
+    background-position: center;
+  }
 </style>
 
-<body class="minimal">
+<script type="text/javascript" src="./main.70a66962.js"></script>
+
+<script>
+  window.onload = function () {
+    const img = new Image();
+    img.src = './assets/jellyfish.gif';
+    img.onload = function () {
+      document.body.style.backgroundImage = `url(${img.src})`;
+    }
+
+    setTimeout(function() {
+      document.getElementById('greeting').style.display = 'none';
+    }, 3000); // 3000 ms = 3 seconds
+  };
+</script>
+
+
+
+<body class="minimal" id="background-image" style="background-image: url('./assets/jellyfish.png')">
   <div id="site-border-left"></div>
   <div id="site-border-right"></div>
   <div id="site-border-top"></div>
@@ -55,45 +78,37 @@
             <li><a href="./contact.html" title="">Contact</a></li>
             <li><a href="./resume.html" title="">Resume/CV</a></li>
           </ul>
-
-
         </div>
       </div>
     </nav>
   </header>
-  <div class="hero-full-container background-image-container white-text-container"
-    style="background-image: url('./assets/jellyfish.gif')">
-    <div class="container">
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="hero-full-wrapper">
-            <div class="text-content">
-              <h1>Hello,<br>
-                <span id="typed-strings">
-                  <span>I'm Euan Goodbrand</span>
-                  <span>Software Developer</span>
-                  <span>Passion for Visual Effects</span>
-                </span>
-                <span id="typed"></span>
-              </h1>
-            </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="hero-full-container background-image-container white-text-container" style="padding-top: 50px;">
+          <div class="text-content" style="padding-top: 200px;">
+            <h1><span id="greeting">Hello,</span><br>
+              <span id="typed-strings">
+                <span>I'm Euan Goodbrand</span>
+                <span>Software Developer</span>
+                <span>Passion for Visual Effects</span>
+              </span>
+              <span id="typed"></span>
+            </h1>
           </div>
         </div>
       </div>
     </div>
   </div>
-</body>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function (event) {
+      type();
+      movingBackgroundImage();
+    });
+  </script>
 
-
-<script>
-  document.addEventListener("DOMContentLoaded", function (event) {
-    type();
-    movingBackgroundImage();
-  });
-</script>
-
-
-<script type="text/javascript" src="./main.70a66962.js"></script>
+  <script type="text/javascript" src="./main.70a66962.js"></script>
 </body>
 
 </html>
