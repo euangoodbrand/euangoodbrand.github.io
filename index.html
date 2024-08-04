@@ -67,9 +67,13 @@
 
 <body id="page-top" class="politics_version">
     <!-- Video Background -->
-    <video autoplay loop muted id="background-video">
-        <source src="./assets/jellyfish3_low_res.mp4" type="video/mp4">
-    </video>
+    <div id="video-container">
+        <video id="background-video" poster="./assets/jellyfish-poster.jpg" playsinline autoplay loop muted>
+            <source src="./assets/jellyfish3_low_res.webm" type="video/webm">
+            <source src="./assets/jellyfish3_low_res.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
 
     <!-- LOADER -->
     <div id="preloader">
@@ -128,10 +132,6 @@
     </nav>
 
     <section id="home" class="main-banner parallaxie">
-        <!-- Video Background -->
-        <video autoplay loop muted id="background-video">
-            <source src=".\images\jellyfish.mp4" type="video/mp4">
-        </video>
         <div class="heading">
             <h1>hello i'm Euan Goodbrand</h1>
             <h3 class="cd-headline clip is-full-width">
@@ -144,6 +144,7 @@
             </h3>
         </div>
     </section>
+
 
     <svg id="clouds" class="hidden-xs" xmlns="http://www.w3.org/2000/svg"
         version="1.1" width="100%" height="100px" viewBox="0 0 85 100"
@@ -704,6 +705,27 @@
                     <!-- ALL PLUGINS -->
                     <script src="js/custom.js"></script>
                     <script src="js/jquery.vide.js"></script>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            var video = document.getElementById('background-video');
+                            var videoContainer = document.getElementById('video-container');
+                
+                            function checkScroll() {
+                                var rect = videoContainer.getBoundingClientRect();
+                                var isVisible = (rect.top >= 0 && rect.bottom <= window.innerHeight);
+                                
+                                if (isVisible) {
+                                    video.play();
+                                } else {
+                                    video.pause();
+                                }
+                            }
+                
+                            window.addEventListener('scroll', checkScroll);
+                            window.addEventListener('resize', checkScroll);
+                            checkScroll();
+                        });
+                    </script>
 
                     <!-- Project 1 Modal -->
                     <div class="modal fade" id="project1Modal" tabindex="-1"
