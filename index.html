@@ -1,69 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- Basic -->
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<head>
+    <!-- Basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-<!-- Mobile Metas -->
-<meta name="viewport"
-    content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Site Metas -->
-<title>Euan Goodbrand</title>
-<meta name="keywords" content>
-<meta name="description" content>
-<meta name="author" content>
+    <!-- Site Metas -->
+    <title>Euan Goodbrand</title>
+    <meta name="keywords" content="Software Developer, AI, Visual Effects, Portfolio">
+    <meta name="description" content="Euan Goodbrand's personal website showcasing software engineering projects, skills, and contact information.">
+    <meta name="author" content="Euan Goodbrand">
 
-<!-- Site Icons -->
-<link rel="shortcut icon" href="images/tab.png" type="image/x-icon" />
-<link rel="tab" href="images/tab.png">
+    <!-- Site Icons -->
+    <link rel="shortcut icon" href="images/tab.png" type="image/x-icon" />
 
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" href="css/bootstrap.min.css">
-<!-- Site CSS -->
-<link rel="stylesheet" href="style.css">
-<!-- Responsive CSS -->
-<link rel="stylesheet" href="css/responsive.css">
-<!-- Custom CSS -->
-<link rel="stylesheet" href="css/custom.css">
-<script src="js/modernizr.js"></script> <!-- Modernizr -->
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-<link rel="stylesheet"
-    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<script
-    src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script
-    src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Site CSS -->
+    <link rel="stylesheet" href="style.css">
 
-<style>
-    /* Video Background CSS */
-    #home {
-        position: relative;
-        overflow: hidden;
-    }
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="css/responsive.css">
 
-    #background-video {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        min-width: 100%;
-        min-height: 100%;
-        width: auto;
-        height: auto;
-        z-index: -1; 
-        transform: translate(-50%, -50%);
-        background: url('./images/jellyfish.png') no-repeat;
-        background-size: cover;
-        filter: brightness(2.5);
-    }
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/custom.css">
 
-    
-    .heading h1, .heading p, .heading h3 {
-        color: white; 
-        text-shadow: 2px 2px 8px rgba(0,0,0,0.6); 
-    }
-</style>
+    <!-- Defer Non-critical CSS -->
+    <link rel="stylesheet" href="css/custom.css" media="print" onload="this.media='all'">
+
+    <style>
+        /* Video Background CSS */
+        #home {
+            position: relative;
+            overflow: hidden;
+        }
+
+        #background-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            transform: translate(-50%, -50%);
+            background: url('./images/jellyfish.png') no-repeat;
+            background-size: cover;
+            filter: brightness(2.5);
+        }
+
+        .heading h1,
+        .heading p,
+        .heading h3 {
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+        }
+    </style>
+</head>
 
 <body id="page-top" class="politics_version">
     <!-- Video Background -->
@@ -86,14 +85,10 @@
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
         <div class="container">
             <a class="navbar-brand js-scroll-trigger" href="#page-top">
-                <img class="img-fluid" src="images/logo.png" alt width="300"
-                    height="150" />
-
+                <img class="img-fluid" src="images/logo.png" alt="Logo" width="300" height="150" />
             </a>
-            <button class="navbar-toggler navbar-toggler-right"
-                type="button" data-toggle="collapse"
-                data-target="#navbarResponsive"
-                aria-controls="navbarResponsive" aria-expanded="false"
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
                 aria-label="Toggle navigation">
                 Menu
                 <i class="fa fa-bars"></i>
@@ -101,30 +96,25 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav text-uppercase ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger active"
-                            href="#home">Home</a>
+                        <a class="nav-link js-scroll-trigger active" href="#home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#about">About
-                            Me</a>
+                        <a class="nav-link js-scroll-trigger" href="#about">About Me</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="#skills">Skills</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger"
-                            href="#portfolio">Portfolio</a>
+                        <a class="nav-link js-scroll-trigger" href="#portfolio">Portfolio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger"
-                            href="#testimonials">Testimonials</a>
+                        <a class="nav-link js-scroll-trigger" href="#testimonials">Testimonials</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="#blog">Blog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger"
-                            href="#contact">Contact</a>
+                        <a class="nav-link js-scroll-trigger" href="#contact">Contact</a>
                     </li>
                 </ul>
             </div>
@@ -145,10 +135,8 @@
         </div>
     </section>
 
-
-    <svg id="clouds" class="hidden-xs" xmlns="http://www.w3.org/2000/svg"
-        version="1.1" width="100%" height="100px" viewBox="0 0 85 100"
-        preserveAspectRatio="none">
+    <svg id="clouds" class="hidden-xs" xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100px"
+        viewBox="0 0 85 100" preserveAspectRatio="none">
         <path d="M-5 100 Q 0 20 5 100 Z
         M0 100 Q 5 0 10 100
         M5 100 Q 10 30 15 100
@@ -179,26 +167,26 @@
                 <div class="col-md-6">
                     <div class="message-box">
                         <h2>Euan Goodbrand</h2>
-                        <p>I am a software developer with a passion for AI
-                            and visual effects. </p>
-                        <p>I love to create visual effects in my free time
-                            such as the JellyFish animation seen on the
+                        <p>I am a software developer with a passion for AI and visual effects.</p>
+                        <p>I love to create visual effects in my free time such as the JellyFish animation seen on the
                             homepage.
 
-                            I am constantly pursuing new technologies and
-                            would love to connect with like minded people.
+                            I am constantly pursuing new technologies and would love to connect with like minded people.
                             Feel free to connect through my socials below!
                         </p>
 
-                        <a href="uploads\Euan_Goodbrand_CV_resume.pdf" class="sim-btn btn-hover-new"
+                        <a href="uploads/Euan_Goodbrand_CV_resume.pdf" class="sim-btn btn-hover-new"
                             data-text="Download CV"><span>Download CV</span></a>
                     </div>
                 </div>
 
                 <div class="col-md-6">
                     <div class="right-box-pro wow fadeIn">
-                        <img src="uploads/Euan Goodbrand.jpeg" alt
-                            class="img-fluid img-rounded">
+                        <picture>
+                            <source srcset="uploads/euan-goodbrand.webp" type="image/webp">
+                            <img src="uploads/euan-goodbrand.jpeg" alt="Euan Goodbrand" class="img-fluid img-rounded"
+                                loading="lazy" width="400" height="400">
+                        </picture>
                     </div>
                 </div>
             </div>
@@ -208,10 +196,9 @@
     <div id="skills" class="section lb">
         <div class="container">
             <div class="section-title text-left">
-                <h3>My Skills</h3>
-                <p>Throughout my journey in tech, I've cultivated a diverse
-                    skill set, constantly adapting myself. Below are some
-                    areas I focus.</p>
+                <h2>My Skills</h2>
+                <p>Throughout my journey in tech, I've cultivated a diverse skill set, constantly adapting myself. Below
+                    are some areas I focus.</p>
             </div>
 
             <div class="row">
@@ -220,13 +207,10 @@
                         <div class="ser-icon">
                             <i class="flaticon-seo"></i>
                         </div>
-                        <h2>Software Engineering</h2>
-                        <p>I've dedicated myself to crafting software
-                            solutions that address real-world problems.
-                            Whether it's a sleek mobile app or a robust OS,
-                            my aim is to bridge people's needs with
-                            technical
-                            innovation.</p>
+                        <h3>Software Engineering</h3>
+                        <p>I've dedicated myself to crafting software solutions that address real-world problems.
+                            Whether it's a sleek mobile app or a robust OS, my aim is to bridge people's needs with
+                            technical innovation.</p>
                     </div>
                 </div>
 
@@ -235,11 +219,9 @@
                         <div class="ser-icon">
                             <i class="flaticon-development"></i>
                         </div>
-                        <h2>Cloud Computing</h2>
-                        <p>I utilise the power of the cloud to provide
-                            scalable and efficient solutions. From utilizing
-                            SaaS platforms to leveraging PaaS, I've got
-                            experience in AWS and Google Cloud.</p>
+                        <h3>Cloud Computing</h3>
+                        <p>I utilise the power of the cloud to provide scalable and efficient solutions. From utilizing
+                            SaaS platforms to leveraging PaaS, I've got experience in AWS and Google Cloud.</p>
                     </div>
                 </div>
 
@@ -248,13 +230,10 @@
                         <div class="ser-icon">
                             <i class="flaticon-process"></i>
                         </div>
-                        <h2>Creative Design</h2>
-                        <p>My passion lies in combining aesthetics with
-                            utility. Through disciplines like UI/UX and
-                            graphic design, I bring things to life, ensuring
-                            audiences enjoy interacting with them in the
-                            digital
-                            realm.</p>
+                        <h3>Creative Design</h3>
+                        <p>My passion lies in combining aesthetics with utility. Through disciplines like UI/UX and
+                            graphic design, I bring things to life, ensuring audiences enjoy interacting with them in
+                            the digital realm.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -262,14 +241,10 @@
                         <div class="ser-icon">
                             <i class="flaticon-discuss-issue"></i>
                         </div>
-                        <h2>Internet of Things (IoT)</h2>
-                        <p>With IoT, I've explored adding embedding
-                            connectivity into everyday objects. My work
-                            in this space are all about connecting the
-                            tangible and digital worlds. I enjoy tinkering
-                            with
-                            parts to build cool stuff such as a card
-                            shuffling machine I built recently.</p>
+                        <h3>Internet of Things (IoT)</h3>
+                        <p>With IoT, I've explored embedding connectivity into everyday objects. My work in this space
+                            is all about connecting the tangible and digital worlds. I enjoy tinkering with parts to
+                            build cool stuff such as a card shuffling machine I built recently.</p>
                     </div>
                 </div>
 
@@ -278,11 +253,9 @@
                         <div class="ser-icon">
                             <i class="flaticon-idea"></i>
                         </div>
-                        <h2>Graphics and Procedural Modeling</h2>
-                        <p>Graphics are more than just visuals for me; they're
-                            a medium of expression. I'm particularly fond of
-                            procedural modeling, using algorithms to
-                            generate intricate and diverse 3D designs,
+                        <h3>Graphics and Procedural Modeling</h3>
+                        <p>Graphics are more than just visuals for me; they're a medium of expression. I'm particularly
+                            fond of procedural modeling, using algorithms to generate intricate and diverse 3D designs,
                             bringing things to life.</p>
                     </div>
                 </div>
@@ -292,11 +265,9 @@
                         <div class="ser-icon">
                             <i class="flaticon-idea-1"></i>
                         </div>
-                        <h2>Artificial Intelligence</h2>
-                        <p>I've always been captivated by the potential of
-                            AI. Through crafting algorithms that emulate
-                            human intelligence, I've contributed to projects
-                            that span from chess bots, computer vision,
+                        <h3>Artificial Intelligence</h3>
+                        <p>I've always been captivated by the potential of AI. Through crafting algorithms that emulate
+                            human intelligence, I've contributed to projects that span from chess bots, computer vision,
                             and I am currently doing my MSc on the topic.</p>
                     </div>
                 </div>
@@ -307,7 +278,7 @@
     <div id="portfolio" class="section lb">
         <div class="container">
             <div class="section-title text-left">
-                <h3>Portfolio</h3>
+                <h2>Portfolio</h2>
                 <p>Click on the icons to view the project and source code.</p>
             </div>
 
@@ -326,20 +297,15 @@
             <div class="gallery-list row">
                 <!-- First Image Block -->
                 <div class="col-md-4 col-sm-6 gallery-grid gal_c gal_d">
-
                     <div class="gallery-single fix">
                         <div class="gallery-title"
                             style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: bold; text-shadow: 5px 5px 5px rgba(0, 0, 0, 1); text-align: center;">
                             OpenGL Graphics Scene</div>
 
-                        <img src="uploads/lamp-bg.png" class="img-fluid"
-                            alt="Image">
+                        <img src="uploads/lamp-bg.png" class="img-fluid" alt="OpenGL Graphics Scene" loading="lazy">
                         <div class="img-overlay">
-                            <a href="project6.html"
-                                class="hoverbutton global-radius"
-                                data-toggle="modal"
-                                data-target="#project6Modal"><i
-                                    class="fa fa-picture-o"></i></a>
+                            <a href="project6.html" class="hoverbutton global-radius" data-toggle="modal"
+                                data-target="#project6Modal">View Project<i class="fa fa-picture-o"></i></a>
                         </div>
                     </div>
                 </div>
@@ -351,15 +317,10 @@
                             style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: bold; text-shadow: 5px 5px 5px rgba(0, 0, 0, 1); text-align: center;">
                             Procedural Modelling for Dungeon Levels</div>
 
-                        <img src="uploads/dungeon2-bg.png" class="img-fluid"
-                            alt="Image">
+                        <img src="uploads/dungeon2-bg.png" class="img-fluid" alt="Dungeon Levels" loading="lazy">
                         <div class="img-overlay">
-                            <a href="project1.html"
-                                class="hoverbutton global-radius"
-                                data-toggle="modal"
-                                data-target="#project1Modal"><i
-                                    class="fa fa-picture-o"></i></a>
-
+                            <a href="project1.html" class="hoverbutton global-radius" data-toggle="modal"
+                                data-target="#project1Modal">View Project<i class="fa fa-picture-o"></i></a>
                         </div>
                     </div>
                 </div>
@@ -371,14 +332,10 @@
                             style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: bold; text-shadow: 5px 5px 5px rgba(0, 0, 0, 1); text-align: center;">
                             Rental JSwing Java Application</div>
 
-                        <img src="uploads/rental-bg.png" class="img-fluid"
-                            alt="Image">
+                        <img src="uploads/rental-bg.png" class="img-fluid" alt="Rental Application" loading="lazy">
                         <div class="img-overlay">
-                            <a href="project5.html"
-                                class="hoverbutton global-radius"
-                                data-toggle="modal"
-                                data-target="#project5Modal"><i
-                                    class="fa fa-picture-o"></i></a>
+                            <a href="project5.html" class="hoverbutton global-radius" data-toggle="modal"
+                                data-target="#project5Modal">View Project<i class="fa fa-picture-o"></i></a>
                         </div>
                     </div>
                 </div>
@@ -390,14 +347,11 @@
                             style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: bold; text-shadow: 5px 5px 5px rgba(0, 0, 0, 1); text-align: center;">
                             Mentor-Mentee System</div>
 
-                        <img src="uploads/mentor-mentee2-bg.png"
-                            class="img-fluid" alt="Image">
+                        <img src="uploads/mentor-mentee2-bg.png" class="img-fluid" alt="Mentor-Mentee System"
+                            loading="lazy">
                         <div class="img-overlay">
-                            <a href="project3.html"
-                                class="hoverbutton global-radius"
-                                data-toggle="modal"
-                                data-target="#project3Modal"><i
-                                    class="fa fa-picture-o"></i></a>
+                            <a href="project3.html" class="hoverbutton global-radius" data-toggle="modal"
+                                data-target="#project3Modal">View Project<i class="fa fa-picture-o"></i></a>
                         </div>
                     </div>
                 </div>
@@ -407,17 +361,13 @@
                     <div class="gallery-single fix">
                         <div class="gallery-title"
                             style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: bold; text-shadow: 5px 5px 5px rgba(0, 0, 0, 1); text-align: center;">
-
                             AI Movie Review Interpreter</div>
 
-                        <img src="uploads/movie-review-bg.png"
-                            class="img-fluid" alt="Image">
+                        <img src="uploads/movie-review-bg.png" class="img-fluid" alt="AI Movie Review Interpreter"
+                            loading="lazy">
                         <div class="img-overlay">
-                            <a href="project4.html"
-                                class="hoverbutton global-radius"
-                                data-toggle="modal"
-                                data-target="#project4Modal"><i
-                                    class="fa fa-picture-o"></i></a>
+                            <a href="project4.html" class="hoverbutton global-radius" data-toggle="modal"
+                                data-target="#project4Modal">View Project<i class="fa fa-picture-o"></i></a>
                         </div>
                     </div>
                 </div>
@@ -429,14 +379,11 @@
                             style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: bold; text-shadow: 5px 5px 5px rgba(0, 0, 0, 1); text-align: center;">
                             Extenuating Circumstances Form System</div>
 
-                        <img src="uploads/ecf2-bg.png" class="img-fluid"
-                            alt="Image">
+                        <img src="uploads/ecf2-bg.png" class="img-fluid" alt="Extenuating Circumstances Form"
+                            loading="lazy">
                         <div class="img-overlay">
-                            <a href="project2.html"
-                                class="hoverbutton global-radius"
-                                data-toggle="modal"
-                                data-target="#project2Modal"><i
-                                    class="fa fa-picture-o"></i></a>
+                            <a href="project2.html" class="hoverbutton global-radius" data-toggle="modal"
+                                data-target="#project2Modal">View Project<i class="fa fa-picture-o"></i></a>
                         </div>
                     </div>
                 </div>
@@ -445,58 +392,40 @@
             <div id="testimonials" class="section wb">
                 <div class="container">
                     <div class="section-title text-left">
-                        <h3>Testimonials</h3>
+                        <h2>Testimonials</h2>
                     </div>
 
                     <div class="row">
                         <div class="col-md-12 col-sm-12">
-                            <div
-                                class="testi-carousel owl-carousel owl-theme">
+                            <div class="testi-carousel owl-carousel owl-theme">
 
                                 <div class="testimonial clearfix">
                                     <div class="desc">
-                                        <h3><i class="fa fa-quote-left"></i>
-                                            Great to work with!</h3>
-                                        <p class="lead">Working with euan on
-                                            many projects has been a
-                                            highlight during my studies at
-                                            the University of Sheffield. He
-                                            always puts a lot of effort into
-                                            his work. He goes above and
-                                            beyond to help teammates and
-                                            drive the project to success. He
-                                            can simplify complex tasks. It
-                                            is not just Euan's knowledge
-                                            that makes him stand out but
-                                            also his leadership, teamwork,
-                                            communication and patience.</p>
+                                        <h3><i class="fa fa-quote-left"></i> Great to work with!</h3>
+                                        <p class="lead">Working with Euan on many projects has been a highlight during
+                                            my studies at the University of Sheffield. He always puts a lot of effort
+                                            into his work. He goes above and beyond to help teammates and drive the
+                                            project to success. He can simplify complex tasks. It is not just Euan's
+                                            knowledge that makes him stand out but also his leadership, teamwork,
+                                            communication, and patience.</p>
                                     </div>
                                     <div class="testi-meta">
-                                        <img src="images/samiha-fansur.jpeg"
-                                            alt
-                                            class="img-fluid alignleft">
-                                        <h4>Samiha Fansur<small>-
-                                                Software Developer</small></h4>
+                                        <img src="images/samiha-fansur.jpeg" alt="Samiha Fansur"
+                                            class="img-fluid alignleft" loading="lazy" width="100" height="100">
+                                        <h4>Samiha Fansur<small>- Software Developer</small></h4>
                                     </div>
                                 </div>
 
                                 <div class="testimonial clearfix">
                                     <div class="desc">
-                                        <h3><i class="fa fa-quote-left"></i>
-                                            Great guy!
-                                        </h3>
-                                        <p class="lead">Euan is one of the
-                                            hardest workers I have ever met.
-                                            A great asset wherever he goes.</p>
-
+                                        <h3><i class="fa fa-quote-left"></i> Great guy!</h3>
+                                        <p class="lead">Euan is one of the hardest workers I have ever met. A great
+                                            asset wherever he goes.</p>
                                     </div>
                                     <div class="testi-meta">
-                                        <img src="images/alasdair-g.jpeg"
-                                            alt
-                                            class="img-fluid alignleft">
-                                        <h4>Alasdair G<small>
-                                                Co-Founder of The Battle
-                                                Box, Order Fulfillment
+                                        <img src="images/alasdair-g.jpeg" alt="Alasdair G"
+                                            class="img-fluid alignleft" loading="lazy" width="100" height="100">
+                                        <h4>Alasdair G<small>- Co-Founder of The Battle Box, Order Fulfillment
                                                 Supervisor at EU Automation.</small></h4>
                                     </div>
                                 </div>
@@ -510,9 +439,8 @@
             <div id="blog" class="section lb">
                 <div class="container">
                     <div class="section-title text-left">
-                        <h3>Recent Updates</h3>
-                        <p>Catch up with my latest adventures and academic
-                            endeavors. It's been a busy year!</p>
+                        <h2>Recent Updates</h2>
+                        <p>Catch up with my latest adventures and academic endeavors. It's been a busy year!</p>
                     </div>
 
                     <div class="row">
@@ -521,8 +449,8 @@
                         <div class="col-md-4 col-sm-6 col-lg-4">
                             <div class="post-box">
                                 <div class="post-thumb">
-                                    <img src="images/SDC23.jpg"
-                                        class="img-fluid" alt="post-img" />
+                                    <img src="images/SDC23.jpg" class="img-fluid" alt="Presenting at Sumo Digital"
+                                        loading="lazy" width="350" height="200" />
                                     <div class="date">
                                         <span>23</span>
                                         <span>June</span>
@@ -533,10 +461,8 @@
                                     <ul>
                                         <li>Jun 23, 2023</li>
                                     </ul>
-                                    <p>I had the privilege of presenting my
-                                        thesis at Sumo Digital's Developer
-                                        Conference. Engaging with industry
-                                        veterans was enlightening!</p>
+                                    <p>I had the privilege of presenting my thesis at Sumo Digital's Developer
+                                        Conference. Engaging with industry veterans was enlightening!</p>
                                 </div>
                             </div>
                         </div>
@@ -545,9 +471,8 @@
                         <div class="col-md-4 col-sm-6 col-lg-4">
                             <div class="post-box">
                                 <div class="post-thumb">
-                                    <img
-                                        src="images/graduation-sheffield2.jpg"
-                                        class="img-fluid" alt="post-img" />
+                                    <img src="images/graduation-sheffield2.jpg" class="img-fluid"
+                                        alt="Graduation at Sheffield" loading="lazy" width="350" height="200" />
                                     <div class="date">
                                         <span>17</span>
                                         <span>July</span>
@@ -558,10 +483,8 @@
                                     <ul>
                                         <li>Jul 17, 2023</li>
                                     </ul>
-                                    <p>Thrilled to graduate with First Class
-                                        Honours in Computer Science from The
-                                        University of Sheffield. Here's to
-                                        the future!</p>
+                                    <p>Thrilled to graduate with First Class Honours in Computer Science from The
+                                        University of Sheffield. Here's to the future!</p>
                                 </div>
                             </div>
                         </div>
@@ -570,23 +493,21 @@
                         <div class="col-md-4 col-sm-6 col-lg-4">
                             <div class="post-box">
                                 <div class="post-thumb">
-                                    <img src="images/imperial.jpeg"
-                                        class="img-fluid" alt="post-img" />
+                                    <img src="images/imperial.jpeg" class="img-fluid"
+                                        alt="New Adventures at Imperial College London" loading="lazy" width="350"
+                                        height="200" />
                                     <div class="date">
                                         <span>30</span>
                                         <span>Sept</span>
                                     </div>
                                 </div>
                                 <div class="post-info">
-                                    <h4>New Adventures at Imperial College
-                                        London</h4>
+                                    <h4>New Adventures at Imperial College London</h4>
                                     <ul>
                                         <li>Sep 30, 2023</li>
                                     </ul>
-                                    <p>Excited to embark on my MSc journey
-                                        in Computing at Imperial College
-                                        London, with a focus on AI and
-                                        Machine Learning.</p>
+                                    <p>Excited to embark on my MSc journey in Computing at Imperial College London, with
+                                        a focus on AI and Machine Learning.</p>
                                 </div>
                             </div>
                         </div>
@@ -596,11 +517,9 @@
             </div>
 
             <div id="contact" class="section db">
-                <div
-                    style="background-color: #ffffff; padding: 30px; border-radius: 0px; padding-top: 0px;">
-                    <div
-                        style="font-size: 24px; color: #006064; padding-bottom: 20px; border-bottom: 2px solid #4dd0e1;">
-                        <h7>Contact me!</h7>
+                <div style="background-color: #ffffff; padding: 30px; border-radius: 0px; padding-top: 0px;">
+                    <div style="font-size: 24px; color: #006064; padding-bottom: 20px; border-bottom: 2px solid #4dd0e1;">
+                        <h2>Contact me!</h2>
                     </div>
 
                     <div style="padding-top: 20px;">
@@ -608,7 +527,7 @@
                             <li style="color: #0277bd; padding: 10px 0;">
                                 <i class="fa fa-phone" aria-hidden="true"
                                     style="color: #4dd0e1; margin-right: 10px;"></i>
-                                + 44 7956028983
+                                +44 7956028983
                             </li>
                             <li style="color: #0277bd; padding: 10px 0;">
                                 <i class="fa fa-at" aria-hidden="true"
@@ -616,20 +535,16 @@
                                 euangoodbrand@gmail.com
                             </li>
                             <li style="color: #0277bd; padding: 10px 0;">
-                                <i class="fa fa-map-marker"
-                                    aria-hidden="true"
+                                <i class="fa fa-map-marker" aria-hidden="true"
                                     style="color: #4dd0e1; margin-right: 10px;"></i>
                                 London, UK
                             </li>
                         </ul>
                         <h3 style="color: #006064;">Connect!</h3>
-                        <a href="https://www.linkedin.com/in/euangoodbrand/"
-                            style="color: #0277bd; margin-right: 15px;">
-                            <i class="fa fa-linkedin"
-                                style="font-size: 24px;"></i>
+                        <a href="https://www.linkedin.com/in/euangoodbrand/" style="color: #0277bd; margin-right: 15px;">
+                            <i class="fa fa-linkedin" style="font-size: 24px;"></i>
                         </a>
-                        <a href="https://github.com/euangoodbrand"
-                            style="color: #0277bd;">
+                        <a href="https://github.com/euangoodbrand" style="color: #0277bd;">
                             <i class="fa fa-github" style="font-size: 24px;"></i>
                         </a>
                     </div>
@@ -644,8 +559,7 @@
                     <div class="fish" id="fish"></div>
                     <div class="fish" id="fish2"></div>
 
-                    <form id="waterform" method="post"
-                        action="https://formspree.io/f/mqkorpdd">
+                    <form id="waterform" method="post" action="https://formspree.io/f/mqkorpdd">
 
                         <div class="formgroup" id="name-form">
                             <label for="name">Your name*</label>
@@ -662,8 +576,7 @@
                             <textarea id="message" name="message"></textarea>
                         </div>
 
-                        <input type="hidden" name="_subject"
-                            value="New message from your contact form" />
+                        <input type="hidden" name="_subject" value="New message from your contact form" />
                         <input type="submit" value="Send your message!" />
 
                     </form>
@@ -681,220 +594,181 @@
                                     <a href="#">Top</a>
                                     <a href="#">Contact</a>
                                 </p>
-                                <p class="footer-company-name">All Rights
-                                    Reserved. &copy; 2023 <a href="#">@Euan
-                                        Goodbrand</a>
-                                </div>
+                                <p class="footer-company-name">All Rights Reserved. &copy; 2023 <a href="#">@Euan
+                                        Goodbrand</a></p>
                             </div>
                         </div>
                     </div>
-                    <a href="#" id="scroll-to-top"
-                        class="dmtop global-radius"><i
-                            class="fa fa-angle-up"></i></a>
+                </div>
+                <a href="#" id="scroll-to-top" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
 
-                    <!-- ALL JS FILES -->
-                    <script src="js/all.js"></script>
-                    <!-- Camera Slider -->
-                    <script src="js/jquery.mobile.customized.min.js"></script>
-                    <script src="js/jquery.easing.1.3.js"></script>
-                    <script src="js/parallaxie.js"></script>
-                    <script src="js/headline.js"></script>
-                    <!-- Contact form JavaScript -->
-                    <script src="js/jqBootstrapValidation.js"></script>
-                    <script src="js/contact_me.js"></script>
-                    <!-- ALL PLUGINS -->
-                    <script src="js/custom.js"></script>
-                    <script src="js/jquery.vide.js"></script>
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            var video = document.getElementById('background-video');
-                            var videoContainer = document.getElementById('video-container');
-                
-                            function checkScroll() {
-                                var rect = videoContainer.getBoundingClientRect();
-                                var isVisible = (rect.top >= 0 && rect.bottom <= window.innerHeight);
-                                
-                                if (isVisible) {
-                                    video.play();
-                                } else {
-                                    video.pause();
-                                }
+                <!-- ALL JS FILES -->
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                <script src="js/modernizr.js" defer></script>
+                <script src="js/all.js" defer></script>
+                <!-- Camera Slider -->
+                <script src="js/jquery.mobile.customized.min.js" defer></script>
+                <script src="js/jquery.easing.1.3.js" defer></script>
+                <script src="js/parallaxie.js" defer></script>
+                <script src="js/headline.js" defer></script>
+                <!-- Contact form JavaScript -->
+                <script src="js/jqBootstrapValidation.js" defer></script>
+                <script src="js/contact_me.js" defer></script>
+                <!-- ALL PLUGINS -->
+                <script src="js/custom.js" defer></script>
+                <script src="js/jquery.vide.js" defer></script>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        var video = document.getElementById('background-video');
+                        var videoContainer = document.getElementById('video-container');
+
+                        function checkScroll() {
+                            var rect = videoContainer.getBoundingClientRect();
+                            var isVisible = (rect.top >= 0 && rect.bottom <= window.innerHeight);
+
+                            if (isVisible) {
+                                video.play();
+                            } else {
+                                video.pause();
                             }
-                
-                            window.addEventListener('scroll', checkScroll);
-                            window.addEventListener('resize', checkScroll);
-                            checkScroll();
-                        });
-                    </script>
+                        }
 
-                    <!-- Project 1 Modal -->
-                    <div class="modal fade" id="project1Modal" tabindex="-1"
-                        role="dialog" aria-labelledby="project1ModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title"
-                                        id="project1ModalLabel">Procedural Modelling for Dungeon Levels</h5>
-                                    <button type="button" class="close"
-                                        data-dismiss="modal"
-                                        aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <iframe src="project1.html" width="100%"
-                                        height="600px"></iframe>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button"
-                                        class="btn btn-secondary"
-                                        data-dismiss="modal">Close</button>
-                                </div>
+                        window.addEventListener('scroll', checkScroll, { passive: true });
+                        window.addEventListener('resize', checkScroll);
+                        checkScroll();
+                    });
+                </script>
+
+                <!-- Project 1 Modal -->
+                <div class="modal fade" id="project1Modal" tabindex="-1" role="dialog"
+                    aria-labelledby="project1ModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="project1ModalLabel">Procedural Modelling for Dungeon
+                                    Levels</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe src="project1.html" width="100%" height="600px"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Project 2 Modal -->
-                    <div class="modal fade" id="project2Modal" tabindex="-1"
-                        role="dialog" aria-labelledby="project2ModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title"
-                                        id="project2ModalLabel">Extenuating Circumstances Form System</h5>
-                                    <button type="button" class="close"
-                                        data-dismiss="modal"
-                                        aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <iframe src="project2.html" width="100%"
-                                        height="600px"></iframe>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button"
-                                        class="btn btn-secondary"
-                                        data-dismiss="modal">Close</button>
-                                </div>
+                <!-- Project 2 Modal -->
+                <div class="modal fade" id="project2Modal" tabindex="-1" role="dialog"
+                    aria-labelledby="project2ModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="project2ModalLabel">Extenuating Circumstances Form
+                                    System</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe src="project2.html" width="100%" height="600px"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Project 3 Modal -->
-                    <div class="modal fade" id="project3Modal" tabindex="-1"
-                        role="dialog" aria-labelledby="project3ModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title"
-                                        id="project3ModalLabel">Mentor-Mentee System</h5>
-                                    <button type="button" class="close"
-                                        data-dismiss="modal"
-                                        aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <iframe src="project3.html" width="100%"
-                                        height="600px"></iframe>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button"
-                                        class="btn btn-secondary"
-                                        data-dismiss="modal">Close</button>
-                                </div>
+                <!-- Project 3 Modal -->
+                <div class="modal fade" id="project3Modal" tabindex="-1" role="dialog"
+                    aria-labelledby="project3ModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="project3ModalLabel">Mentor-Mentee System</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe src="project3.html" width="100%" height="600px"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Project 4 Modal -->
-                    <div class="modal fade" id="project4Modal" tabindex="-1"
-                        role="dialog" aria-labelledby="project4ModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title"
-                                        id="project4ModalLabel">AI Movie Review Interpreter</h5>
-                                    <button type="button" class="close"
-                                        data-dismiss="modal"
-                                        aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <iframe src="project4.html" width="100%"
-                                        height="600px"></iframe>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button"
-                                        class="btn btn-secondary"
-                                        data-dismiss="modal">Close</button>
-                                </div>
+                <!-- Project 4 Modal -->
+                <div class="modal fade" id="project4Modal" tabindex="-1" role="dialog"
+                    aria-labelledby="project4ModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="project4ModalLabel">AI Movie Review Interpreter</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe src="project4.html" width="100%" height="600px"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Project 5 Modal -->
-                    <div class="modal fade" id="project5Modal" tabindex="-1"
-                        role="dialog" aria-labelledby="project5ModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title"
-                                        id="project5ModalLabel">
-                                        Rental JSwing Application</h5>
-                                    <button type="button" class="close"
-                                        data-dismiss="modal"
-                                        aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <iframe src="project5.html" width="100%"
-                                        height="600px"></iframe>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button"
-                                        class="btn btn-secondary"
-                                        data-dismiss="modal">Close</button>
-                                </div>
+                <!-- Project 5 Modal -->
+                <div class="modal fade" id="project5Modal" tabindex="-1" role="dialog"
+                    aria-labelledby="project5ModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="project5ModalLabel">
+                                    Rental JSwing Application</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe src="project5.html" width="100%" height="600px"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Project 6 Modal -->
-                    <div class="modal fade" id="project6Modal" tabindex="-1"
-                        role="dialog" aria-labelledby="project6ModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title"
-                                        id="project6ModalLabel">
-                                        OpenGL Graphics Scene</h5>
-                                    <button type="button" class="close"
-                                        data-dismiss="modal"
-                                        aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <iframe src="project6.html" width="100%"
-                                        height="600px"></iframe>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button"
-                                        class="btn btn-secondary"
-                                        data-dismiss="modal">Close</button>
-                                </div>
+                <!-- Project 6 Modal -->
+                <div class="modal fade" id="project6Modal" tabindex="-1" role="dialog"
+                    aria-labelledby="project6ModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="project6ModalLabel">
+                                    OpenGL Graphics Scene</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe src="project6.html" width="100%" height="600px"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
-                </body>
-            </html>
+                </div>
+</body>
+
+</html>
