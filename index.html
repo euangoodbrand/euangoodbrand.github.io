@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<head>
 <!-- Basic -->
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
 <!-- Mobile Metas -->
-<meta name="viewport"
-    content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- Site Metas -->
-<title>Euan Goodbrand</title>
-<meta name="keywords" content>
-<meta name="description" content>
-<meta name="author" content>
+<title>Euan Goodbrand — ML Engineer</title>
+<meta name="keywords" content="Euan Goodbrand, Machine Learning, ML Engineer, Graphics, Simulations">
+<meta name="description" content="Euan Goodbrand — Machine Learning Engineer passionate about simulations, graphics, and AI.">
+<meta name="author" content="Euan Goodbrand">
 
 <!-- Site Icons -->
 <link rel="shortcut icon" href="images/tab.png" type="image/x-icon" />
@@ -27,14 +27,11 @@
 <link rel="stylesheet" href="css/responsive.css">
 <!-- Custom CSS -->
 <link rel="stylesheet" href="css/custom.css">
-<script src="js/modernizr.js"></script> <!-- Modernizr -->
+<script src="js/modernizr.js"></script>
 
-<link rel="stylesheet"
-    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<script
-    src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script
-    src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <style>
     /* Video Background CSS */
@@ -51,25 +48,201 @@
         min-height: 100%;
         width: auto;
         height: auto;
-        z-index: -1; 
+        z-index: -1;
         transform: translate(-50%, -50%);
         background: url('./assets/jellyfish.png') no-repeat;
         background-size: cover;
         filter: brightness(2.5);
     }
 
-    
     .heading h1, .heading p, .heading h3 {
-        color: white; 
-        text-shadow: 2px 2px 8px rgba(0,0,0,0.6); 
+        color: white;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+    }
+
+    /* ===== CLOUDS SVG FIX ===== */
+    #clouds {
+        display: block;
+        width: 100%;
+        height: 80px;
+        margin-top: -80px;
+        position: relative;
+        z-index: 1;
+    }
+    #clouds path {
+        fill: #ffffff;
+        stroke: #ffffff;
+    }
+    @media (max-width: 768px) {
+        #clouds {
+            height: 40px;
+            margin-top: -40px;
+        }
+    }
+    @media (min-width: 1600px) {
+        #clouds {
+            height: 120px;
+            margin-top: -120px;
+        }
+    }
+
+    /* ===== SKILLS CARDS POLISH ===== */
+    .services-inner-box {
+        border-radius: 8px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        min-height: 260px;
+    }
+    .services-inner-box:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 32px rgba(0,0,0,0.10);
+    }
+
+    /* ===== BLOG / UPDATES CARDS ===== */
+    .post-box {
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .post-box:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+    }
+
+    /* ===== CONTACT SECTION CLEANUP ===== */
+    #contact .contact-card {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 8px;
+    }
+    #contact .contact-heading {
+        font-weight: normal;
+        font-size: 2.5em;
+        font-family: 'Raleway', sans-serif;
+        color: #006064;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #4dd0e1;
+        margin-bottom: 20px;
+    }
+
+    /* ===== GALLERY TITLE OVERLAY ===== */
+    .gallery-single .gallery-title {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-weight: bold;
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.85);
+        text-align: center;
+        z-index: 2;
+        pointer-events: none;
+        font-size: 16px;
+        line-height: 1.3;
+        padding: 0 10px;
+    }
+
+    /* ===== FORM RESPONSIVE FIX ===== */
+    @media (max-width: 600px) {
+        form, input, textarea, .formgroup, .formgroup-active, .formgroup-error {
+            width: 100% !important;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        #form {
+            padding: 0 15px;
+        }
+    }
+
+    /* ===== MERCEDES ACCENT (subtle F1 teal) ===== */
+    .update-mercedes .date {
+        background: #00D2BE !important;
+    }
+
+    /* ===== UPDATES CAROUSEL ===== */
+    .updates-carousel .post-box {
+        margin: 0 10px 20px;
+        background: #fff;
+    }
+    .updates-carousel .owl-dots {
+        text-align: center;
+        margin-top: 20px;
+    }
+    .updates-carousel .owl-dot span {
+        width: 12px;
+        height: 12px;
+        margin: 5px;
+        background: #ccc;
+        display: inline-block;
+        border-radius: 50%;
+        transition: background 0.3s ease;
+    }
+    .updates-carousel .owl-dot.active span {
+        background: #2d4248;
+    }
+    .updates-carousel .owl-nav {
+        position: absolute;
+        top: 40%;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        pointer-events: none;
+    }
+    .updates-carousel .owl-prev,
+    .updates-carousel .owl-next {
+        pointer-events: auto;
+        background: rgba(45, 66, 72, 0.7) !important;
+        color: #fff !important;
+        width: 40px;
+        height: 40px;
+        border-radius: 50% !important;
+        line-height: 40px !important;
+        text-align: center;
+        font-size: 22px !important;
+        transition: background 0.3s ease;
+    }
+    .updates-carousel .owl-prev:hover,
+    .updates-carousel .owl-next:hover {
+        background: rgba(45, 66, 72, 1) !important;
+    }
+    .updates-carousel .owl-prev {
+        margin-left: -20px;
+    }
+    .updates-carousel .owl-next {
+        margin-right: -20px;
+    }
+    /* ===== 3D BUBBLE CANVAS ===== */
+    #bubble-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+    }
+    /* Let heading stay above bubbles but allow clicks through */
+    .heading {
+        z-index: 3;
+        pointer-events: none;
+    }
+    .heading a, .heading button {
+        pointer-events: auto;
+    }
+    /* Click-capture overlay for bubbles */
+    #bubble-click-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        cursor: pointer;
     }
 </style>
+</head>
 
 <body id="page-top" class="politics_version">
-    <!-- Video Background -->
-    <video autoplay loop muted id="background-video">
-        <source src="./assets/jellyfish.mp4" type="video/mp4">
-    </video>
 
     <!-- LOADER -->
     <div id="preloader">
@@ -82,14 +255,10 @@
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
         <div class="container">
             <a class="navbar-brand js-scroll-trigger" href="#page-top">
-                <img class="img-fluid" src="images/logo.png" alt width="300"
-                    height="150" />
-
+                <img class="img-fluid" src="images/logo.png" alt="Euan Goodbrand" width="300" height="150" />
             </a>
-            <button class="navbar-toggler navbar-toggler-right"
-                type="button" data-toggle="collapse"
-                data-target="#navbarResponsive"
-                aria-controls="navbarResponsive" aria-expanded="false"
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
                 aria-label="Toggle navigation">
                 Menu
                 <i class="fa fa-bars"></i>
@@ -97,30 +266,23 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav text-uppercase ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger active"
-                            href="#home">Home</a>
+                        <a class="nav-link js-scroll-trigger active" href="#home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#about">About
-                            Me</a>
+                        <a class="nav-link js-scroll-trigger" href="#about">About Me</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="#skills">Skills</a>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger"
-                            href="#portfolio">Portfolio</a>
+                        <a class="nav-link js-scroll-trigger" href="#blog">Updates</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger"
-                            href="#testimonials">Testimonials</a>
+                        <a class="nav-link js-scroll-trigger" href="#portfolio">Portfolio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#blog">Blog</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger"
-                            href="#contact">Contact</a>
+                        <a class="nav-link js-scroll-trigger" href="#contact">Contact</a>
                     </li>
                 </ul>
             </div>
@@ -132,6 +294,10 @@
         <video autoplay loop muted id="background-video">
             <source src=".\images\jellyfish.mp4" type="video/mp4">
         </video>
+        <!-- 3D Bubbles Canvas -->
+        <canvas id="bubble-canvas"></canvas>
+        <!-- Click layer for bubble popping -->
+        <div id="bubble-click-layer"></div>
         <div class="heading">
             <h1>hello i'm Euan Goodbrand</h1>
             <h3 class="cd-headline clip is-full-width">
@@ -145,9 +311,10 @@
         </div>
     </section>
 
-    <svg id="clouds" class="hidden-xs" xmlns="http://www.w3.org/2000/svg"
-        version="1.1" width="100%" height="100px" viewBox="0 0 85 100"
-        preserveAspectRatio="none">
+
+    <!-- Clouds SVG — fixed: use viewBox + preserveAspectRatio for fluid scaling -->
+    <svg id="clouds" xmlns="http://www.w3.org/2000/svg" version="1.1"
+        viewBox="0 0 100 100" preserveAspectRatio="none">
         <path d="M-5 100 Q 0 20 5 100 Z
         M0 100 Q 5 0 10 100
         M5 100 Q 10 30 15 100
@@ -172,22 +339,20 @@
         </path>
     </svg>
 
+    <!-- ===== ABOUT ===== -->
     <div id="about" class="section wb">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
                     <div class="message-box">
                         <h2>Euan Goodbrand</h2>
-                        <p>I am a Machine Learning Engineer with a passion for 
-                            simulations and visual effects. </p>
-<!--                         <a href="uploads\Euan_Goodbrand_CV_resume.pdf" class="sim-btn btn-hover-new"
-                            data-text="Download CV"><span>Download CV</span></a> -->
+                        <p>I am a Machine Learning Engineer at the Mercedes-AMG PETRONAS Formula One Team, with a passion for simulations, graphics, and visual effects.</p>
                     </div>
                 </div>
 
                 <div class="col-md-6">
                     <div class="right-box-pro wow fadeIn">
-                        <img src="uploads/Euan Goodbrand.jpeg" alt
+                        <img src="uploads/Euan Goodbrand.jpeg" alt="Euan Goodbrand"
                             class="img-fluid img-rounded">
                     </div>
                 </div>
@@ -195,105 +360,138 @@
         </div>
     </div>
 
+    <!-- ===== SKILLS (reduced to 3) ===== -->
     <div id="skills" class="section lb">
         <div class="container">
             <div class="section-title text-left">
                 <h3>My Skills</h3>
-                <p>Throughout my journey in tech, I've cultivated a diverse
-                    skill set, constantly adapting myself. Below are some
-                    areas I focus.</p>
+                <p>Core areas I specialise in — where graphics, intelligence, and physics converge.</p>
             </div>
 
             <div class="row">
-                <div class="col-md-4">
-                    <div class="services-inner-box">
-                        <div class="ser-icon">
-                            <i class="flaticon-seo"></i>
-                        </div>
-                        <h2>Software Engineering</h2>
-                        <p>I've dedicated myself to crafting software
-                            solutions that address real-world problems.
-                            Whether it's a sleek mobile app or a robust OS,
-                            my aim is to bridge people's needs with
-                            technical
-                            innovation.</p>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="services-inner-box">
-                        <div class="ser-icon">
-                            <i class="flaticon-development"></i>
-                        </div>
-                        <h2>Cloud Computing</h2>
-                        <p>I utilise the power of the cloud to provide
-                            scalable and efficient solutions. From utilizing
-                            SaaS platforms to leveraging PaaS, I've got
-                            experience in AWS and Google Cloud.</p>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="services-inner-box">
-                        <div class="ser-icon">
-                            <i class="flaticon-process"></i>
-                        </div>
-                        <h2>Creative Design</h2>
-                        <p>My passion lies in combining aesthetics with
-                            utility. Through disciplines like UI/UX and
-                            graphic design, I bring things to life, ensuring
-                            audiences enjoy interacting with them in the
-                            digital
-                            realm.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="services-inner-box">
-                        <div class="ser-icon">
-                            <i class="flaticon-discuss-issue"></i>
-                        </div>
-                        <h2>Internet of Things (IoT)</h2>
-                        <p>With IoT, I've explored adding embedding
-                            connectivity into everyday objects. My work
-                            in this space are all about connecting the
-                            tangible and digital worlds. I enjoy tinkering
-                            with
-                            parts to build cool stuff such as a card
-                            shuffling machine I built recently.</p>
-                    </div>
-                </div>
-
+                <!-- Skill 1: Graphics & Procedural Modelling -->
                 <div class="col-md-4">
                     <div class="services-inner-box">
                         <div class="ser-icon">
                             <i class="flaticon-idea"></i>
                         </div>
-                        <h2>Graphics and Procedural Modeling</h2>
-                        <p>Graphics are more than just visuals for me; they're
-                            a medium of expression. I'm particularly fond of
-                            procedural modeling, using algorithms to
-                            generate intricate and diverse 3D designs,
-                            bringing things to life.</p>
+                        <h2>Graphics &amp; Procedural Modelling</h2>
+                        <p>Using algorithms to generate intricate 3D environments and assets. From OpenGL rendering pipelines to procedural dungeon generation, I combine mathematical foundations with creative expression to bring worlds to life.</p>
                     </div>
                 </div>
 
+                <!-- Skill 2: AI / Machine Learning -->
                 <div class="col-md-4">
                     <div class="services-inner-box">
                         <div class="ser-icon">
                             <i class="flaticon-idea-1"></i>
                         </div>
-                        <h2>Artificial Intelligence</h2>
-                        <p>I've always been captivated by the potential of
-                            AI. Through crafting algorithms that emulate
-                            human intelligence, I've contributed to projects
-                            that span from chess bots, computer vision,
-                            and I am currently doing my MSc on the topic.</p>
+                        <h2>AI / Machine Learning</h2>
+                        <p>Building intelligent systems that learn and adapt — from NLP classifiers and computer vision to high-performance ML pipelines at the cutting edge of Formula One. MSc in Computing (AI &amp; ML) from Imperial College London.</p>
+                    </div>
+                </div>
+
+                <!-- Skill 3: Physics-Based Simulations -->
+                <div class="col-md-4">
+                    <div class="services-inner-box">
+                        <div class="ser-icon">
+                            <i class="flaticon-process"></i>
+                        </div>
+                        <h2>Physics-Based Simulations</h2>
+                        <p>Modelling real-world phenomena through numerical methods and simulation frameworks. Applying physics-driven approaches to engineering problems where accuracy and performance are critical.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- ===== RECENT UPDATES (Carousel) ===== -->
+    <div id="blog" class="section lb">
+        <div class="container">
+            <div class="section-title text-left">
+                <h3>Recent Updates</h3>
+                <p>Catch up with my latest adventures and career milestones.</p>
+            </div>
+
+            <div class="updates-carousel owl-carousel owl-theme">
+
+                <!-- 1. Presenting at Sumo Digital -->
+                <div class="post-box">
+                    <div class="post-thumb">
+                        <img src="images/SDC23.jpg" class="img-fluid" alt="Sumo Digital Conference" />
+                        <div class="date">
+                            <span>23</span>
+                            <span>June</span>
+                        </div>
+                    </div>
+                    <div class="post-info">
+                        <h4>Presenting at Sumo Digital</h4>
+                        <ul>
+                            <li>Jun 23, 2023</li>
+                        </ul>
+                        <p>I had the privilege of presenting my thesis at Sumo Digital's Developer Conference. Engaging with industry veterans was enlightening!</p>
+                    </div>
+                </div>
+
+                <!-- 2. Sheffield Graduation -->
+                <div class="post-box">
+                    <div class="post-thumb">
+                        <img src="images/graduation-sheffield2.jpg" class="img-fluid" alt="Sheffield Graduation" />
+                        <div class="date">
+                            <span>17</span>
+                            <span>July</span>
+                        </div>
+                    </div>
+                    <div class="post-info">
+                        <h4>First Class Honours from Sheffield</h4>
+                        <ul>
+                            <li>Jul 17, 2023</li>
+                        </ul>
+                        <p>Graduated with First Class Honours in Computer Science from The University of Sheffield.</p>
+                    </div>
+                </div>
+
+                <!-- 3. Imperial College London -->
+                <div class="post-box">
+                    <div class="post-thumb">
+                        <img src="images/imperial.jpeg" class="img-fluid" alt="Imperial College London" />
+                        <div class="date">
+                            <span>30</span>
+                            <span>Sept</span>
+                        </div>
+                    </div>
+                    <div class="post-info">
+                        <h4>New Adventures at Imperial College London</h4>
+                        <ul>
+                            <li>Sep 30, 2023</li>
+                        </ul>
+                        <p>Embarked on my MSc in Computing at Imperial College London, specialising in AI and Machine Learning.</p>
+                    </div>
+                </div>
+
+                <!-- 4. Mercedes F1 (far right) -->
+                <div class="post-box update-mercedes">
+                    <div class="post-thumb">
+                        <img src="images/w16.jpeg" class="img-fluid" alt="Mercedes F1" />
+                        <div class="date">
+                            <span>01</span>
+                            <span>Sept</span>
+                        </div>
+                    </div>
+                    <div class="post-info">
+                        <h4>Joined Mercedes-AMG PETRONAS F1 Team</h4>
+                        <ul>
+                            <li>Sep 01, 2024</li>
+                        </ul>
+                        <p>Started my role as an ML Engineer at the Mercedes-AMG PETRONAS Formula One Team, applying machine learning to the cutting edge of motorsport.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== PORTFOLIO ===== -->
     <div id="portfolio" class="section lb">
         <div class="container">
             <div class="section-title text-left">
@@ -316,20 +514,12 @@
             <div class="gallery-list row">
                 <!-- First Image Block -->
                 <div class="col-md-4 col-sm-6 gallery-grid gal_c gal_d">
-
                     <div class="gallery-single fix">
-                        <div class="gallery-title"
-                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: bold; text-shadow: 5px 5px 5px rgba(0, 0, 0, 1); text-align: center;">
-                            OpenGL Graphics Scene</div>
-
-                        <img src="uploads/lamp-bg.png" class="img-fluid"
-                            alt="Image">
+                        <div class="gallery-title">OpenGL Graphics Scene</div>
+                        <img src="uploads/lamp-bg.png" class="img-fluid" alt="OpenGL Graphics Scene">
                         <div class="img-overlay">
-                            <a href="project6.html"
-                                class="hoverbutton global-radius"
-                                data-toggle="modal"
-                                data-target="#project6Modal"><i
-                                    class="fa fa-picture-o"></i></a>
+                            <a href="project6.html" class="hoverbutton global-radius"
+                                data-toggle="modal" data-target="#project6Modal"><i class="fa fa-picture-o"></i></a>
                         </div>
                     </div>
                 </div>
@@ -337,19 +527,11 @@
                 <!-- Second Image Block -->
                 <div class="col-md-4 col-sm-6 gallery-grid gal_c gal_d">
                     <div class="gallery-single fix">
-                        <div class="gallery-title"
-                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: bold; text-shadow: 5px 5px 5px rgba(0, 0, 0, 1); text-align: center;">
-                            Procedural Modelling for Dungeon Levels</div>
-
-                        <img src="uploads/dungeon2-bg.png" class="img-fluid"
-                            alt="Image">
+                        <div class="gallery-title">Procedural Modelling for Dungeon Levels</div>
+                        <img src="uploads/dungeon2-bg.png" class="img-fluid" alt="Procedural Dungeon Generation">
                         <div class="img-overlay">
-                            <a href="project1.html"
-                                class="hoverbutton global-radius"
-                                data-toggle="modal"
-                                data-target="#project1Modal"><i
-                                    class="fa fa-picture-o"></i></a>
-
+                            <a href="project1.html" class="hoverbutton global-radius"
+                                data-toggle="modal" data-target="#project1Modal"><i class="fa fa-picture-o"></i></a>
                         </div>
                     </div>
                 </div>
@@ -357,18 +539,11 @@
                 <!-- Third Image Block -->
                 <div class="col-md-4 col-sm-6 gallery-grid gal_a gal_c">
                     <div class="gallery-single fix">
-                        <div class="gallery-title"
-                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: bold; text-shadow: 5px 5px 5px rgba(0, 0, 0, 1); text-align: center;">
-                            Rental JSwing Java Application</div>
-
-                        <img src="uploads/rental-bg.png" class="img-fluid"
-                            alt="Image">
+                        <div class="gallery-title">Rental JSwing Java Application</div>
+                        <img src="uploads/rental-bg.png" class="img-fluid" alt="Rental Application">
                         <div class="img-overlay">
-                            <a href="project5.html"
-                                class="hoverbutton global-radius"
-                                data-toggle="modal"
-                                data-target="#project5Modal"><i
-                                    class="fa fa-picture-o"></i></a>
+                            <a href="project5.html" class="hoverbutton global-radius"
+                                data-toggle="modal" data-target="#project5Modal"><i class="fa fa-picture-o"></i></a>
                         </div>
                     </div>
                 </div>
@@ -376,18 +551,11 @@
                 <!-- Fourth Image Block -->
                 <div class="col-md-4 col-sm-6 gallery-grid gal_c gal_a">
                     <div class="gallery-single fix">
-                        <div class="gallery-title"
-                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: bold; text-shadow: 5px 5px 5px rgba(0, 0, 0, 1); text-align: center;">
-                            Mentor-Mentee System</div>
-
-                        <img src="uploads/mentor-mentee2-bg.png"
-                            class="img-fluid" alt="Image">
+                        <div class="gallery-title">Mentor-Mentee System</div>
+                        <img src="uploads/mentor-mentee2-bg.png" class="img-fluid" alt="Mentor-Mentee System">
                         <div class="img-overlay">
-                            <a href="project3.html"
-                                class="hoverbutton global-radius"
-                                data-toggle="modal"
-                                data-target="#project3Modal"><i
-                                    class="fa fa-picture-o"></i></a>
+                            <a href="project3.html" class="hoverbutton global-radius"
+                                data-toggle="modal" data-target="#project3Modal"><i class="fa fa-picture-o"></i></a>
                         </div>
                     </div>
                 </div>
@@ -395,19 +563,11 @@
                 <!-- Fifth Image Block -->
                 <div class="col-md-4 col-sm-6 gallery-grid gal_b gal_c">
                     <div class="gallery-single fix">
-                        <div class="gallery-title"
-                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: bold; text-shadow: 5px 5px 5px rgba(0, 0, 0, 1); text-align: center;">
-
-                            AI Movie Review Interpreter</div>
-
-                        <img src="uploads/movie-review-bg.png"
-                            class="img-fluid" alt="Image">
+                        <div class="gallery-title">AI Movie Review Interpreter</div>
+                        <img src="uploads/movie-review-bg.png" class="img-fluid" alt="AI Movie Review Interpreter">
                         <div class="img-overlay">
-                            <a href="project4.html"
-                                class="hoverbutton global-radius"
-                                data-toggle="modal"
-                                data-target="#project4Modal"><i
-                                    class="fa fa-picture-o"></i></a>
+                            <a href="project4.html" class="hoverbutton global-radius"
+                                data-toggle="modal" data-target="#project4Modal"><i class="fa fa-picture-o"></i></a>
                         </div>
                     </div>
                 </div>
@@ -415,222 +575,52 @@
                 <!-- Sixth Image Block -->
                 <div class="col-md-4 col-sm-6 gallery-grid gal_c gal_a">
                     <div class="gallery-single fix">
-                        <div class="gallery-title"
-                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: bold; text-shadow: 5px 5px 5px rgba(0, 0, 0, 1); text-align: center;">
-                            Extenuating Circumstances Form System</div>
-
-                        <img src="uploads/ecf2-bg.png" class="img-fluid"
-                            alt="Image">
+                        <div class="gallery-title">Extenuating Circumstances Form System</div>
+                        <img src="uploads/ecf2-bg.png" class="img-fluid" alt="ECF System">
                         <div class="img-overlay">
-                            <a href="project2.html"
-                                class="hoverbutton global-radius"
-                                data-toggle="modal"
-                                data-target="#project2Modal"><i
-                                    class="fa fa-picture-o"></i></a>
+                            <a href="project2.html" class="hoverbutton global-radius"
+                                data-toggle="modal" data-target="#project2Modal"><i class="fa fa-picture-o"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div id="testimonials" class="section wb">
-                <div class="container">
-                    <div class="section-title text-left">
-                        <h3>Testimonials</h3>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12 col-sm-12">
-                            <div
-                                class="testi-carousel owl-carousel owl-theme">
-
-                                <div class="testimonial clearfix">
-                                    <div class="desc">
-                                        <h3><i class="fa fa-quote-left"></i>
-                                            Great to work with!</h3>
-                                        <p class="lead">Working with euan on
-                                            many projects has been a
-                                            highlight during my studies at
-                                            the University of Sheffield. He
-                                            always puts a lot of effort into
-                                            his work. He goes above and
-                                            beyond to help teammates and
-                                            drive the project to success. He
-                                            can simplify complex tasks. It
-                                            is not just Euan's knowledge
-                                            that makes him stand out but
-                                            also his leadership, teamwork,
-                                            communication and patience.</p>
-                                    </div>
-                                    <div class="testi-meta">
-                                        <img src="images/samiha-fansur.jpeg"
-                                            alt
-                                            class="img-fluid alignleft">
-                                        <h4>Samiha Fansur<small>-
-                                                Software Developer</small></h4>
-                                    </div>
-                                </div>
-
-                                <div class="testimonial clearfix">
-                                    <div class="desc">
-                                        <h3><i class="fa fa-quote-left"></i>
-                                            Great guy!
-                                        </h3>
-                                        <p class="lead">Euan is one of the
-                                            hardest workers I have ever met.
-                                            A great asset wherever he goes.</p>
-
-                                    </div>
-                                    <div class="testi-meta">
-                                        <img src="images/alasdair-g.jpeg"
-                                            alt
-                                            class="img-fluid alignleft">
-                                        <h4>Alasdair G<small>
-                                                Co-Founder of The Battle
-                                                Box, Order Fulfillment
-                                                Supervisor at EU Automation.</small></h4>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="blog" class="section lb">
-                <div class="container">
-                    <div class="section-title text-left">
-                        <h3>Recent Updates</h3>
-                        <p>Catch up with my latest adventures and academic
-                            endeavors. It's been a busy year!</p>
-                    </div>
-
-                    <div class="row">
-
-                        <!-- First Blog Post -->
-                        <div class="col-md-4 col-sm-6 col-lg-4">
-                            <div class="post-box">
-                                <div class="post-thumb">
-                                    <img src="images/SDC23.jpg"
-                                        class="img-fluid" alt="post-img" />
-                                    <div class="date">
-                                        <span>23</span>
-                                        <span>June</span>
-                                    </div>
-                                </div>
-                                <div class="post-info">
-                                    <h4>Presenting at Sumo Digital</h4>
-                                    <ul>
-                                        <li>Jun 23, 2023</li>
-                                    </ul>
-                                    <p>I had the privilege of presenting my
-                                        thesis at Sumo Digital's Developer
-                                        Conference. Engaging with industry
-                                        veterans was enlightening!</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Second Blog Post -->
-                        <div class="col-md-4 col-sm-6 col-lg-4">
-                            <div class="post-box">
-                                <div class="post-thumb">
-                                    <img
-                                        src="images/graduation-sheffield2.jpg"
-                                        class="img-fluid" alt="post-img" />
-                                    <div class="date">
-                                        <span>17</span>
-                                        <span>July</span>
-                                    </div>
-                                </div>
-                                <div class="post-info">
-                                    <h4>Academic Achievements at Sheffield</h4>
-                                    <ul>
-                                        <li>Jul 17, 2023</li>
-                                    </ul>
-                                    <p>Thrilled to graduate with First Class
-                                        Honours in Computer Science from The
-                                        University of Sheffield. Here's to
-                                        the future!</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Third Blog Post -->
-                        <div class="col-md-4 col-sm-6 col-lg-4">
-                            <div class="post-box">
-                                <div class="post-thumb">
-                                    <img src="images/imperial.jpeg"
-                                        class="img-fluid" alt="post-img" />
-                                    <div class="date">
-                                        <span>30</span>
-                                        <span>Sept</span>
-                                    </div>
-                                </div>
-                                <div class="post-info">
-                                    <h4>New Adventures at Imperial College
-                                        London</h4>
-                                    <ul>
-                                        <li>Sep 30, 2023</li>
-                                    </ul>
-                                    <p>Excited to embark on my MSc journey
-                                        in Computing at Imperial College
-                                        London, with a focus on AI and
-                                        Machine Learning.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
+            <!-- ===== CONTACT ===== -->
             <div id="contact" class="section db">
-                <div
-                    style="background-color: #ffffff; padding: 30px; border-radius: 0px; padding-top: 0px;">
-                    <div
-                        style="font-size: 24px; color: #006064; padding-bottom: 20px; border-bottom: 2px solid #4dd0e1;">
-                        <h7>Contact me!</h7>
-                    </div>
+                <div class="contact-card">
+                    <div class="contact-heading">Contact me!</div>
 
                     <div style="padding-top: 20px;">
                         <ul style="list-style-type: none; padding: 0;">
                             <li style="color: #0277bd; padding: 10px 0;">
-                                <i class="fa fa-at" aria-hidden="true"
-                                    style="color: #4dd0e1; margin-right: 10px;"></i>
-                                euangoodbrand@gmail.com
+                                <i class="fa fa-at" aria-hidden="true" style="color: #4dd0e1; margin-right: 10px;"></i>
+                                <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ddb8a8bcb3bab2b2b9bfafbcb3b99dbab0bcb4b1f3beb2b0">[email&#160;protected]</a>
                             </li>
                             <li style="color: #0277bd; padding: 10px 0;">
-                                <i class="fa fa-map-marker"
-                                    aria-hidden="true"
-                                    style="color: #4dd0e1; margin-right: 10px;"></i>
+                                <i class="fa fa-map-marker" aria-hidden="true" style="color: #4dd0e1; margin-right: 10px;"></i>
                                 London, UK
                             </li>
                         </ul>
                         <h3 style="color: #006064;">Connect!</h3>
-                        <a href="https://www.linkedin.com/in/euangoodbrand/"
-                            style="color: #0277bd; margin-right: 15px;">
-                            <i class="fa fa-linkedin"
-                                style="font-size: 24px;"></i>
+                        <a href="https://www.linkedin.com/in/euangoodbrand/" style="color: #0277bd; margin-right: 15px;">
+                            <i class="fa fa-linkedin" style="font-size: 24px;"></i>
                         </a>
-                        <a href="https://github.com/euangoodbrand"
-                            style="color: #0277bd;">
+                        <a href="https://github.com/euangoodbrand" style="color: #0277bd;">
                             <i class="fa fa-github" style="font-size: 24px;"></i>
                         </a>
                     </div>
                 </div>
 
-                <header style="padding-top: 0px; padding-bottom: 0px;">
-
-                </header>
+                <header style="padding-top: 0px; padding-bottom: 0px;"></header>
 
                 <div id="form" style="padding-bottom: 75px;">
 
                     <div class="fish" id="fish"></div>
                     <div class="fish" id="fish2"></div>
 
-                    <form id="waterform" method="post"
-                        action="https://formspree.io/f/mqkorpdd">
+                    <form id="waterform" method="post" action="https://formspree.io/f/mqkorpdd">
 
                         <div class="formgroup" id="name-form">
                             <label for="name">Your name*</label>
@@ -647,8 +637,7 @@
                             <textarea id="message" name="message"></textarea>
                         </div>
 
-                        <input type="hidden" name="_subject"
-                            value="New message from your contact form" />
+                        <input type="hidden" name="_subject" value="New message from your contact form" />
                         <input type="submit" value="Send your message!" />
 
                     </form>
@@ -660,205 +649,649 @@
                         <div class="footer-distributed">
                             <div class="footer-left">
                                 <p class="footer-links">
-                                    <a href="#">Home</a>
-                                    <a href="#">Blog</a>
-                                    <a href="#">About</a>
-                                    <a href="#">Top</a>
-                                    <a href="#">Contact</a>
+                                    <a href="#home">Home</a>
+                                    <a href="#blog">Updates</a>
+                                    <a href="#about">About</a>
+                                    <a href="#page-top">Top</a>
+                                    <a href="#contact">Contact</a>
                                 </p>
-                                <p class="footer-company-name">All Rights
-                                    Reserved. &copy; 2023 <a href="#">@Euan
-                                        Goodbrand</a>
-                                </div>
+                                <p class="footer-company-name">All Rights Reserved. &copy; 2025 <a href="#">@Euan Goodbrand</a></p>
                             </div>
                         </div>
                     </div>
-                    <a href="#" id="scroll-to-top"
-                        class="dmtop global-radius"><i
-                            class="fa fa-angle-up"></i></a>
+                </div>
+                <a href="#" id="scroll-to-top" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
 
-                    <!-- ALL JS FILES -->
-                    <script src="js/all.js"></script>
-                    <!-- Camera Slider -->
-                    <script src="js/jquery.mobile.customized.min.js"></script>
-                    <script src="js/jquery.easing.1.3.js"></script>
-                    <script src="js/parallaxie.js"></script>
-                    <script src="js/headline.js"></script>
-                    <!-- Contact form JavaScript -->
-                    <script src="js/jqBootstrapValidation.js"></script>
-                    <script src="js/contact_me.js"></script>
-                    <!-- ALL PLUGINS -->
-                    <script src="js/custom.js"></script>
-                    <script src="js/jquery.vide.js"></script>
+                <!-- ALL JS FILES -->
+                <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+                <script src="js/all.js"></script>
+                <!-- Camera Slider -->
+                <script src="js/jquery.mobile.customized.min.js"></script>
+                <script src="js/jquery.easing.1.3.js"></script>
+                <script src="js/parallaxie.js"></script>
+                <script src="js/headline.js"></script>
+                <!-- Contact form JavaScript -->
+                <script src="js/jqBootstrapValidation.js"></script>
+                <script src="js/contact_me.js"></script>
+                <!-- ALL PLUGINS -->
+                <script src="js/custom.js"></script>
+                <script src="js/jquery.vide.js"></script>
 
-                    <!-- Project 1 Modal -->
-                    <div class="modal fade" id="project1Modal" tabindex="-1"
-                        role="dialog" aria-labelledby="project1ModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title"
-                                        id="project1ModalLabel">Procedural Modelling for Dungeon Levels</h5>
-                                    <button type="button" class="close"
-                                        data-dismiss="modal"
-                                        aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <iframe src="project1.html" width="100%"
-                                        height="600px"></iframe>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button"
-                                        class="btn btn-secondary"
-                                        data-dismiss="modal">Close</button>
-                                </div>
+                <!-- Initialize Updates Carousel -->
+                <script>
+                    $(document).ready(function(){
+                        $(".updates-carousel").owlCarousel({
+                            items: 3,
+                            loop: true,
+                            margin: 20,
+                            nav: true,
+                            dots: true,
+                            autoplay: true,
+                            autoplayTimeout: 5000,
+                            autoplayHoverPause: true,
+                            startPosition: 1,
+                            navText: ["&#10094;", "&#10095;"],
+                            responsive: {
+                                0: {
+                                    items: 1
+                                },
+                                576: {
+                                    items: 2
+                                },
+                                992: {
+                                    items: 3
+                                }
+                            }
+                        });
+                    });
+                </script>
+
+                <!-- Three.js for 3D Bubbles + Water Surface -->
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+                <script>
+                (function() {
+                    const canvas = document.getElementById('bubble-canvas');
+                    const clickLayer = document.getElementById('bubble-click-layer');
+                    if (!canvas) return;
+
+                    const homeSection = document.getElementById('home');
+
+                    // ========================
+                    // THREE.JS SCENE SETUP
+                    // ========================
+                    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                    renderer.setClearColor(0x000000, 0);
+
+                    const scene = new THREE.Scene();
+                    const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
+                    camera.position.z = 30;
+
+                    // Lighting
+                    scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+                    const dirLight1 = new THREE.DirectionalLight(0x88ccff, 0.8);
+                    dirLight1.position.set(5, 10, 7);
+                    scene.add(dirLight1);
+                    const dirLight2 = new THREE.DirectionalLight(0xff88cc, 0.5);
+                    dirLight2.position.set(-5, -5, 5);
+                    scene.add(dirLight2);
+                    const pointLight = new THREE.PointLight(0x4dd0e1, 1.2, 50);
+                    pointLight.position.set(0, 0, 15);
+                    scene.add(pointLight);
+
+                    // ========================
+                    // 3D WATER SURFACE (height-field wave sim)
+                    // ========================
+                    const WATER_SEG_X = 120;
+                    const WATER_SEG_Y = 80;
+                    const WATER_WIDTH = 60;
+                    const WATER_HEIGHT = 40;
+                    const WATER_Z = -8;
+
+                    const waterGeo = new THREE.PlaneGeometry(WATER_WIDTH, WATER_HEIGHT, WATER_SEG_X, WATER_SEG_Y);
+                    const waterMat = new THREE.MeshPhysicalMaterial({
+                        color: 0x4dd0e1,
+                        metalness: 0.15,
+                        roughness: 0.1,
+                        transparent: true,
+                        opacity: 0.25,
+                        thickness: 0.5,
+                        clearcoat: 1.0,
+                        clearcoatRoughness: 0.05,
+                        reflectivity: 0.9,
+                        side: THREE.DoubleSide,
+                        flatShading: false,
+                    });
+                    const waterMesh = new THREE.Mesh(waterGeo, waterMat);
+                    waterMesh.position.z = WATER_Z;
+                    scene.add(waterMesh);
+
+                    // Wave simulation buffers
+                    const cols = WATER_SEG_X + 1;
+                    const rows = WATER_SEG_Y + 1;
+                    const totalVerts = cols * rows;
+                    const hCurr = new Float32Array(totalVerts);
+                    const hPrev = new Float32Array(totalVerts);
+                    const hTemp = new Float32Array(totalVerts);
+
+                    const WAVE_SPEED = 0.38;
+                    const DAMPING = 0.985;
+                    const STEPS_PER_FRAME = 2;
+
+                    function waveStep() {
+                        const c2 = WAVE_SPEED * WAVE_SPEED;
+                        for (let step = 0; step < STEPS_PER_FRAME; step++) {
+                            for (let j = 1; j < rows - 1; j++) {
+                                for (let i = 1; i < cols - 1; i++) {
+                                    const idx = j * cols + i;
+                                    const neighbors =
+                                        hCurr[idx - 1] + hCurr[idx + 1] +
+                                        hCurr[idx - cols] + hCurr[idx + cols];
+                                    hTemp[idx] = (2 * hCurr[idx] - hPrev[idx] + c2 * (neighbors - 4 * hCurr[idx])) * DAMPING;
+                                }
+                            }
+                            hPrev.set(hCurr);
+                            hCurr.set(hTemp);
+                        }
+                    }
+
+                    function injectWave(worldX, worldY, radius, amplitude) {
+                        const gx = (worldX / WATER_WIDTH + 0.5) * WATER_SEG_X;
+                        const gy = (worldY / WATER_HEIGHT + 0.5) * WATER_SEG_Y;
+                        const r = radius;
+                        const minI = Math.max(1, Math.floor(gx - r));
+                        const maxI = Math.min(cols - 2, Math.ceil(gx + r));
+                        const minJ = Math.max(1, Math.floor(gy - r));
+                        const maxJ = Math.min(rows - 2, Math.ceil(gy + r));
+                        for (let j = minJ; j <= maxJ; j++) {
+                            for (let i = minI; i <= maxI; i++) {
+                                const dx = i - gx;
+                                const dy = j - gy;
+                                const dist = Math.sqrt(dx * dx + dy * dy);
+                                if (dist < r) {
+                                    const falloff = Math.cos((dist / r) * Math.PI * 0.5);
+                                    hCurr[j * cols + i] += amplitude * falloff * falloff;
+                                }
+                            }
+                        }
+                    }
+
+                    function applyHeightsToMesh() {
+                        const pos = waterGeo.attributes.position;
+                        for (let i = 0; i < totalVerts; i++) {
+                            pos.setZ(i, hCurr[i]);
+                        }
+                        pos.needsUpdate = true;
+                        waterGeo.computeVertexNormals();
+                    }
+
+                    // ========================
+                    // BUBBLES
+                    // ========================
+                    function createBubbleMaterial() {
+                        return new THREE.MeshPhysicalMaterial({
+                            color: 0xffffff,
+                            metalness: 0.1,
+                            roughness: 0.05,
+                            transparent: true,
+                            opacity: 0.45 + Math.random() * 0.2,
+                            thickness: 0.25,
+                            clearcoat: 1.0,
+                            clearcoatRoughness: 0.05,
+                            reflectivity: 1.0,
+                            side: THREE.DoubleSide,
+                        });
+                    }
+
+                    const BUBBLE_COUNT = 20;
+                    const bubbles = [];
+                    const bubbleGeo = new THREE.SphereGeometry(1, 32, 32);
+
+                    for (let i = 0; i < BUBBLE_COUNT; i++) {
+                        const scale = 1 + Math.random() * 1;
+                        const mesh = new THREE.Mesh(bubbleGeo, createBubbleMaterial());
+                        mesh.scale.setScalar(scale);
+                        mesh.position.set(
+                            (Math.random() - 0.5) * 40,
+                            (Math.random() - 0.5) * 25,
+                            (Math.random() - 0.5) * 15
+                        );
+                        scene.add(mesh);
+                        bubbles.push({
+                            mesh,
+                            baseScale: scale,
+                            baseOpacity: mesh.material.opacity,
+                            vx: (Math.random() - 0.5) * 0.02,
+                            vy: 0.005 + Math.random() * 0.02,
+                            vz: (Math.random() - 0.5) * 0.01,
+                            wobbleSpeed: 0.5 + Math.random() * 1.5,
+                            wobbleAmp: 0.3 + Math.random() * 0.8,
+                            wobbleOffset: Math.random() * Math.PI * 2,
+                            pulseSpeed: 0.3 + Math.random() * 0.7,
+                            pulseAmp: 0.04 + Math.random() * 0.06,
+                            popping: false,
+                            popTime: 0,
+                            popDuration: 0.3,
+                        });
+                    }
+
+                    // ========================
+                    // MOUSE TRACKING
+                    // ========================
+                    const mouse = { x: 0, y: 0, worldX: 0, worldY: 0, clientX: 0, clientY: 0 };
+                    let mouseActive = false;
+                    let prevWorldX = 0, prevWorldY = 0;
+                    let mouseVX = 0, mouseVY = 0, mouseSpeed = 0;
+
+                    function updateMouse(clientX, clientY) {
+                        const rect = homeSection.getBoundingClientRect();
+                        if (clientY >= rect.top && clientY <= rect.bottom) {
+                            mouse.clientX = clientX;
+                            mouse.clientY = clientY;
+                            mouse.x = (clientX / window.innerWidth) * 2 - 1;
+                            mouse.y = -(clientY / window.innerHeight) * 2 + 1;
+                            mouse.worldX = mouse.x * 22;
+                            mouse.worldY = mouse.y * 14;
+                            mouseActive = true;
+                        } else {
+                            mouseActive = false;
+                        }
+                    }
+
+                    window.addEventListener('mousemove', function(e) {
+                        updateMouse(e.clientX, e.clientY);
+                    });
+                    window.addEventListener('touchmove', function(e) {
+                        const t = e.touches[0];
+                        updateMouse(t.clientX, t.clientY);
+                    }, { passive: true });
+
+                    // ========================
+                    // BUBBLE POPPING
+                    // ========================
+                    const popParticles = [];
+
+                    function spawnPopParticles(worldX, worldY, worldZ) {
+                        const count = 8 + Math.floor(Math.random() * 6);
+                        for (let i = 0; i < count; i++) {
+                            const angle = Math.random() * Math.PI * 2;
+                            const speed = 0.15 + Math.random() * 0.3;
+                            const sz = 0.08 + Math.random() * 0.12;
+                            const geo = new THREE.SphereGeometry(sz, 8, 8);
+                            const mat = new THREE.MeshBasicMaterial({
+                                color: new THREE.Color().setHSL(0.5 + Math.random() * 0.2, 0.8, 0.7),
+                                transparent: true,
+                                opacity: 0.9,
+                            });
+                            const mesh = new THREE.Mesh(geo, mat);
+                            mesh.position.set(worldX, worldY, worldZ);
+                            scene.add(mesh);
+                            popParticles.push({
+                                mesh,
+                                vx: Math.cos(angle) * speed * (0.5 + Math.random()),
+                                vy: Math.sin(angle) * speed * (0.5 + Math.random()),
+                                vz: (Math.random() - 0.5) * speed * 0.5,
+                                life: 0.4 + Math.random() * 0.3,
+                                age: 0,
+                            });
+                        }
+                    }
+
+                    function popBubbleAt(clickWorldX, clickWorldY) {
+                        let closestIdx = -1;
+                        let closestDist = Infinity;
+                        for (let i = 0; i < bubbles.length; i++) {
+                            const b = bubbles[i];
+                            if (b.popping || !b.mesh.visible) continue;
+                            const m = b.mesh;
+                            const dx = m.position.x - clickWorldX;
+                            const dy = m.position.y - clickWorldY;
+                            const dist = Math.sqrt(dx * dx + dy * dy);
+                            const hitRadius = b.baseScale * 2.5;
+                            if (dist < hitRadius && dist < closestDist) {
+                                closestDist = dist;
+                                closestIdx = i;
+                            }
+                        }
+                        if (closestIdx !== -1) {
+                            const b = bubbles[closestIdx];
+                            b.popping = true;
+                            b.popTime = 0;
+                            spawnPopParticles(b.mesh.position.x, b.mesh.position.y, b.mesh.position.z);
+                            // Also inject a big wave where the bubble popped
+                            injectWave(b.mesh.position.x, b.mesh.position.y, 6, 1.2);
+                        }
+                    }
+
+                    function respawnBubble(idx) {
+                        const b = bubbles[idx];
+                        const m = b.mesh;
+                        b.baseScale = 1 + Math.random() * 1;
+                        b.baseOpacity = 0.45 + Math.random() * 0.2;
+                        m.material.opacity = b.baseOpacity;
+                        m.scale.setScalar(b.baseScale);
+                        m.position.set(
+                            (Math.random() - 0.5) * 40,
+                            -16 - Math.random() * 5,
+                            (Math.random() - 0.5) * 15
+                        );
+                        m.visible = true;
+                        b.popping = false;
+                        b.popTime = 0;
+                    }
+
+                    function handleClick(clientX, clientY) {
+                        const nx = (clientX / window.innerWidth) * 2 - 1;
+                        const ny = -(clientY / window.innerHeight) * 2 + 1;
+                        const wx = nx * 22;
+                        const wy = ny * 14;
+                        popBubbleAt(wx, wy);
+                    }
+
+                    clickLayer.addEventListener('click', function(e) {
+                        handleClick(e.clientX, e.clientY);
+                    });
+                    clickLayer.addEventListener('touchstart', function(e) {
+                        if (e.touches.length === 1) {
+                            handleClick(e.touches[0].clientX, e.touches[0].clientY);
+                        }
+                    }, { passive: true });
+
+                    // ========================
+                    // SCROLL FADE
+                    // ========================
+                    let scrollOpacity = 1;
+                    window.addEventListener('scroll', function() {
+                        const rect = homeSection.getBoundingClientRect();
+                        const sectionH = rect.height;
+                        const scrolled = -rect.top;
+                        if (scrolled <= sectionH * 0.2) {
+                            scrollOpacity = 1;
+                        } else if (scrolled >= sectionH * 0.7) {
+                            scrollOpacity = 0;
+                        } else {
+                            scrollOpacity = 1 - (scrolled - sectionH * 0.2) / (sectionH * 0.5);
+                        }
+                        canvas.style.opacity = scrollOpacity;
+                    });
+
+                    // ========================
+                    // RESIZE
+                    // ========================
+                    function onResize() {
+                        const w = homeSection.offsetWidth;
+                        const h = homeSection.offsetHeight;
+                        renderer.setSize(w, h);
+                        camera.aspect = w / h;
+                        camera.updateProjectionMatrix();
+                    }
+                    window.addEventListener('resize', onResize);
+                    onResize();
+
+                    // ========================
+                    // ANIMATION LOOP
+                    // ========================
+                    const clock = new THREE.Clock();
+                    let animationId;
+                    let lastTime = performance.now();
+                    let distAccum = 0;
+
+                    function animate() {
+                        animationId = requestAnimationFrame(animate);
+
+                        const now = performance.now();
+                        const dt = Math.min((now - lastTime) / 1000, 0.05);
+                        lastTime = now;
+
+                        if (scrollOpacity <= 0) return;
+
+                        const t = clock.getElapsedTime();
+
+                        // --- Water wave injection from mouse ---
+                        if (mouseActive) {
+                            const dvx = mouse.worldX - prevWorldX;
+                            const dvy = mouse.worldY - prevWorldY;
+                            mouseVX += (dvx - mouseVX) * 0.4;
+                            mouseVY += (dvy - mouseVY) * 0.4;
+                            mouseSpeed = Math.sqrt(mouseVX * mouseVX + mouseVY * mouseVY);
+
+                            if (mouseSpeed > 0.05) {
+                                distAccum += mouseSpeed;
+                                const spacing = Math.max(0.3, 1.5 - mouseSpeed * 0.3);
+                                while (distAccum > spacing) {
+                                    distAccum -= spacing;
+                                    const frac = distAccum / (mouseSpeed + 0.01);
+                                    const ix = mouse.worldX - mouseVX * frac * 0.5;
+                                    const iy = mouse.worldY - mouseVY * frac * 0.5;
+                                    const amp = Math.min(mouseSpeed * 0.5, 1.5);
+                                    const rad = 2.5 + Math.min(mouseSpeed * 0.8, 4);
+                                    injectWave(ix, iy, rad, amp);
+                                }
+                            } else {
+                                distAccum = 0;
+                            }
+                            prevWorldX = mouse.worldX;
+                            prevWorldY = mouse.worldY;
+                        } else {
+                            mouseVX *= 0.9;
+                            mouseVY *= 0.9;
+                            mouseSpeed *= 0.9;
+                        }
+
+                        // Step wave simulation
+                        waveStep();
+                        applyHeightsToMesh();
+
+                        // --- Pop particles ---
+                        for (let i = popParticles.length - 1; i >= 0; i--) {
+                            const p = popParticles[i];
+                            p.age += dt;
+                            if (p.age >= p.life) {
+                                scene.remove(p.mesh);
+                                p.mesh.geometry.dispose();
+                                p.mesh.material.dispose();
+                                popParticles.splice(i, 1);
+                                continue;
+                            }
+                            p.mesh.position.x += p.vx * dt * 4;
+                            p.mesh.position.y += p.vy * dt * 4;
+                            p.mesh.position.z += p.vz * dt * 4;
+                            p.mesh.material.opacity = 0.9 * (1 - p.age / p.life);
+                            p.mesh.scale.setScalar(1 - (p.age / p.life) * 0.6);
+                        }
+
+                        // --- Bubbles ---
+                        for (let i = 0; i < bubbles.length; i++) {
+                            const b = bubbles[i];
+                            const m = b.mesh;
+
+                            if (b.popping) {
+                                b.popTime += dt;
+                                const progress = Math.min(b.popTime / b.popDuration, 1);
+                                m.scale.setScalar(b.baseScale * (1 + progress * 0.8));
+                                m.material.opacity = b.baseOpacity * (1 - progress);
+                                if (progress >= 1) {
+                                    m.visible = false;
+                                    (function(idx) {
+                                        setTimeout(function() { respawnBubble(idx); }, 1000 + Math.random() * 1500);
+                                    })(i);
+                                    b.popTime = b.popDuration;
+                                }
+                                continue;
+                            }
+
+                            m.position.x += b.vx + Math.sin(t * b.wobbleSpeed + b.wobbleOffset) * 0.008;
+                            m.position.y += b.vy;
+                            m.position.z += b.vz;
+                            m.position.x += Math.sin(t * b.wobbleSpeed + b.wobbleOffset) * b.wobbleAmp * 0.01;
+
+                            const pulse = 1 + Math.sin(t * b.pulseSpeed * 2 + i) * b.pulseAmp;
+                            m.scale.setScalar(b.baseScale * pulse);
+
+                            if (m.position.y > 16) {
+                                m.position.y = -16;
+                                m.position.x = (Math.random() - 0.5) * 40;
+                            }
+                            if (m.position.x > 24) m.position.x = -24;
+                            if (m.position.x < -24) m.position.x = 24;
+
+                            if (mouseActive) {
+                                const dx = m.position.x - mouse.worldX;
+                                const dy = m.position.y - mouse.worldY;
+                                const dist = Math.sqrt(dx * dx + dy * dy);
+                                const repulseRadius = 6;
+                                if (dist < repulseRadius && dist > 0.1) {
+                                    const force = (1 - dist / repulseRadius) * 0.12;
+                                    m.position.x += (dx / dist) * force;
+                                    m.position.y += (dy / dist) * force;
+                                }
+                            }
+
+                            m.rotation.x += 0.002;
+                            m.rotation.y += 0.003;
+                        }
+
+                        // Camera sway
+                        camera.position.x = Math.sin(t * 0.15) * 0.5;
+                        camera.position.y = Math.cos(t * 0.1) * 0.3;
+
+                        renderer.render(scene, camera);
+                    }
+
+                    animate();
+
+                    document.addEventListener('visibilitychange', function() {
+                        if (document.hidden) {
+                            cancelAnimationFrame(animationId);
+                        } else {
+                            lastTime = performance.now();
+                            animate();
+                        }
+                    });
+                })();
+                </script>
+
+                <!-- Project 1 Modal -->
+                <div class="modal fade" id="project1Modal" tabindex="-1" role="dialog" aria-labelledby="project1ModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="project1ModalLabel">Procedural Modelling for Dungeon Levels</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe src="project1.html" width="100%" height="600px"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Project 2 Modal -->
-                    <div class="modal fade" id="project2Modal" tabindex="-1"
-                        role="dialog" aria-labelledby="project2ModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title"
-                                        id="project2ModalLabel">Extenuating Circumstances Form System</h5>
-                                    <button type="button" class="close"
-                                        data-dismiss="modal"
-                                        aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <iframe src="project2.html" width="100%"
-                                        height="600px"></iframe>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button"
-                                        class="btn btn-secondary"
-                                        data-dismiss="modal">Close</button>
-                                </div>
+                <!-- Project 2 Modal -->
+                <div class="modal fade" id="project2Modal" tabindex="-1" role="dialog" aria-labelledby="project2ModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="project2ModalLabel">Extenuating Circumstances Form System</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe src="project2.html" width="100%" height="600px"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Project 3 Modal -->
-                    <div class="modal fade" id="project3Modal" tabindex="-1"
-                        role="dialog" aria-labelledby="project3ModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title"
-                                        id="project3ModalLabel">Mentor-Mentee System</h5>
-                                    <button type="button" class="close"
-                                        data-dismiss="modal"
-                                        aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <iframe src="project3.html" width="100%"
-                                        height="600px"></iframe>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button"
-                                        class="btn btn-secondary"
-                                        data-dismiss="modal">Close</button>
-                                </div>
+                <!-- Project 3 Modal -->
+                <div class="modal fade" id="project3Modal" tabindex="-1" role="dialog" aria-labelledby="project3ModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="project3ModalLabel">Mentor-Mentee System</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe src="project3.html" width="100%" height="600px"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Project 4 Modal -->
-                    <div class="modal fade" id="project4Modal" tabindex="-1"
-                        role="dialog" aria-labelledby="project4ModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title"
-                                        id="project4ModalLabel">AI Movie Review Interpreter</h5>
-                                    <button type="button" class="close"
-                                        data-dismiss="modal"
-                                        aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <iframe src="project4.html" width="100%"
-                                        height="600px"></iframe>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button"
-                                        class="btn btn-secondary"
-                                        data-dismiss="modal">Close</button>
-                                </div>
+                <!-- Project 4 Modal -->
+                <div class="modal fade" id="project4Modal" tabindex="-1" role="dialog" aria-labelledby="project4ModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="project4ModalLabel">AI Movie Review Interpreter</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe src="project4.html" width="100%" height="600px"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Project 5 Modal -->
-                    <div class="modal fade" id="project5Modal" tabindex="-1"
-                        role="dialog" aria-labelledby="project5ModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title"
-                                        id="project5ModalLabel">
-                                        Rental JSwing Application</h5>
-                                    <button type="button" class="close"
-                                        data-dismiss="modal"
-                                        aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <iframe src="project5.html" width="100%"
-                                        height="600px"></iframe>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button"
-                                        class="btn btn-secondary"
-                                        data-dismiss="modal">Close</button>
-                                </div>
+                <!-- Project 5 Modal -->
+                <div class="modal fade" id="project5Modal" tabindex="-1" role="dialog" aria-labelledby="project5ModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="project5ModalLabel">Rental JSwing Application</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe src="project5.html" width="100%" height="600px"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Project 6 Modal -->
-                    <div class="modal fade" id="project6Modal" tabindex="-1"
-                        role="dialog" aria-labelledby="project6ModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title"
-                                        id="project6ModalLabel">
-                                        OpenGL Graphics Scene</h5>
-                                    <button type="button" class="close"
-                                        data-dismiss="modal"
-                                        aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <iframe src="project6.html" width="100%"
-                                        height="600px"></iframe>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button"
-                                        class="btn btn-secondary"
-                                        data-dismiss="modal">Close</button>
-                                </div>
+                <!-- Project 6 Modal -->
+                <div class="modal fade" id="project6Modal" tabindex="-1" role="dialog" aria-labelledby="project6ModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="project6ModalLabel">OpenGL Graphics Scene</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe src="project6.html" width="100%" height="600px"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
-                </body>
-            </html>
+                </div>
+
+            </div>
+</body>
+
+</html>

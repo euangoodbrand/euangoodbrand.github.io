@@ -550,7 +550,7 @@ a img.aligncenter {
 }
 
 .heading h3{
-	color: ffffff;
+	color: #ffffff;
 }
 
 .cd-words-wrapper {
@@ -617,17 +617,7 @@ xclip
     background-color: #2d4248;
 }
 
-#clouds{
-	margin-top: -5%;
-	position: relative;
-	z-index: 1;
-}
-#clouds path {
-    fill: #ffffff;
-    bottom: -10px;
-    overflow: hidden;
-    stroke: #ffffff;
-}
+/* #clouds is now styled inline in index.html <style> for responsive control */
 
 .section {
     display: block;
