@@ -617,7 +617,7 @@ xclip
     background-color: #2d4248;
 }
 
-/* #clouds is now styled inline in index.html <style> for responsive control */
+/* Hero→F1 blend: see index.html .hero-fluid-bridge (clouds SVG removed) */
 
 .section {
     display: block;

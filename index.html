@@ -38,6 +38,12 @@
     #home {
         position: relative;
         overflow: hidden;
+        isolation: isolate;
+        width: 100vw;
+        max-width: 100%;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+        box-sizing: border-box;
     }
 
     #background-video {
@@ -59,42 +65,96 @@
         color: white;
         text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
     }
+    .heading .hero-subtitle {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 1.05rem;
+        font-weight: 400;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #00d2be;
+        text-shadow: 0 2px 12px rgba(0, 210, 190, 0.35);
+        margin-top: 0.6rem;
+    }
+    .heading .hero-subtitle .hero-sep {
+        display: inline-block;
+        margin: 0 0.65em;
+        color: rgba(255, 255, 255, 0.3);
+    }
 
-    /* ===== CLOUDS SVG FIX ===== */
-    #clouds {
+    /* ===== HERO → F1 fluid / track blend (replaces clouds) ===== */
+    .hero-fluid-bridge {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: clamp(100px, 21vmin, 240px);
+        z-index: 2;
+        pointer-events: none;
+        overflow: hidden;
+    }
+    .hero-fluid-glow {
+        position: absolute;
+        left: 5%;
+        right: 5%;
+        bottom: 18%;
+        height: 75%;
+        background: radial-gradient(ellipse 55% 45% at 50% 100%,
+            rgba(77, 208, 225, 0.28) 0%,
+            rgba(0, 196, 176, 0.08) 42%,
+            transparent 70%);
+        animation: heroFluidGlow 7s ease-in-out infinite alternate;
+    }
+    @keyframes heroFluidGlow {
+        from { opacity: 0.65; transform: scaleX(0.94) translateY(2px); }
+        to { opacity: 1; transform: scaleX(1.06) translateY(-2px); }
+    }
+    .hero-fluid-svg {
+        position: absolute;
+        left: -5%;
+        width: 110%;
+        bottom: 0;
+        height: 72%;
         display: block;
-        width: 100%;
-        height: 80px;
-        margin-top: -80px;
-        position: relative;
-        z-index: 1;
     }
-    #clouds path {
-        fill: #ffffff;
-        stroke: #ffffff;
+    .hero-wave-back {
+        animation: heroWaveDriftA 16s ease-in-out infinite alternate;
+        transform-origin: 50% 100%;
     }
-    @media (max-width: 768px) {
-        #clouds {
-            height: 40px;
-            margin-top: -40px;
+    .hero-wave-front {
+        animation: heroWaveDriftB 11s ease-in-out infinite alternate;
+        transform-origin: 50% 100%;
+    }
+    @keyframes heroWaveDriftA {
+        from { transform: translateX(-2.5%) scaleY(1); }
+        to { transform: translateX(2.5%) scaleY(1.08); }
+    }
+    @keyframes heroWaveDriftB {
+        from { transform: translateX(2%) scaleY(1.06); }
+        to { transform: translateX(-2%) scaleY(0.98); }
+    }
+    .hero-fluid-track {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 42%;
+        background:
+            repeating-linear-gradient(90deg,
+                transparent 0px,
+                transparent 14px,
+                rgba(0, 196, 176, 0.04) 14px,
+                rgba(0, 196, 176, 0.04) 15px),
+            linear-gradient(180deg,
+                transparent 0%,
+                rgba(6, 9, 13, 0.55) 35%,
+                #06090d 100%);
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .hero-fluid-glow,
+        .hero-wave-back,
+        .hero-wave-front {
+            animation: none;
         }
-    }
-    @media (min-width: 1600px) {
-        #clouds {
-            height: 120px;
-            margin-top: -120px;
-        }
-    }
-
-    /* ===== SKILLS CARDS POLISH ===== */
-    .services-inner-box {
-        border-radius: 8px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        min-height: 260px;
-    }
-    .services-inner-box:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 12px 32px rgba(0,0,0,0.10);
     }
 
     /* ===== BLOG / UPDATES CARDS ===== */
@@ -108,20 +168,185 @@
         box-shadow: 0 8px 24px rgba(0,0,0,0.10);
     }
 
-    /* ===== CONTACT SECTION CLEANUP ===== */
-    #contact .contact-card {
-        background-color: #ffffff;
-        padding: 30px;
-        border-radius: 8px;
+    /* ===== PORTFOLIO → CONTACT divider ===== */
+    .section-divider-trace {
+        position: relative;
+        height: 64px;
+        background: #090c10;
+        overflow: hidden;
     }
-    #contact .contact-heading {
-        font-weight: normal;
-        font-size: 2.5em;
+    .section-divider-trace::before {
+        content: '';
+        position: absolute;
+        left: 0; right: 0;
+        top: 50%;
+        height: 1px;
+        background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(0,196,176,0.06) 12%,
+            rgba(0,196,176,0.22) 35%,
+            rgba(0,210,190,0.45) 50%,
+            rgba(0,196,176,0.22) 65%,
+            rgba(0,196,176,0.06) 88%,
+            transparent 100%);
+    }
+    .section-divider-trace::after {
+        content: '';
+        position: absolute;
+        top: calc(50% - 4px);
+        left: 50%;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #00d2be;
+        box-shadow: 0 0 12px 3px rgba(0,210,190,0.4), 0 0 32px 6px rgba(0,210,190,0.15);
+        transform: translateX(-50%);
+        animation: dividerPulse 3s ease-in-out infinite;
+    }
+    @keyframes dividerPulse {
+        0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(0.85); }
+        50% { opacity: 1; transform: translateX(-50%) scale(1.2); }
+    }
+    .divider-ticks {
+        position: absolute;
+        top: calc(50% - 0.5px);
+        left: 10%;
+        right: 10%;
+        height: 1px;
+        background: repeating-linear-gradient(90deg,
+            transparent 0px,
+            transparent 24px,
+            rgba(0,196,176,0.1) 24px,
+            rgba(0,196,176,0.1) 25px);
+    }
+
+    /* ===== CONTACT — dark theme matching F1 section ===== */
+    #contact {
+        background: linear-gradient(180deg, #090c10 0%, #0a0d10 100%) !important;
+        padding: 0 !important;
+    }
+    .contact-wrap {
+        max-width: 620px;
+        margin: 0 auto;
+        padding: 5rem 1.25rem 3.5rem;
+    }
+    .contact-wrap h2 {
         font-family: 'Raleway', sans-serif;
-        color: #006064;
-        padding-bottom: 20px;
-        border-bottom: 2px solid #4dd0e1;
-        margin-bottom: 20px;
+        font-weight: 700;
+        font-size: 2rem;
+        color: #f2f6f8;
+        margin-bottom: 0.2rem;
+        letter-spacing: 0.03em;
+    }
+    .contact-wrap .contact-rule {
+        width: 56px;
+        height: 2px;
+        background: #00c4b0;
+        border: none;
+        margin: 0.75rem 0 2rem;
+    }
+    .contact-channels {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem 2rem;
+        margin-bottom: 2.5rem;
+    }
+    .contact-channels a,
+    .contact-channels span {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 0.82rem;
+        letter-spacing: 0.06em;
+        color: #a8b8c4;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: color 0.2s;
+    }
+    .contact-channels a:hover {
+        color: #00d2be;
+    }
+    .contact-channels .fa {
+        font-size: 1rem;
+        color: #00c4b0;
+        width: 1.1rem;
+        text-align: center;
+    }
+    .contact-form-dark label {
+        display: block;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #7d8a96;
+        margin-bottom: 0.4rem;
+    }
+    .contact-form-dark input[type="text"],
+    .contact-form-dark input[type="email"],
+    .contact-form-dark textarea {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(0, 196, 176, 0.18);
+        border-radius: 3px;
+        padding: 0.72rem 0.85rem;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 0.88rem;
+        color: #e0e8ee;
+        margin-bottom: 1.35rem;
+        transition: border-color 0.25s, background 0.25s;
+        outline: none;
+        resize: vertical;
+    }
+    .contact-form-dark input[type="text"]:focus,
+    .contact-form-dark input[type="email"]:focus,
+    .contact-form-dark textarea:focus {
+        border-color: #00c4b0;
+        background: rgba(0, 196, 176, 0.06);
+    }
+    .contact-form-dark textarea {
+        min-height: 130px;
+    }
+    .contact-form-dark input[type="text"]::placeholder,
+    .contact-form-dark input[type="email"]::placeholder,
+    .contact-form-dark textarea::placeholder {
+        color: #4e5c66;
+    }
+    .contact-form-dark button[type="submit"] {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: #0a0d10;
+        background: #00c4b0;
+        border: none;
+        padding: 0.75rem 2.2rem;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: background 0.25s, transform 0.15s;
+    }
+    .contact-form-dark button[type="submit"]:hover {
+        background: #00e0ca;
+        transform: translateY(-1px);
+    }
+
+    /* Footer inside dark contact — match the deep background */
+    #contact .copyrights {
+        background: #080b0e;
+        border-top: 1px solid rgba(0, 196, 176, 0.08);
+    }
+    #contact .footer-links a {
+        color: #6b7785;
+    }
+    #contact .footer-links a:hover {
+        color: #00c4b0;
+    }
+    #contact .footer-company-name {
+        color: #4a535d;
+    }
+    #contact .footer-company-name a {
+        color: #7d8a96;
     }
 
     /* ===== GALLERY TITLE OVERLAY ===== */
@@ -177,7 +402,7 @@
         transition: background 0.3s ease;
     }
     .updates-carousel .owl-dot.active span {
-        background: #2d4248;
+        background: #1e2a32;
     }
     .updates-carousel .owl-nav {
         position: absolute;
@@ -217,6 +442,7 @@
         left: 0;
         width: 100%;
         height: 100%;
+        display: block;
         z-index: 0;
         pointer-events: none;
         transition: opacity 0.4s ease;
@@ -239,6 +465,245 @@
         z-index: 1;
         cursor: pointer;
     }
+
+    /* ===== ABOUT + F1 / ML — continues hero fluid into asphalt / garage tone ===== */
+    .f1-ml-section {
+        position: relative;
+        overflow: hidden;
+        margin-top: -1px;
+        color: #e8eaed;
+        padding-top: 4.5rem;
+        padding-bottom: 4.5rem;
+        border-bottom: 1px solid rgba(0, 196, 176, 0.1);
+        background-color: #05070a;
+        background-image:
+            linear-gradient(180deg, #070b10 0%, #0a1016 14%, rgba(6, 8, 11, 0.92) 38%, transparent 62%),
+            radial-gradient(ellipse 125% 80% at 50% -18%, #1a2832 0%, #101820 35%, transparent 58%);
+    }
+    .f1-ml-name {
+        color: #f7f8fa;
+        font-weight: 700;
+        font-size: 2.25rem;
+        margin-bottom: 0.35rem;
+        letter-spacing: 0.02em;
+    }
+    .f1-ml-tagline {
+        color: #00c4b0;
+        font-size: 1.15rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+    }
+    .f1-ml-section .section-title h3 {
+        color: #f2f4f7;
+        letter-spacing: 0.04em;
+        font-weight: 700;
+    }
+    .f1-ml-section .section-title p {
+        color: #9aa3ad;
+        max-width: 44rem;
+    }
+    .f1-ml-wrap {
+        position: relative;
+        min-height: 580px;
+    }
+    @media (max-width: 768px) {
+        .f1-ml-wrap {
+            min-height: 520px;
+        }
+    }
+    #f1-telemetry-canvas {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        z-index: 0;
+        pointer-events: auto;
+    }
+    .f1-ml-content {
+        position: relative;
+        z-index: 2;
+        pointer-events: none;
+    }
+    .f1-ml-content a,
+    .f1-ml-content button {
+        pointer-events: auto;
+    }
+    .f1-ml-lead {
+        font-size: 1.1rem;
+        line-height: 1.75;
+        color: #c5ccd4;
+        margin-bottom: 1.25rem;
+    }
+    .f1-ml-chips {
+        list-style: none;
+        padding: 0;
+        margin: 1.25rem 0 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 0.75rem;
+    }
+    .f1-ml-chips li {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #00c4b0;
+        border: 1px solid rgba(0, 196, 176, 0.35);
+        padding: 0.35rem 0.65rem;
+        border-radius: 2px;
+        background: rgba(0, 196, 176, 0.06);
+    }
+    /* Light sections — portfolio / lower blocks */
+    .section-surface-muted {
+        background: linear-gradient(180deg, #dde3e8 0%, #e8ecf0 55%, #eef1f4 100%);
+        color: #2a343c;
+    }
+    /* Recent Updates: tall blend strip (fixed height) F1 black → cool grey, then solid light body */
+    #blog.section-surface-muted.section-after-dark {
+        --blog-blend: min(520px, 52vh);
+        background-color: #eef1f4;
+        background-image: linear-gradient(180deg,
+            #05070a 0%,
+            #0a1016 5%,
+            #111920 9%,
+            #18242d 12%,
+            #1f2f38 15%,
+            #273b46 18%,
+            #304854 21%,
+            #3a5663 24%,
+            #456572 28%,
+            #517581 32%,
+            #5f8690 36%,
+            #6f97a0 40%,
+            #81a8b0 44%,
+            #94b8bf 48%,
+            #a9c7cd 52%,
+            #bfd5da 56%,
+            #d3e2e5 60%,
+            #e2ebee 65%,
+            #ebf1f3 72%,
+            #eef1f4 82%,
+            #f1f3f6 100%);
+        background-size: 100% var(--blog-blend);
+        background-repeat: no-repeat;
+        background-position: top center;
+    }
+    .section-surface-muted .section-title h3 {
+        color: #1e2a32;
+    }
+    .section-surface-muted .section-title p {
+        color: #5a6670;
+    }
+    /* Title sits on the dark upper band — light type for contrast */
+    #blog .section-title h3 {
+        color: #f2f6f8;
+        text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+    }
+    #blog .section-title p {
+        color: #b8c9d2;
+        text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+    }
+    /* ===== PORTFOLIO — interactive spatial graph ===== */
+    #portfolio.portfolio-graph {
+        background: linear-gradient(180deg, #f1f3f6 0%, #8b9ba8 5%, #3a4650 10%, #1a2229 16%, #0d1116 24%, #090c10 100%);
+        padding: 0 !important;
+        position: relative;
+        overflow: hidden;
+    }
+    .portfolio-graph-wrap {
+        position: relative;
+        min-height: 880px;
+    }
+    @media (max-width: 768px) {
+        .portfolio-graph-wrap { min-height: 740px; }
+    }
+    #portfolio-canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        z-index: 0;
+        cursor: default;
+    }
+    .portfolio-graph-ui {
+        position: relative;
+        z-index: 2;
+        pointer-events: none;
+        padding: 3.5rem 0 2rem;
+    }
+    .portfolio-graph-ui .section-title {
+        pointer-events: none;
+    }
+    .portfolio-graph-ui .section-title h3 {
+        color: #f2f6f8;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    }
+    .portfolio-graph-ui .section-title p {
+        color: #8fa1ad;
+    }
+    .portfolio-graph-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem 0.55rem;
+        margin-bottom: 1rem;
+        pointer-events: auto;
+    }
+    .portfolio-graph-filters button {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #7d8a96;
+        background: rgba(0,0,0,0.3);
+        border: 1px solid rgba(0,196,176,0.15);
+        border-radius: 3px;
+        padding: 6px 16px;
+        cursor: pointer;
+        transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .portfolio-graph-filters button:hover { color: #c0cdd4; }
+    .portfolio-graph-filters button.active {
+        color: #00d2be;
+        border-color: #00c4b0;
+        background: rgba(0,196,176,0.1);
+    }
+    .portfolio-graph-tooltip {
+        position: absolute;
+        z-index: 10;
+        pointer-events: none;
+        background: rgba(6,9,13,0.92);
+        border: 1px solid rgba(0,196,176,0.25);
+        border-radius: 4px;
+        padding: 10px 14px;
+        max-width: 240px;
+        color: #e0e8ee;
+        font-size: 0.82rem;
+        line-height: 1.45;
+        opacity: 0;
+        transition: opacity 0.18s;
+        backdrop-filter: blur(8px);
+    }
+    .portfolio-graph-tooltip.visible { opacity: 1; }
+    .portfolio-graph-tooltip strong {
+        display: block;
+        color: #00d2be;
+        font-size: 0.88rem;
+        margin-bottom: 3px;
+    }
+    .portfolio-graph-tooltip .tt-tags {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 0.62rem;
+        color: #5e6e78;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-top: 4px;
+    }
+
 </style>
 </head>
 
@@ -254,9 +719,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
         <div class="container">
-            <a class="navbar-brand js-scroll-trigger" href="#page-top">
-                <img class="img-fluid" src="images/logo.png" alt="Euan Goodbrand" width="300" height="150" />
-            </a>
+            <a class="navbar-brand js-scroll-trigger" href="#page-top" aria-label="Back to top"></a>
             <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
                 data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -271,10 +734,6 @@
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="#about">About Me</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#skills">Skills</a>
-                    </li>
-
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="#blog">Updates</a>
                     </li>
@@ -299,106 +758,54 @@
         <!-- Click layer for bubble popping -->
         <div id="bubble-click-layer"></div>
         <div class="heading">
-            <h1>hello i'm Euan Goodbrand</h1>
-            <h3 class="cd-headline clip is-full-width">
-                <span>Passionate about</span>
-                <span class="cd-words-wrapper">
-                    <b class="is-visible">Software Engineering</b>
-                    <b>Artificial Intelligence</b>
-                    <b>Visual Effects</b>
-                </span>
-            </h3>
+            <h1>Euan Goodbrand</h1>
+            <p class="hero-subtitle">ML Engineer — Mercedes F1<span class="hero-sep">/</span>Spatial &amp; Physical AI</p>
+        </div>
+        <div class="hero-fluid-bridge" aria-hidden="true">
+            <div class="hero-fluid-glow"></div>
+            <svg class="hero-fluid-svg" viewBox="0 0 1200 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="heroFluidGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#7ed4e0" stop-opacity="0.5"/>
+                        <stop offset="0.28" stop-color="#2a8a8f" stop-opacity="0.45"/>
+                        <stop offset="0.55" stop-color="#0f2229" stop-opacity="0.88"/>
+                        <stop offset="1" stop-color="#06090d" stop-opacity="1"/>
+                    </linearGradient>
+                </defs>
+                <path class="hero-wave-back" fill="url(#heroFluidGrad)" opacity="0.75"
+                    d="M0,52 C220,18 380,88 600,48 C820,8 980,78 1200,42 L1200,100 L0,100 Z"/>
+                <path class="hero-wave-front" fill="url(#heroFluidGrad)" opacity="0.95"
+                    d="M0,62 C200,92 420,28 620,58 C820,88 1000,32 1200,54 L1200,100 L0,100 Z"/>
+            </svg>
+            <div class="hero-fluid-track"></div>
         </div>
     </section>
 
-
-    <!-- Clouds SVG — fixed: use viewBox + preserveAspectRatio for fluid scaling -->
-    <svg id="clouds" xmlns="http://www.w3.org/2000/svg" version="1.1"
-        viewBox="0 0 100 100" preserveAspectRatio="none">
-        <path d="M-5 100 Q 0 20 5 100 Z
-        M0 100 Q 5 0 10 100
-        M5 100 Q 10 30 15 100
-        M10 100 Q 15 10 20 100
-        M15 100 Q 20 30 25 100
-        M20 100 Q 25 -10 30 100
-        M25 100 Q 30 10 35 100
-        M30 100 Q 35 30 40 100
-        M35 100 Q 40 10 45 100
-        M40 100 Q 45 50 50 100
-        M45 100 Q 50 20 55 100
-        M50 100 Q 55 40 60 100
-        M55 100 Q 60 60 65 100
-        M60 100 Q 65 50 70 100
-        M65 100 Q 70 20 75 100
-        M70 100 Q 75 45 80 100
-        M75 100 Q 80 30 85 100
-        M80 100 Q 85 20 90 100
-        M85 100 Q 90 50 95 100
-        M90 100 Q 95 25 100 100
-        M95 100 Q 100 15 105 100 Z">
-        </path>
-    </svg>
-
-    <!-- ===== ABOUT ===== -->
-    <div id="about" class="section wb">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="message-box">
-                        <h2>Euan Goodbrand</h2>
-                        <p>I am a Machine Learning Engineer at the Mercedes-AMG PETRONAS Formula One Team, with a passion for simulations, graphics, and visual effects.</p>
-                    </div>
+    <!-- ===== ABOUT (bio + F1 / ML Three.js field) ===== -->
+    <div id="about" class="section f1-ml-section">
+        <div class="f1-ml-wrap">
+            <canvas id="f1-telemetry-canvas" aria-hidden="true"></canvas>
+            <div class="container f1-ml-content">
+                <div class="section-title text-left">
+                    <h2 class="f1-ml-name">Euan Goodbrand</h2>
+                    <h3 class="f1-ml-tagline">Machine learning at the limit</h3>
+                    <p>I am a Machine Learning Engineer at the <strong style="color: #e8eaed;">Mercedes-AMG PETRONAS Formula One Team</strong>, with a passion for simulations, graphics, and visual effects. The scene behind this text is a live, decorative field — the same blend of motion, data, and engineering intuition that shows up in my work on and off the track.</p>
                 </div>
-
-                <div class="col-md-6">
-                    <div class="right-box-pro wow fadeIn">
-                        <img src="uploads/Euan Goodbrand.jpeg" alt="Euan Goodbrand"
-                            class="img-fluid img-rounded">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== SKILLS (reduced to 3) ===== -->
-    <div id="skills" class="section lb">
-        <div class="container">
-            <div class="section-title text-left">
-                <h3>My Skills</h3>
-                <p>Core areas I specialise in — where graphics, intelligence, and physics converge.</p>
-            </div>
-
-            <div class="row">
-                <!-- Skill 1: Graphics & Procedural Modelling -->
-                <div class="col-md-4">
-                    <div class="services-inner-box">
-                        <div class="ser-icon">
-                            <i class="flaticon-idea"></i>
-                        </div>
-                        <h2>Graphics &amp; Procedural Modelling</h2>
-                        <p>Using algorithms to generate intricate 3D environments and assets. From OpenGL rendering pipelines to procedural dungeon generation, I combine mathematical foundations with creative expression to bring worlds to life.</p>
-                    </div>
-                </div>
-
-                <!-- Skill 2: AI / Machine Learning -->
-                <div class="col-md-4">
-                    <div class="services-inner-box">
-                        <div class="ser-icon">
-                            <i class="flaticon-idea-1"></i>
-                        </div>
-                        <h2>AI / Machine Learning</h2>
-                        <p>Building intelligent systems that learn and adapt — from NLP classifiers and computer vision to high-performance ML pipelines at the cutting edge of Formula One. MSc in Computing (AI &amp; ML) from Imperial College London.</p>
-                    </div>
-                </div>
-
-                <!-- Skill 3: Physics-Based Simulations -->
-                <div class="col-md-4">
-                    <div class="services-inner-box">
-                        <div class="ser-icon">
-                            <i class="flaticon-process"></i>
-                        </div>
-                        <h2>Physics-Based Simulations</h2>
-                        <p>Modelling real-world phenomena through numerical methods and simulation frameworks. Applying physics-driven approaches to engineering problems where accuracy and performance are critical.</p>
+                <div class="row">
+                    <div class="col-lg-11 col-xl-10">
+                        <p class="f1-ml-lead">
+                            Day to day I turn <strong style="color: #fff;">telemetry, simulations, and engineering data</strong> into systems that support decisions at trackside and in the factory — where lap-time margins are milliseconds and models have to be as disciplined as the car. That same appetite for <strong style="color: #fff;">rigorous ML, performance, and physics</strong> feeds how I think about graphics pipelines, procedural worlds, and numerical simulation outside F1.
+                        </p>
+                        <ul class="f1-ml-chips" aria-label="Focus areas">
+                            <li>Telemetry &amp; sensor streams</li>
+                            <li>Simulation &amp; CFD adjacency</li>
+                            <li>Model deployment</li>
+                            <li>Latency-aware inference</li>
+                            <li>Graphics &amp; procedural modelling</li>
+                            <li>AI, CV &amp; NLP</li>
+                            <li>Physics-based simulation</li>
+                            <li>MSc AI &amp; ML — Imperial</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -406,7 +813,7 @@
     </div>
 
     <!-- ===== RECENT UPDATES (Carousel) ===== -->
-    <div id="blog" class="section lb">
+    <div id="blog" class="section section-surface-muted section-after-dark">
         <div class="container">
             <div class="section-title text-left">
                 <h3>Recent Updates</h3>
@@ -491,157 +898,64 @@
         </div>
     </div>
 
-    <!-- ===== PORTFOLIO ===== -->
-    <div id="portfolio" class="section lb">
-        <div class="container">
-            <div class="section-title text-left">
-                <h3>Portfolio</h3>
-                <p>Click on the icons to view the project and source code.</p>
+    <!-- ===== PORTFOLIO — interactive spatial graph ===== -->
+    <div id="portfolio" class="section portfolio-graph">
+        <div class="portfolio-graph-wrap">
+            <canvas id="portfolio-canvas"></canvas>
+            <div class="portfolio-graph-tooltip" id="pg-tooltip">
+                <strong id="pg-tt-title"></strong>
+                <span id="pg-tt-desc"></span>
+                <div class="tt-tags" id="pg-tt-tags"></div>
             </div>
-
-            <div class="gallery-menu row">
-                <div class="col-md-12">
-                    <div class="button-group filter-button-group text-left">
-                        <button class="active" data-filter="*">All</button>
-                        <button data-filter=".gal_a">Web Development</button>
-                        <button data-filter=".gal_b">Artificial Intelligence</button>
-                        <button data-filter=".gal_c">Software Engineering</button>
-                        <button data-filter=".gal_d">Graphics</button>
-                    </div>
+            <div class="container portfolio-graph-ui">
+                <div class="section-title text-left">
+                    <h3>Portfolio</h3>
+                    <p>Projects shown as a graph — nodes that share a discipline are connected. Hover for details, click to open. Use the filters to highlight a cluster.</p>
                 </div>
-            </div>
-
-            <div class="gallery-list row">
-                <!-- First Image Block -->
-                <div class="col-md-4 col-sm-6 gallery-grid gal_c gal_d">
-                    <div class="gallery-single fix">
-                        <div class="gallery-title">OpenGL Graphics Scene</div>
-                        <img src="uploads/lamp-bg.png" class="img-fluid" alt="OpenGL Graphics Scene">
-                        <div class="img-overlay">
-                            <a href="project6.html" class="hoverbutton global-radius"
-                                data-toggle="modal" data-target="#project6Modal"><i class="fa fa-picture-o"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Second Image Block -->
-                <div class="col-md-4 col-sm-6 gallery-grid gal_c gal_d">
-                    <div class="gallery-single fix">
-                        <div class="gallery-title">Procedural Modelling for Dungeon Levels</div>
-                        <img src="uploads/dungeon2-bg.png" class="img-fluid" alt="Procedural Dungeon Generation">
-                        <div class="img-overlay">
-                            <a href="project1.html" class="hoverbutton global-radius"
-                                data-toggle="modal" data-target="#project1Modal"><i class="fa fa-picture-o"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Third Image Block -->
-                <div class="col-md-4 col-sm-6 gallery-grid gal_a gal_c">
-                    <div class="gallery-single fix">
-                        <div class="gallery-title">Rental JSwing Java Application</div>
-                        <img src="uploads/rental-bg.png" class="img-fluid" alt="Rental Application">
-                        <div class="img-overlay">
-                            <a href="project5.html" class="hoverbutton global-radius"
-                                data-toggle="modal" data-target="#project5Modal"><i class="fa fa-picture-o"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Fourth Image Block -->
-                <div class="col-md-4 col-sm-6 gallery-grid gal_c gal_a">
-                    <div class="gallery-single fix">
-                        <div class="gallery-title">Mentor-Mentee System</div>
-                        <img src="uploads/mentor-mentee2-bg.png" class="img-fluid" alt="Mentor-Mentee System">
-                        <div class="img-overlay">
-                            <a href="project3.html" class="hoverbutton global-radius"
-                                data-toggle="modal" data-target="#project3Modal"><i class="fa fa-picture-o"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Fifth Image Block -->
-                <div class="col-md-4 col-sm-6 gallery-grid gal_b gal_c">
-                    <div class="gallery-single fix">
-                        <div class="gallery-title">AI Movie Review Interpreter</div>
-                        <img src="uploads/movie-review-bg.png" class="img-fluid" alt="AI Movie Review Interpreter">
-                        <div class="img-overlay">
-                            <a href="project4.html" class="hoverbutton global-radius"
-                                data-toggle="modal" data-target="#project4Modal"><i class="fa fa-picture-o"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sixth Image Block -->
-                <div class="col-md-4 col-sm-6 gallery-grid gal_c gal_a">
-                    <div class="gallery-single fix">
-                        <div class="gallery-title">Extenuating Circumstances Form System</div>
-                        <img src="uploads/ecf2-bg.png" class="img-fluid" alt="ECF System">
-                        <div class="img-overlay">
-                            <a href="project2.html" class="hoverbutton global-radius"
-                                data-toggle="modal" data-target="#project2Modal"><i class="fa fa-picture-o"></i></a>
-                        </div>
-                    </div>
+                <div class="portfolio-graph-filters" id="pg-filters">
+                    <button class="active" data-tag="all">All</button>
+                    <button data-tag="web">Web</button>
+                    <button data-tag="ai">AI</button>
+                    <button data-tag="eng">Engineering</button>
+                    <button data-tag="gfx">Graphics</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="section-divider-trace" aria-hidden="true">
+        <div class="divider-ticks"></div>
+    </div>
+
             <!-- ===== CONTACT ===== -->
-            <div id="contact" class="section db">
-                <div class="contact-card">
-                    <div class="contact-heading">Contact me!</div>
+            <div id="contact" class="section">
+                <div class="contact-wrap">
+                    <h2>Get in touch</h2>
+                    <hr class="contact-rule">
 
-                    <div style="padding-top: 20px;">
-                        <ul style="list-style-type: none; padding: 0;">
-                            <li style="color: #0277bd; padding: 10px 0;">
-                                <i class="fa fa-at" aria-hidden="true" style="color: #4dd0e1; margin-right: 10px;"></i>
-                                <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ddb8a8bcb3bab2b2b9bfafbcb3b99dbab0bcb4b1f3beb2b0">[email&#160;protected]</a>
-                            </li>
-                            <li style="color: #0277bd; padding: 10px 0;">
-                                <i class="fa fa-map-marker" aria-hidden="true" style="color: #4dd0e1; margin-right: 10px;"></i>
-                                London, UK
-                            </li>
-                        </ul>
-                        <h3 style="color: #006064;">Connect!</h3>
-                        <a href="https://www.linkedin.com/in/euangoodbrand/" style="color: #0277bd; margin-right: 15px;">
-                            <i class="fa fa-linkedin" style="font-size: 24px;"></i>
+                    <div class="contact-channels">
+                        <a href="https://www.linkedin.com/in/euangoodbrand/">
+                            <i class="fa fa-linkedin" aria-hidden="true"></i>LinkedIn
                         </a>
-                        <a href="https://github.com/euangoodbrand" style="color: #0277bd;">
-                            <i class="fa fa-github" style="font-size: 24px;"></i>
+                        <a href="https://github.com/euangoodbrand">
+                            <i class="fa fa-github" aria-hidden="true"></i>GitHub
                         </a>
+                        <span><i class="fa fa-map-marker" aria-hidden="true"></i>London, UK</span>
                     </div>
-                </div>
 
-                <header style="padding-top: 0px; padding-bottom: 0px;"></header>
+                    <form class="contact-form-dark" method="post" action="https://formspree.io/f/mqkorpdd">
+                        <label for="contact-name">Name</label>
+                        <input type="text" id="contact-name" name="name" placeholder="Your name" required />
 
-                <div id="form" style="padding-bottom: 75px;">
+                        <label for="contact-email">Email</label>
+                        <input type="email" id="contact-email" name="email" placeholder="you@example.com" required />
 
-                    <div class="fish" id="fish"></div>
-                    <div class="fish" id="fish2"></div>
-
-                    <form id="waterform" method="post" action="https://formspree.io/f/mqkorpdd">
-
-                        <div class="formgroup" id="name-form">
-                            <label for="name">Your name*</label>
-                            <input type="text" id="name" name="name" />
-                        </div>
-
-                        <div class="formgroup" id="email-form">
-                            <label for="email">Your e-mail*</label>
-                            <input type="email" id="email" name="email" />
-                        </div>
-
-                        <div class="formgroup" id="message-form">
-                            <label for="message">Your message</label>
-                            <textarea id="message" name="message"></textarea>
-                        </div>
+                        <label for="contact-message">Message</label>
+                        <textarea id="contact-message" name="message" placeholder="What's on your mind?"></textarea>
 
                         <input type="hidden" name="_subject" value="New message from your contact form" />
-                        <input type="submit" value="Send your message!" />
-
+                        <button type="submit">Send message</button>
                     </form>
-
                 </div>
 
                 <div class="copyrights">
@@ -722,10 +1036,66 @@
                     const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
                     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
                     renderer.setClearColor(0x000000, 0);
+                    canvas.style.width = '100%';
+                    canvas.style.height = '100%';
+                    canvas.style.display = 'block';
 
                     const scene = new THREE.Scene();
                     const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
                     camera.position.z = 30;
+
+                    const raycaster = new THREE.Raycaster();
+                    const pointerNdc = new THREE.Vector2();
+                    const planeHit = new THREE.Vector3();
+                    const _vBubble = new THREE.Vector3();
+                    const _closestOnRay = new THREE.Vector3();
+
+                    /** NDC from pointer; uses canvas bounds so it matches WebGL viewport (not window / not #home). */
+                    function setPointerNdc(clientX, clientY) {
+                        const rect = canvas.getBoundingClientRect();
+                        if (rect.width < 1 || rect.height < 1) {
+                            return false;
+                        }
+                        pointerNdc.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+                        pointerNdc.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+                        return true;
+                    }
+
+                    let lastCanvasCssW = -1;
+                    let lastCanvasCssH = -1;
+                    let lastPixelRatio = -1;
+                    /** Set after wave sim init; clears heights + pointer state when canvas layout / aspect changes. */
+                    let layoutResetHook = null;
+                    /**
+                     * Match drawing buffer + camera aspect to the canvas as laid out in CSS.
+                     * setSize(..., false) avoids Three.js pinning inline px width/height (which breaks resizing).
+                     */
+                    function syncCanvasFromLayout() {
+                        const rect = canvas.getBoundingClientRect();
+                        const w = Math.max(1, Math.round(rect.width));
+                        const h = Math.max(1, Math.round(rect.height));
+                        const pr = Math.min(window.devicePixelRatio || 1, 2);
+                        if (w === lastCanvasCssW && h === lastCanvasCssH && pr === lastPixelRatio) {
+                            return;
+                        }
+                        lastCanvasCssW = w;
+                        lastCanvasCssH = h;
+                        lastPixelRatio = pr;
+                        renderer.setPixelRatio(pr);
+                        renderer.setSize(w, h, false);
+                        camera.aspect = w / h;
+                        camera.updateProjectionMatrix();
+                        syncWaterPlaneToView();
+                        if (layoutResetHook) {
+                            layoutResetHook();
+                        }
+                    }
+
+                    function invalidateCanvasSize() {
+                        lastCanvasCssW = -1;
+                        lastCanvasCssH = -1;
+                        lastPixelRatio = -1;
+                    }
 
                     // Lighting
                     scene.add(new THREE.AmbientLight(0xffffff, 0.3));
@@ -754,7 +1124,7 @@
                         metalness: 0.15,
                         roughness: 0.1,
                         transparent: true,
-                        opacity: 0.25,
+                        opacity: 0.34,
                         thickness: 0.5,
                         clearcoat: 1.0,
                         clearcoatRoughness: 0.05,
@@ -766,6 +1136,22 @@
                     waterMesh.position.z = WATER_Z;
                     scene.add(waterMesh);
 
+                    /** Scale water mesh so its world size matches the camera frustum at WATER_Z (full viewport width). */
+                    function syncWaterPlaneToView() {
+                        const d = camera.position.z - WATER_Z;
+                        const tanHalf = Math.tan((camera.fov * Math.PI / 180) / 2);
+                        const halfV = d * tanHalf;
+                        const halfU = halfV * camera.aspect;
+                        const pad = 0.96;
+                        waterMesh.scale.set(
+                            (2 * halfU * pad) / WATER_WIDTH,
+                            (2 * halfV * pad) / WATER_HEIGHT,
+                            1
+                        );
+                    }
+
+                    const waterPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), -WATER_Z);
+
                     // Wave simulation buffers
                     const cols = WATER_SEG_X + 1;
                     const rows = WATER_SEG_Y + 1;
@@ -774,9 +1160,28 @@
                     const hPrev = new Float32Array(totalVerts);
                     const hTemp = new Float32Array(totalVerts);
 
-                    const WAVE_SPEED = 0.38;
-                    const DAMPING = 0.985;
+                    const WAVE_SPEED = 0.32;
+                    const DAMPING = 0.988;
                     const STEPS_PER_FRAME = 2;
+                    const MAX_WAVE_DISPLACEMENT = 1.82;
+                    const MAX_INJECT_AMPLITUDE = 0.54;
+                    const MAX_INJECT_RADIUS = 3.85;
+                    const MAX_INJECTS_PER_FRAME = 8;
+                    const MAX_MOUSE_WORLD_DELTA = 2.2;
+                    const MAX_MOUSE_SPEED_WAVE = 2.5;
+                    const MAX_DIST_ACCUM = 5.5;
+
+                    function clampWaveSample(v) {
+                        if (v > MAX_WAVE_DISPLACEMENT) return MAX_WAVE_DISPLACEMENT;
+                        if (v < -MAX_WAVE_DISPLACEMENT) return -MAX_WAVE_DISPLACEMENT;
+                        return v;
+                    }
+
+                    function clampWaveField(arr) {
+                        for (let i = 0; i < totalVerts; i++) {
+                            arr[i] = clampWaveSample(arr[i]);
+                        }
+                    }
 
                     function waveStep() {
                         const c2 = WAVE_SPEED * WAVE_SPEED;
@@ -792,13 +1197,19 @@
                             }
                             hPrev.set(hCurr);
                             hCurr.set(hTemp);
+                            clampWaveField(hCurr);
+                            clampWaveField(hPrev);
                         }
                     }
 
                     function injectWave(worldX, worldY, radius, amplitude) {
-                        const gx = (worldX / WATER_WIDTH + 0.5) * WATER_SEG_X;
-                        const gy = (worldY / WATER_HEIGHT + 0.5) * WATER_SEG_Y;
-                        const r = radius;
+                        const effW = WATER_WIDTH * waterMesh.scale.x;
+                        const effH = WATER_HEIGHT * waterMesh.scale.y;
+                        const gx = (worldX / effW + 0.5) * WATER_SEG_X;
+                        const gy = (worldY / effH + 0.5) * WATER_SEG_Y;
+                        const r = Math.min(Math.max(radius, 0.4), MAX_INJECT_RADIUS);
+                        const amp = Math.max(-MAX_INJECT_AMPLITUDE, Math.min(MAX_INJECT_AMPLITUDE, amplitude));
+                        if (amp === 0) return;
                         const minI = Math.max(1, Math.floor(gx - r));
                         const maxI = Math.min(cols - 2, Math.ceil(gx + r));
                         const minJ = Math.max(1, Math.floor(gy - r));
@@ -810,11 +1221,14 @@
                                 const dist = Math.sqrt(dx * dx + dy * dy);
                                 if (dist < r) {
                                     const falloff = Math.cos((dist / r) * Math.PI * 0.5);
-                                    hCurr[j * cols + i] += amplitude * falloff * falloff;
+                                    const idx = j * cols + i;
+                                    hCurr[idx] = clampWaveSample(hCurr[idx] + amp * falloff * falloff);
                                 }
                             }
                         }
                     }
+
+                    let waterNormalFrame = 0;
 
                     function applyHeightsToMesh() {
                         const pos = waterGeo.attributes.position;
@@ -822,7 +1236,11 @@
                             pos.setZ(i, hCurr[i]);
                         }
                         pos.needsUpdate = true;
-                        waterGeo.computeVertexNormals();
+                        waterNormalFrame++;
+                        if (waterNormalFrame >= 2) {
+                            waterNormalFrame = 0;
+                            waterGeo.computeVertexNormals();
+                        }
                     }
 
                     // ========================
@@ -843,17 +1261,36 @@
                         });
                     }
 
+                    /** Visible XY range at z≈0 for current camera (keeps bubbles in frame across aspect ratios). */
+                    function getBubbleFieldBounds() {
+                        const planeZ = 0;
+                        const dist = Math.abs(camera.position.z - planeZ);
+                        const halfH = Math.tan((camera.fov * Math.PI / 180) / 2) * dist;
+                        const halfW = halfH * camera.aspect;
+                        const pad = 0.86;
+                        const cx = camera.position.x;
+                        const cy = camera.position.y;
+                        return {
+                            minX: cx - halfW * pad,
+                            maxX: cx + halfW * pad,
+                            minY: cy - halfH * pad,
+                            maxY: cy + halfH * pad,
+                        };
+                    }
+
                     const BUBBLE_COUNT = 20;
                     const bubbles = [];
                     const bubbleGeo = new THREE.SphereGeometry(1, 32, 32);
 
+                    onResize();
                     for (let i = 0; i < BUBBLE_COUNT; i++) {
                         const scale = 1 + Math.random() * 1;
                         const mesh = new THREE.Mesh(bubbleGeo, createBubbleMaterial());
                         mesh.scale.setScalar(scale);
+                        const bf0 = getBubbleFieldBounds();
                         mesh.position.set(
-                            (Math.random() - 0.5) * 40,
-                            (Math.random() - 0.5) * 25,
+                            bf0.minX + Math.random() * (bf0.maxX - bf0.minX),
+                            bf0.minY + Math.random() * (bf0.maxY - bf0.minY),
                             (Math.random() - 0.5) * 15
                         );
                         scene.add(mesh);
@@ -878,20 +1315,21 @@
                     // ========================
                     // MOUSE TRACKING
                     // ========================
-                    const mouse = { x: 0, y: 0, worldX: 0, worldY: 0, clientX: 0, clientY: 0 };
+                    const mouse = { worldX: 0, worldY: 0, clientX: 0, clientY: 0 };
                     let mouseActive = false;
                     let prevWorldX = 0, prevWorldY = 0;
                     let mouseVX = 0, mouseVY = 0, mouseSpeed = 0;
 
                     function updateMouse(clientX, clientY) {
-                        const rect = homeSection.getBoundingClientRect();
-                        if (clientY >= rect.top && clientY <= rect.bottom) {
+                        const rect = canvas.getBoundingClientRect();
+                        if (
+                            clientX >= rect.left &&
+                            clientX <= rect.right &&
+                            clientY >= rect.top &&
+                            clientY <= rect.bottom
+                        ) {
                             mouse.clientX = clientX;
                             mouse.clientY = clientY;
-                            mouse.x = (clientX / window.innerWidth) * 2 - 1;
-                            mouse.y = -(clientY / window.innerHeight) * 2 + 1;
-                            mouse.worldX = mouse.x * 22;
-                            mouse.worldY = mouse.y * 14;
                             mouseActive = true;
                         } else {
                             mouseActive = false;
@@ -937,30 +1375,32 @@
                         }
                     }
 
-                    function popBubbleAt(clickWorldX, clickWorldY) {
-                        let closestIdx = -1;
-                        let closestDist = Infinity;
+                    function beginPopBubble(idx) {
+                        const b = bubbles[idx];
+                        if (b.popping || !b.mesh.visible) return;
+                        b.popping = true;
+                        b.popTime = 0;
+                        spawnPopParticles(b.mesh.position.x, b.mesh.position.y, b.mesh.position.z);
+                        injectWave(b.mesh.position.x, b.mesh.position.y, 4.5, 0.55);
+                    }
+
+                    /** True 3D pick — avoids parallax error vs projecting clicks onto the water plane (bad on ultrawide). */
+                    function tryPopBubbleFromPointer(clientX, clientY) {
+                        if (!setPointerNdc(clientX, clientY)) return;
+                        raycaster.setFromCamera(pointerNdc, camera);
+                        const targets = [];
                         for (let i = 0; i < bubbles.length; i++) {
                             const b = bubbles[i];
-                            if (b.popping || !b.mesh.visible) continue;
-                            const m = b.mesh;
-                            const dx = m.position.x - clickWorldX;
-                            const dy = m.position.y - clickWorldY;
-                            const dist = Math.sqrt(dx * dx + dy * dy);
-                            const hitRadius = b.baseScale * 2.5;
-                            if (dist < hitRadius && dist < closestDist) {
-                                closestDist = dist;
-                                closestIdx = i;
-                            }
+                            if (!b.popping && b.mesh.visible) targets.push(b.mesh);
                         }
-                        if (closestIdx !== -1) {
-                            const b = bubbles[closestIdx];
-                            b.popping = true;
-                            b.popTime = 0;
-                            spawnPopParticles(b.mesh.position.x, b.mesh.position.y, b.mesh.position.z);
-                            // Also inject a big wave where the bubble popped
-                            injectWave(b.mesh.position.x, b.mesh.position.y, 6, 1.2);
-                        }
+                        if (targets.length === 0) return;
+                        const hits = raycaster.intersectObjects(targets, false);
+                        if (hits.length === 0) return;
+                        const mesh = hits[0].object;
+                        const idx = bubbles.findIndex(function(bub) {
+                            return bub.mesh === mesh;
+                        });
+                        if (idx !== -1) beginPopBubble(idx);
                     }
 
                     function respawnBubble(idx) {
@@ -970,9 +1410,10 @@
                         b.baseOpacity = 0.45 + Math.random() * 0.2;
                         m.material.opacity = b.baseOpacity;
                         m.scale.setScalar(b.baseScale);
+                        const bf = getBubbleFieldBounds();
                         m.position.set(
-                            (Math.random() - 0.5) * 40,
-                            -16 - Math.random() * 5,
+                            bf.minX + Math.random() * (bf.maxX - bf.minX),
+                            bf.minY - 2 - Math.random() * 5,
                             (Math.random() - 0.5) * 15
                         );
                         m.visible = true;
@@ -981,11 +1422,18 @@
                     }
 
                     function handleClick(clientX, clientY) {
-                        const nx = (clientX / window.innerWidth) * 2 - 1;
-                        const ny = -(clientY / window.innerHeight) * 2 + 1;
-                        const wx = nx * 22;
-                        const wy = ny * 14;
-                        popBubbleAt(wx, wy);
+                        syncCanvasFromLayout();
+                        const sx = camera.position.x;
+                        const sy = camera.position.y;
+                        camera.position.x = 0;
+                        camera.position.y = 0;
+                        camera.position.z = 30;
+                        camera.updateMatrixWorld(true);
+                        tryPopBubbleFromPointer(clientX, clientY);
+                        camera.position.x = sx;
+                        camera.position.y = sy;
+                        camera.position.z = 30;
+                        camera.updateMatrixWorld(true);
                     }
 
                     clickLayer.addEventListener('click', function(e) {
@@ -1019,14 +1467,19 @@
                     // RESIZE
                     // ========================
                     function onResize() {
-                        const w = homeSection.offsetWidth;
-                        const h = homeSection.offsetHeight;
-                        renderer.setSize(w, h);
-                        camera.aspect = w / h;
-                        camera.updateProjectionMatrix();
+                        invalidateCanvasSize();
+                        syncCanvasFromLayout();
                     }
                     window.addEventListener('resize', onResize);
+                    if (window.visualViewport) {
+                        window.visualViewport.addEventListener('resize', onResize);
+                    }
                     onResize();
+                    if (typeof ResizeObserver !== 'undefined') {
+                        const ro = new ResizeObserver(onResize);
+                        ro.observe(homeSection);
+                        ro.observe(canvas);
+                    }
 
                     // ========================
                     // ANIMATION LOOP
@@ -1035,6 +1488,25 @@
                     let animationId;
                     let lastTime = performance.now();
                     let distAccum = 0;
+                    let mouseRearmed = true;
+
+                    layoutResetHook = function() {
+                        hCurr.fill(0);
+                        hPrev.fill(0);
+                        hTemp.fill(0);
+                        mouseRearmed = true;
+                        mouseVX = 0;
+                        mouseVY = 0;
+                        mouseSpeed = 0;
+                        distAccum = 0;
+                        waterNormalFrame = 0;
+                        const pos = waterGeo.attributes.position;
+                        for (let i = 0; i < totalVerts; i++) {
+                            pos.setZ(i, 0);
+                        }
+                        pos.needsUpdate = true;
+                        waterGeo.computeVertexNormals();
+                    };
 
                     function animate() {
                         animationId = requestAnimationFrame(animate);
@@ -1045,38 +1517,91 @@
 
                         if (scrollOpacity <= 0) return;
 
+                        syncCanvasFromLayout();
+
                         const t = clock.getElapsedTime();
+                        const swayX = Math.sin(t * 0.15) * 0.5;
+                        const swayY = Math.cos(t * 0.1) * 0.3;
 
+                        /**
+                         * Rays for pointer / water / bubble repulsion use a camera WITHOUT XY sway.
+                         * Sway changes every frame; if included, the water hit point drifts and velocity
+                         * looks inverted (CW mouse → CCW waves) with a vertical bias.
+                         */
+                        camera.position.x = 0;
+                        camera.position.y = 0;
+                        camera.position.z = 30;
+                        camera.updateMatrixWorld(true);
+
+                        // One pointer ray per frame: same NDC + Raycaster as Three uses.
+                        let viewRayReady = false;
                         // --- Water wave injection from mouse ---
-                        if (mouseActive) {
-                            const dvx = mouse.worldX - prevWorldX;
-                            const dvy = mouse.worldY - prevWorldY;
-                            mouseVX += (dvx - mouseVX) * 0.4;
-                            mouseVY += (dvy - mouseVY) * 0.4;
-                            mouseSpeed = Math.sqrt(mouseVX * mouseVX + mouseVY * mouseVY);
-
-                            if (mouseSpeed > 0.05) {
-                                distAccum += mouseSpeed;
-                                const spacing = Math.max(0.3, 1.5 - mouseSpeed * 0.3);
-                                while (distAccum > spacing) {
-                                    distAccum -= spacing;
-                                    const frac = distAccum / (mouseSpeed + 0.01);
-                                    const ix = mouse.worldX - mouseVX * frac * 0.5;
-                                    const iy = mouse.worldY - mouseVY * frac * 0.5;
-                                    const amp = Math.min(mouseSpeed * 0.5, 1.5);
-                                    const rad = 2.5 + Math.min(mouseSpeed * 0.8, 4);
-                                    injectWave(ix, iy, rad, amp);
+                        if (mouseActive && setPointerNdc(mouse.clientX, mouse.clientY)) {
+                            raycaster.setFromCamera(pointerNdc, camera);
+                            viewRayReady = true;
+                            const dWater = raycaster.ray.distanceToPlane(waterPlane);
+                            if (dWater !== null && dWater > 0) {
+                                raycaster.ray.at(dWater, planeHit);
+                                mouse.worldX = planeHit.x;
+                                /* PlaneGeometry row 0 ↔ −Y; screen-top ray hit must map to wave grid top, not bottom. */
+                                mouse.worldY = -planeHit.y;
+                                if (mouseRearmed) {
+                                    prevWorldX = mouse.worldX;
+                                    prevWorldY = mouse.worldY;
+                                    distAccum = 0;
+                                    mouseRearmed = false;
                                 }
-                            } else {
-                                distAccum = 0;
+                                let dvx = mouse.worldX - prevWorldX;
+                                let dvy = mouse.worldY - prevWorldY;
+                                if (dvx > MAX_MOUSE_WORLD_DELTA) dvx = MAX_MOUSE_WORLD_DELTA;
+                                if (dvx < -MAX_MOUSE_WORLD_DELTA) dvx = -MAX_MOUSE_WORLD_DELTA;
+                                if (dvy > MAX_MOUSE_WORLD_DELTA) dvy = MAX_MOUSE_WORLD_DELTA;
+                                if (dvy < -MAX_MOUSE_WORLD_DELTA) dvy = -MAX_MOUSE_WORLD_DELTA;
+                                mouseVX += (dvx - mouseVX) * 0.35;
+                                mouseVY += (dvy - mouseVY) * 0.35;
+                                mouseSpeed = Math.sqrt(mouseVX * mouseVX + mouseVY * mouseVY);
+                                if (mouseSpeed > MAX_MOUSE_SPEED_WAVE) {
+                                    const s = MAX_MOUSE_SPEED_WAVE / mouseSpeed;
+                                    mouseVX *= s;
+                                    mouseVY *= s;
+                                    mouseSpeed = MAX_MOUSE_SPEED_WAVE;
+                                }
+
+                                if (mouseSpeed > 0.05) {
+                                    distAccum += mouseSpeed;
+                                    if (distAccum > MAX_DIST_ACCUM) {
+                                        distAccum = MAX_DIST_ACCUM;
+                                    }
+                                    const spacing = Math.max(0.22, 0.92 - mouseSpeed * 0.32);
+                                    let injects = 0;
+                                    while (distAccum > spacing && injects < MAX_INJECTS_PER_FRAME) {
+                                        distAccum -= spacing;
+                                        const frac = distAccum / (mouseSpeed + 0.01);
+                                        const ix = mouse.worldX - mouseVX * frac * 0.5;
+                                        const iy = mouse.worldY - mouseVY * frac * 0.5;
+                                        const amp = Math.min(mouseSpeed * 0.44, MAX_INJECT_AMPLITUDE);
+                                        const rad = 2.35 + Math.min(mouseSpeed * 0.62, MAX_INJECT_RADIUS - 0.45);
+                                        injectWave(ix, iy, rad, amp);
+                                        injects++;
+                                    }
+                                } else {
+                                    distAccum = 0;
+                                }
+                                prevWorldX = mouse.worldX;
+                                prevWorldY = mouse.worldY;
                             }
-                            prevWorldX = mouse.worldX;
-                            prevWorldY = mouse.worldY;
-                        } else {
+                        }
+                        if (!mouseActive) {
+                            mouseRearmed = true;
                             mouseVX *= 0.9;
                             mouseVY *= 0.9;
                             mouseSpeed *= 0.9;
                         }
+
+                        camera.position.x = swayX;
+                        camera.position.y = swayY;
+                        camera.position.z = 30;
+                        camera.updateMatrixWorld(true);
 
                         // Step wave simulation
                         waveStep();
@@ -1101,6 +1626,7 @@
                         }
 
                         // --- Bubbles ---
+                        const bubbleBounds = getBubbleFieldBounds();
                         for (let i = 0; i < bubbles.length; i++) {
                             const b = bubbles[i];
                             const m = b.mesh;
@@ -1128,32 +1654,32 @@
                             const pulse = 1 + Math.sin(t * b.pulseSpeed * 2 + i) * b.pulseAmp;
                             m.scale.setScalar(b.baseScale * pulse);
 
-                            if (m.position.y > 16) {
-                                m.position.y = -16;
-                                m.position.x = (Math.random() - 0.5) * 40;
+                            if (m.position.y > bubbleBounds.maxY) {
+                                m.position.y = bubbleBounds.minY - 1 - Math.random() * 3;
+                                m.position.x = bubbleBounds.minX + Math.random() * (bubbleBounds.maxX - bubbleBounds.minX);
                             }
-                            if (m.position.x > 24) m.position.x = -24;
-                            if (m.position.x < -24) m.position.x = 24;
+                            if (m.position.x > bubbleBounds.maxX) m.position.x = bubbleBounds.minX;
+                            if (m.position.x < bubbleBounds.minX) m.position.x = bubbleBounds.maxX;
 
-                            if (mouseActive) {
-                                const dx = m.position.x - mouse.worldX;
-                                const dy = m.position.y - mouse.worldY;
-                                const dist = Math.sqrt(dx * dx + dy * dy);
+                            if (viewRayReady) {
+                                const ray = raycaster.ray;
+                                _vBubble.subVectors(m.position, ray.origin);
+                                const tRay = Math.max(0, _vBubble.dot(ray.direction));
+                                _closestOnRay.copy(ray.origin).addScaledVector(ray.direction, tRay);
+                                _vBubble.subVectors(m.position, _closestOnRay);
+                                const dist = _vBubble.length();
                                 const repulseRadius = 6;
-                                if (dist < repulseRadius && dist > 0.1) {
+                                if (dist < repulseRadius && dist > 0.08) {
                                     const force = (1 - dist / repulseRadius) * 0.12;
-                                    m.position.x += (dx / dist) * force;
-                                    m.position.y += (dy / dist) * force;
+                                    m.position.x += (_vBubble.x / dist) * force;
+                                    m.position.y += (_vBubble.y / dist) * force;
+                                    m.position.z += (_vBubble.z / dist) * force;
                                 }
                             }
 
                             m.rotation.x += 0.002;
                             m.rotation.y += 0.003;
                         }
-
-                        // Camera sway
-                        camera.position.x = Math.sin(t * 0.15) * 0.5;
-                        camera.position.y = Math.cos(t * 0.1) * 0.3;
 
                         renderer.render(scene, camera);
                     }
@@ -1165,8 +1691,567 @@
                             cancelAnimationFrame(animationId);
                         } else {
                             lastTime = performance.now();
+                            distAccum = 0;
+                            mouseRearmed = true;
+                            mouseVX = 0;
+                            mouseVY = 0;
+                            mouseSpeed = 0;
                             animate();
                         }
+                    });
+                })();
+                </script>
+
+                <!-- Portfolio: interactive spatial graph (canvas 2D) -->
+                <script>
+                (function() {
+                    var canvas = document.getElementById('portfolio-canvas');
+                    var wrap = canvas && canvas.parentElement;
+                    if (!canvas || !wrap) return;
+                    var ctx = canvas.getContext('2d');
+                    var tooltip = document.getElementById('pg-tooltip');
+                    var ttTitle = document.getElementById('pg-tt-title');
+                    var ttDesc = document.getElementById('pg-tt-desc');
+                    var ttTags = document.getElementById('pg-tt-tags');
+                    var filterBtns = document.querySelectorAll('#pg-filters button');
+
+                    function mkIcon(paths, color) {
+                        var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">'
+                            + '<rect width="120" height="120" fill="#0d1117"/>'
+                            + '<g transform="translate(60,60)" fill="none" stroke="' + color + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+                            + paths + '</g></svg>';
+                        return 'data:image/svg+xml;utf8,' + svg.replace(/#/g, '%23');
+                    }
+
+                    var icons = {
+                        aero: mkIcon(
+                            '<path d="M-30,-10 L-15,-25 L15,-25 L30,-10 L15,5 L-15,5 Z" stroke-width="1.8"/>'
+                            + '<path d="M-15,-25 L-15,5 M15,-25 L15,5 M-30,-10 L30,-10" opacity="0.5"/>'
+                            + '<path d="M-30,15 Q-10,8 0,18 Q10,28 30,12" stroke="#e06090" stroke-width="2" stroke-dasharray="4,3"/>'
+                            + '<circle cx="-30" cy="15" r="3" fill="#e06090"/><circle cx="0" cy="18" r="3" fill="#e06090"/><circle cx="30" cy="12" r="3" fill="#e06090"/>',
+                            '#00c4b0'),
+                        noisy: mkIcon(
+                            '<circle cx="0" cy="-8" r="22" stroke-width="2"/>'
+                            + '<circle cx="-10" cy="-14" r="5" fill="#4caf50" stroke="none" opacity="0.7"/>'
+                            + '<circle cx="6" cy="-18" r="5" fill="#4caf50" stroke="none" opacity="0.7"/>'
+                            + '<circle cx="-4" cy="-4" r="5" fill="#4caf50" stroke="none" opacity="0.7"/>'
+                            + '<circle cx="12" cy="-6" r="5" fill="#4caf50" stroke="none" opacity="0.7"/>'
+                            + '<line x1="6" y1="-22" x2="14" y2="-14" stroke="#f44336" stroke-width="2.5"/>'
+                            + '<line x1="14" y1="-22" x2="6" y2="-14" stroke="#f44336" stroke-width="2.5"/>'
+                            + '<text x="0" y="32" text-anchor="middle" font-family="monospace" font-size="12" fill="#00c4b0" stroke="none">96%</text>',
+                            '#00c4b0'),
+                        brain: mkIcon(
+                            '<circle cx="-18" cy="-20" r="6" fill="#2196f3" stroke="none" opacity="0.7"/>'
+                            + '<circle cx="18" cy="-20" r="6" fill="#2196f3" stroke="none" opacity="0.7"/>'
+                            + '<circle cx="0" cy="0" r="6" fill="#2196f3" stroke="none" opacity="0.7"/>'
+                            + '<circle cx="-22" cy="16" r="6" fill="#2196f3" stroke="none" opacity="0.7"/>'
+                            + '<circle cx="22" cy="16" r="6" fill="#2196f3" stroke="none" opacity="0.7"/>'
+                            + '<line x1="-18" y1="-20" x2="18" y2="-20"/><line x1="-18" y1="-20" x2="0" y2="0"/>'
+                            + '<line x1="18" y1="-20" x2="0" y2="0"/><line x1="0" y1="0" x2="-22" y2="16"/>'
+                            + '<line x1="0" y1="0" x2="22" y2="16"/><line x1="-22" y1="16" x2="22" y2="16"/>',
+                            '#00c4b0'),
+                        aki: mkIcon(
+                            '<rect x="-28" y="-18" width="56" height="42" rx="5" stroke-width="2"/>'
+                            + '<polyline points="-22,6 -10,6 -4,-14 4,18 10,-6 16,6 24,6" stroke="#4caf50" stroke-width="2.5"/>'
+                            + '<line x1="-12" y1="-30" x2="-12" y2="-22" stroke="#f44336" stroke-width="2.5"/>'
+                            + '<line x1="-16" y1="-26" x2="-8" y2="-26" stroke="#f44336" stroke-width="2.5"/>',
+                            '#00c4b0'),
+                        optuna: mkIcon(
+                            '<line x1="-30" y1="0" x2="30" y2="0" stroke-width="3"/>'
+                            + '<path d="M-10,0 Q-5,-22 10,-22" stroke="#2196f3" stroke-width="2"/>'
+                            + '<path d="M10,-22 Q25,-22 30,0" stroke="#2196f3" stroke-width="2"/>'
+                            + '<path d="M-10,0 Q-5,22 10,22" stroke="#ff9800" stroke-width="2"/>'
+                            + '<path d="M10,22 Q25,22 30,0" stroke="#ff9800" stroke-width="2"/>'
+                            + '<circle cx="-30" cy="0" r="4" fill="#00c4b0"/><circle cx="-10" cy="0" r="4" fill="#00c4b0"/>'
+                            + '<circle cx="30" cy="0" r="5" fill="#00c4b0"/>'
+                            + '<circle cx="10" cy="-22" r="3" fill="#2196f3"/><circle cx="10" cy="22" r="3" fill="#ff9800"/>',
+                            '#00c4b0')
+                    };
+
+                    var projects = [
+                        { id:0, title:'Procedural Dungeon Generation', desc:'BSP-tree algorithms for 3D procedural content generation. Playable levels with geometric and topological correctness, presented at Sumo Digital Conference 2023.', tags:['eng','gfx'], modal:'#project1Modal', img:'uploads/dungeon2-bg.png' },
+                        { id:1, title:'3D Aero Field Prediction', desc:'Spatial AI on high-resolution point-cloud and mesh data — predicting dense physical fields from sparse sensor inputs using geometric deep learning.', tags:['ai','gfx','eng'], modal:'#project7Modal', img:icons.aero },
+                        { id:2, title:'Noisy-Label Deep Learning', desc:'MSc thesis and ACM CCS 2025 publication. Frameworks for robust deep learning under severe label noise, boosting macro F1 from 74.5% to 96.0% on noisy benchmarks.', tags:['ai','eng'], modal:'#project8Modal', img:icons.noisy },
+                        { id:3, title:'Brain Graph Super-Resolution', desc:'Graph neural network research with Imperial College — super-resolving brain connectivity graphs using message-passing and fusion strategies.', tags:['ai','gfx'], modal:'#project9Modal', img:icons.brain },
+                        { id:4, title:'Hospital AKI Detection', desc:'Kubernetes-based real-time acute kidney injury detection from live HL7 lab streams. Fault-tolerant inference with Prometheus/Grafana monitoring, 99.9% F3-score.', tags:['ai','eng','web'], modal:'#project10Modal', img:icons.aki },
+                        { id:5, title:'Optuna OSS Contribution', desc:'Contributed to Optuna v4.6.0 — modernised type-checking and imports across core hyperparameter optimisation modules. Changes merged and highlighted in the release.', tags:['eng'], modal:'#project11Modal', img:icons.optuna },
+                    ];
+
+                    var edges = [];
+                    for (var i = 0; i < projects.length; i++) {
+                        for (var j = i + 1; j < projects.length; j++) {
+                            var shared = projects[i].tags.filter(function(t) { return projects[j].tags.indexOf(t) !== -1; });
+                            if (shared.length > 0) edges.push({ a: i, b: j, shared: shared });
+                        }
+                    }
+
+                    var NODE_RADIUS = 52;
+                    var pr = Math.min(window.devicePixelRatio || 1, 2);
+                    var W = 1, H = 1;
+                    var nodes = [];
+                    var particles = [];
+                    var PARTICLE_COUNT = 90;
+                    var activeTag = 'all';
+                    var pointer = { x: -999, y: -999 };
+                    var hoveredNode = -1;
+                    var nodeImgs = [];
+
+                    projects.forEach(function(p, idx) {
+                        var img = new Image();
+                        img.src = p.img;
+                        nodeImgs[idx] = img;
+                    });
+
+                    function layoutNodes() {
+                        var cx = W / 2, cy = H / 2 + 60;
+                        var rx = Math.min(W * 0.40, 440);
+                        var ry = Math.min(H * 0.30, 260);
+                        projects.forEach(function(p, i) {
+                            var angle = (i / projects.length) * Math.PI * 2 - Math.PI / 2;
+                            var tx = cx + Math.cos(angle) * rx;
+                            var ty = cy + Math.sin(angle) * ry;
+                            if (!nodes[i]) {
+                                nodes[i] = { x: tx, y: ty, tx: tx, ty: ty, vx: 0, vy: 0, r: NODE_RADIUS, pulse: Math.random() * Math.PI * 2 };
+                            } else {
+                                nodes[i].tx = tx;
+                                nodes[i].ty = ty;
+                            }
+                        });
+                    }
+
+                    function initParticles() {
+                        particles = [];
+                        for (var i = 0; i < PARTICLE_COUNT; i++) {
+                            particles.push({
+                                x: Math.random() * W,
+                                y: Math.random() * H,
+                                vx: (Math.random() - 0.5) * 0.25,
+                                vy: (Math.random() - 0.5) * 0.25,
+                                r: 0.6 + Math.random() * 1.2,
+                                a: 0.08 + Math.random() * 0.14,
+                            });
+                        }
+                    }
+
+                    function syncSize() {
+                        var rect = wrap.getBoundingClientRect();
+                        W = Math.max(1, Math.round(rect.width));
+                        H = Math.max(1, Math.round(rect.height));
+                        pr = Math.min(window.devicePixelRatio || 1, 2);
+                        canvas.width = W * pr;
+                        canvas.height = H * pr;
+                        canvas.style.width = W + 'px';
+                        canvas.style.height = H + 'px';
+                        ctx.setTransform(pr, 0, 0, pr, 0, 0);
+                        layoutNodes();
+                    }
+
+                    syncSize();
+                    initParticles();
+
+                    function tagMatch(proj, tag) {
+                        return tag === 'all' || proj.tags.indexOf(tag) !== -1;
+                    }
+
+                    function draw(t) {
+                        ctx.clearRect(0, 0, W, H);
+
+                        particles.forEach(function(p) {
+                            p.x += p.vx;
+                            p.y += p.vy;
+                            if (p.x < 0) p.x = W;
+                            if (p.x > W) p.x = 0;
+                            if (p.y < 0) p.y = H;
+                            if (p.y > H) p.y = 0;
+                            ctx.beginPath();
+                            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                            ctx.fillStyle = 'rgba(0,196,176,' + p.a + ')';
+                            ctx.fill();
+                        });
+
+                        var pConnDist = 100;
+                        for (var i = 0; i < particles.length; i++) {
+                            for (var j = i + 1; j < particles.length; j++) {
+                                var dx = particles[i].x - particles[j].x;
+                                var dy = particles[i].y - particles[j].y;
+                                var d = Math.sqrt(dx * dx + dy * dy);
+                                if (d < pConnDist) {
+                                    ctx.beginPath();
+                                    ctx.moveTo(particles[i].x, particles[i].y);
+                                    ctx.lineTo(particles[j].x, particles[j].y);
+                                    ctx.strokeStyle = 'rgba(0,196,176,' + (0.04 * (1 - d / pConnDist)) + ')';
+                                    ctx.lineWidth = 0.5;
+                                    ctx.stroke();
+                                }
+                            }
+                        }
+
+                        edges.forEach(function(e) {
+                            var na = nodes[e.a], nb = nodes[e.b];
+                            var matchA = tagMatch(projects[e.a], activeTag);
+                            var matchB = tagMatch(projects[e.b], activeTag);
+                            var edgeActive = matchA && matchB;
+                            var alpha = edgeActive ? 0.35 : 0.07;
+                            if (hoveredNode === e.a || hoveredNode === e.b) alpha = Math.min(alpha + 0.3, 0.7);
+                            ctx.beginPath();
+                            ctx.moveTo(na.x, na.y);
+                            ctx.lineTo(nb.x, nb.y);
+                            ctx.strokeStyle = 'rgba(0,196,176,' + alpha + ')';
+                            ctx.lineWidth = edgeActive ? 1.4 : 0.7;
+                            ctx.stroke();
+
+                            if (edgeActive) {
+                                var frac = ((t * 0.0004 + e.a * 0.17 + e.b * 0.11) % 1);
+                                var px = na.x + (nb.x - na.x) * frac;
+                                var py = na.y + (nb.y - na.y) * frac;
+                                ctx.beginPath();
+                                ctx.arc(px, py, 2, 0, Math.PI * 2);
+                                ctx.fillStyle = 'rgba(0,210,190,0.55)';
+                                ctx.fill();
+                            }
+                        });
+
+                        nodes.forEach(function(n, idx) {
+                            n.x += (n.tx - n.x) * 0.06;
+                            n.y += (n.ty - n.y) * 0.06;
+                            n.pulse += 0.025;
+
+                            var active = tagMatch(projects[idx], activeTag);
+                            var hov = hoveredNode === idx;
+                            var baseR = n.r + Math.sin(n.pulse) * 2;
+                            var drawR = hov ? baseR + 6 : baseR;
+                            var nodeAlpha = active ? 1 : 0.22;
+
+                            ctx.save();
+                            ctx.globalAlpha = nodeAlpha;
+
+                            if (hov) {
+                                ctx.shadowColor = 'rgba(0,210,190,0.45)';
+                                ctx.shadowBlur = 18;
+                            }
+
+                            ctx.beginPath();
+                            ctx.arc(n.x, n.y, drawR, 0, Math.PI * 2);
+                            ctx.closePath();
+                            ctx.clip();
+
+                            var img = nodeImgs[idx];
+                            if (img && img.complete && img.naturalWidth > 0) {
+                                var s = drawR * 2;
+                                ctx.drawImage(img, n.x - drawR, n.y - drawR, s, s);
+                                ctx.fillStyle = hov ? 'rgba(0,15,14,0.1)' : 'rgba(0,15,14,0.2)';
+                                ctx.fillRect(n.x - drawR, n.y - drawR, s, s);
+                            } else {
+                                ctx.fillStyle = '#111820';
+                                ctx.fill();
+                            }
+                            ctx.restore();
+
+                            ctx.beginPath();
+                            ctx.arc(n.x, n.y, drawR, 0, Math.PI * 2);
+                            ctx.strokeStyle = hov ? 'rgba(0,210,190,' + (nodeAlpha * 0.9) + ')' : 'rgba(0,196,176,' + (nodeAlpha * 0.45) + ')';
+                            ctx.lineWidth = hov ? 2.2 : 1.2;
+                            ctx.stroke();
+
+                            ctx.save();
+                            ctx.globalAlpha = nodeAlpha;
+                            ctx.font = '600 12px "Roboto Mono", monospace';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'top';
+                            ctx.fillStyle = hov ? '#00e0ca' : '#c0cdd4';
+                            ctx.shadowColor = 'rgba(0,0,0,0.7)';
+                            ctx.shadowBlur = 4;
+                            var label = projects[idx].title;
+                            if (label.length > 22) label = label.substring(0, 20) + '…';
+                            ctx.fillText(label, n.x, n.y + drawR + 8);
+                            ctx.restore();
+                        });
+                    }
+
+                    function hitTest(mx, my) {
+                        for (var i = nodes.length - 1; i >= 0; i--) {
+                            var n = nodes[i];
+                            var dx = mx - n.x, dy = my - n.y;
+                            if (dx * dx + dy * dy < (n.r + 10) * (n.r + 10)) return i;
+                        }
+                        return -1;
+                    }
+
+                    canvas.addEventListener('mousemove', function(e) {
+                        var r = canvas.getBoundingClientRect();
+                        pointer.x = e.clientX - r.left;
+                        pointer.y = e.clientY - r.top;
+                        var hit = hitTest(pointer.x, pointer.y);
+                        if (hit !== hoveredNode) {
+                            hoveredNode = hit;
+                            canvas.style.cursor = hit >= 0 ? 'pointer' : 'default';
+                            if (hit >= 0) {
+                                var p = projects[hit];
+                                ttTitle.textContent = p.title;
+                                ttDesc.textContent = p.desc;
+                                ttTags.textContent = p.tags.join(' · ');
+                                tooltip.classList.add('visible');
+                            } else {
+                                tooltip.classList.remove('visible');
+                            }
+                        }
+                        if (hoveredNode >= 0) {
+                            var tx = Math.min(pointer.x + 16, W - 260);
+                            var ty = Math.max(pointer.y - 80, 10);
+                            tooltip.style.left = tx + 'px';
+                            tooltip.style.top = ty + 'px';
+                        }
+                    });
+
+                    canvas.addEventListener('mouseleave', function() {
+                        hoveredNode = -1;
+                        canvas.style.cursor = 'default';
+                        tooltip.classList.remove('visible');
+                    });
+
+                    canvas.addEventListener('click', function() {
+                        if (hoveredNode >= 0) {
+                            var modal = projects[hoveredNode].modal;
+                            if (modal && typeof $ !== 'undefined') $(modal).modal('show');
+                        }
+                    });
+
+                    filterBtns.forEach(function(btn) {
+                        btn.addEventListener('click', function() {
+                            filterBtns.forEach(function(b) { b.classList.remove('active'); });
+                            btn.classList.add('active');
+                            activeTag = btn.getAttribute('data-tag');
+                        });
+                    });
+
+                    var running = false, rafId = 0;
+
+                    function loop(t) {
+                        if (!running) return;
+                        rafId = requestAnimationFrame(loop);
+                        draw(t);
+                    }
+
+                    var io = new IntersectionObserver(function(entries) {
+                        entries.forEach(function(entry) {
+                            if (entry.isIntersecting) {
+                                if (!running) {
+                                    running = true;
+                                    syncSize();
+                                    initParticles();
+                                    loop(performance.now());
+                                }
+                            } else {
+                                running = false;
+                                cancelAnimationFrame(rafId);
+                            }
+                        });
+                    }, { rootMargin: '80px', threshold: 0.02 });
+                    io.observe(wrap);
+
+                    window.addEventListener('resize', function() {
+                        syncSize();
+                        if (particles.length > 0) {
+                            particles.forEach(function(p) {
+                                if (p.x > W) p.x = Math.random() * W;
+                                if (p.y > H) p.y = Math.random() * H;
+                            });
+                        }
+                    });
+                })();
+                </script>
+
+                <!-- Three.js: F1 / ML telemetry field (Mercedes-adjacent palette, no team assets) -->
+                <script>
+                (function() {
+                    const wrap = document.querySelector('.f1-ml-wrap');
+                    const canvas = document.getElementById('f1-telemetry-canvas');
+                    if (!wrap || !canvas || typeof THREE === 'undefined') return;
+
+                    const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+                    renderer.setClearColor(0x000000, 0);
+                    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+                    const scene = new THREE.Scene();
+                    const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 220);
+                    camera.position.set(0, 3.2, 18);
+
+                    const grid = new THREE.GridHelper(72, 48, 0x00b8a8, 0x1a2228);
+                    if (grid.material) {
+                        const mats = Array.isArray(grid.material) ? grid.material : [grid.material];
+                        mats.forEach(function(m) {
+                            m.transparent = true;
+                            m.opacity = 0.38;
+                        });
+                    }
+                    grid.position.y = -3;
+                    scene.add(grid);
+
+                    const curve = new THREE.CatmullRomCurve3([
+                        new THREE.Vector3(-14, 0.2, -7),
+                        new THREE.Vector3(-6, 0.5, 4),
+                        new THREE.Vector3(5, 0.15, 10),
+                        new THREE.Vector3(14, 0.35, -1),
+                        new THREE.Vector3(10, 0.1, -10),
+                        new THREE.Vector3(-3, 0.25, -11),
+                    ], true);
+                    const lineGeo = new THREE.BufferGeometry().setFromPoints(curve.getPoints(160));
+                    const racingLine = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({
+                        color: 0x00e6cf,
+                        transparent: true,
+                        opacity: 0.88,
+                    }));
+                    scene.add(racingLine);
+
+                    const streakCount = 260;
+                    const streakGeo = new THREE.BufferGeometry();
+                    const streakArr = new Float32Array(streakCount * 3);
+                    const streakVel = [];
+                    for (let i = 0; i < streakCount; i++) {
+                        streakArr[i * 3] = (Math.random() - 0.5) * 46;
+                        streakArr[i * 3 + 1] = (Math.random() - 0.25) * 8;
+                        streakArr[i * 3 + 2] = (Math.random() - 0.5) * 46;
+                        streakVel.push({
+                            vx: 0.07 + Math.random() * 0.24,
+                            vz: (Math.random() - 0.5) * 0.035,
+                        });
+                    }
+                    streakGeo.setAttribute('position', new THREE.BufferAttribute(streakArr, 3));
+                    const streaks = new THREE.Points(streakGeo, new THREE.PointsMaterial({
+                        color: 0x66eedd,
+                        size: 0.11,
+                        transparent: true,
+                        opacity: 0.52,
+                        blending: THREE.AdditiveBlending,
+                        depthWrite: false,
+                        sizeAttenuation: true,
+                    }));
+                    scene.add(streaks);
+
+                    const nodePositions = [
+                        [-7, 1.4, 0], [-1, 2.3, 1.5], [6.5, 1.2, -1], [4, 0.6, 6], [-5, 1.6, 5],
+                    ];
+                    const nodeMeshes = [];
+                    nodePositions.forEach(function(p) {
+                        const g = new THREE.SphereGeometry(0.38, 20, 20);
+                        const m = new THREE.MeshBasicMaterial({ color: 0xd0d8e2, transparent: true, opacity: 0.88 });
+                        const mesh = new THREE.Mesh(g, m);
+                        mesh.position.set(p[0], p[1], p[2]);
+                        scene.add(mesh);
+                        nodeMeshes.push(mesh);
+                    });
+
+                    const edgeVerts = [];
+                    const pairs = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 0], [1, 3], [0, 2]];
+                    pairs.forEach(function(ab) {
+                        const a = nodePositions[ab[0]];
+                        const b = nodePositions[ab[1]];
+                        edgeVerts.push(a[0], a[1], a[2], b[0], b[1], b[2]);
+                    });
+                    const edgeGeo = new THREE.BufferGeometry();
+                    edgeGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(edgeVerts), 3));
+                    const edgeMat = new THREE.LineBasicMaterial({ color: 0x5c6b7a, transparent: true, opacity: 0.48 });
+                    const edges = new THREE.LineSegments(edgeGeo, edgeMat);
+                    scene.add(edges);
+
+                    const barMeshes = [];
+                    for (let i = 0; i < 10; i++) {
+                        const g = new THREE.BoxGeometry(0.2, 1, 0.22);
+                        const m = new THREE.MeshBasicMaterial({
+                            color: 0x009688,
+                            transparent: true,
+                            opacity: 0.42,
+                        });
+                        const mesh = new THREE.Mesh(g, m);
+                        mesh.position.set(16 + (i % 5) * 0.42, -2.45, -4 + Math.floor(i / 5) * 0.5);
+                        barMeshes.push(mesh);
+                        scene.add(mesh);
+                    }
+
+                    scene.add(new THREE.AmbientLight(0x556677, 0.55));
+
+                    let t = 0;
+                    const pointer = { x: 0, y: 0 };
+                    wrap.addEventListener('mousemove', function(e) {
+                        const r = wrap.getBoundingClientRect();
+                        if (r.width < 1 || r.height < 1) return;
+                        pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+                        pointer.y = ((e.clientY - r.top) / r.height) * 2 - 1;
+                    }, { passive: true });
+
+                    function syncSize() {
+                        const r = wrap.getBoundingClientRect();
+                        const w = Math.max(1, Math.round(r.width));
+                        const h = Math.max(1, Math.round(r.height));
+                        renderer.setSize(w, h, false);
+                        canvas.style.width = '100%';
+                        canvas.style.height = '100%';
+                        camera.aspect = w / h;
+                        camera.updateProjectionMatrix();
+                    }
+
+                    let running = false;
+                    let rafId = 0;
+
+                    function tick() {
+                        if (!running) return;
+                        rafId = requestAnimationFrame(tick);
+                        t += 0.018;
+
+                        nodeMeshes.forEach(function(mesh, i) {
+                            const s = 1 + Math.sin(t * 2.4 + i * 0.9) * 0.18;
+                            mesh.scale.setScalar(s);
+                            mesh.material.opacity = 0.62 + Math.sin(t * 3.1 + i * 0.8) * 0.22;
+                        });
+
+                        const pos = streakGeo.attributes.position.array;
+                        const boost = 1 + pointer.x * 0.35;
+                        for (let i = 0; i < streakCount; i++) {
+                            pos[i * 3] += streakVel[i].vx * boost;
+                            pos[i * 3 + 2] += streakVel[i].vz + pointer.y * 0.012;
+                            if (pos[i * 3] > 22) pos[i * 3] = -22;
+                            if (pos[i * 3] < -22) pos[i * 3] = 22;
+                        }
+                        streakGeo.attributes.position.needsUpdate = true;
+
+                        racingLine.rotation.y = Math.sin(t * 0.12) * 0.18;
+                        racingLine.position.y = Math.sin(t * 0.95) * 0.1;
+
+                        barMeshes.forEach(function(mesh, i) {
+                            const h = 0.35 + Math.abs(Math.sin(t * 2.8 + i * 0.5)) * 1.15;
+                            mesh.scale.y = h;
+                            mesh.position.y = -2.95 + h * 0.5;
+                        });
+
+                        edgeMat.opacity = 0.36 + Math.sin(t * 2) * 0.12;
+
+                        camera.position.x = pointer.x * 2.6 + Math.sin(t * 0.35) * 0.45;
+                        camera.position.y = 3.2 + pointer.y * 0.85 + Math.cos(t * 0.32) * 0.25;
+                        camera.lookAt(0, 0.35, 0);
+
+                        renderer.render(scene, camera);
+                    }
+
+                    const io = new IntersectionObserver(function(entries) {
+                        entries.forEach(function(entry) {
+                            if (entry.isIntersecting) {
+                                if (!running) {
+                                    running = true;
+                                    syncSize();
+                                    tick();
+                                } else {
+                                    syncSize();
+                                }
+                            } else {
+                                running = false;
+                                cancelAnimationFrame(rafId);
+                            }
+                        });
+                    }, { root: null, rootMargin: '80px', threshold: 0.04 });
+                    io.observe(wrap);
+
+                    window.addEventListener('resize', function() {
+                        if (running) syncSize();
                     });
                 })();
                 </script>
@@ -1191,18 +2276,18 @@
                     </div>
                 </div>
 
-                <!-- Project 2 Modal -->
-                <div class="modal fade" id="project2Modal" tabindex="-1" role="dialog" aria-labelledby="project2ModalLabel" aria-hidden="true">
+                <!-- Project 7 Modal — 3D Aero Field Prediction -->
+                <div class="modal fade" id="project7Modal" tabindex="-1" role="dialog" aria-labelledby="project7ModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-xl">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="project2ModalLabel">Extenuating Circumstances Form System</h5>
+                                <h5 class="modal-title" id="project7ModalLabel">3D Aerodynamic Field Prediction</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <iframe src="project2.html" width="100%" height="600px"></iframe>
+                                <iframe src="project7.html" width="100%" height="600px"></iframe>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -1211,18 +2296,18 @@
                     </div>
                 </div>
 
-                <!-- Project 3 Modal -->
-                <div class="modal fade" id="project3Modal" tabindex="-1" role="dialog" aria-labelledby="project3ModalLabel" aria-hidden="true">
+                <!-- Project 8 Modal — Noisy-Label Deep Learning -->
+                <div class="modal fade" id="project8Modal" tabindex="-1" role="dialog" aria-labelledby="project8ModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-xl">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="project3ModalLabel">Mentor-Mentee System</h5>
+                                <h5 class="modal-title" id="project8ModalLabel">Deep Learning on Noisy &amp; Imbalanced Data</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <iframe src="project3.html" width="100%" height="600px"></iframe>
+                                <iframe src="project8.html" width="100%" height="600px"></iframe>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -1231,18 +2316,18 @@
                     </div>
                 </div>
 
-                <!-- Project 4 Modal -->
-                <div class="modal fade" id="project4Modal" tabindex="-1" role="dialog" aria-labelledby="project4ModalLabel" aria-hidden="true">
+                <!-- Project 9 Modal — Brain Graph Super-Resolution -->
+                <div class="modal fade" id="project9Modal" tabindex="-1" role="dialog" aria-labelledby="project9ModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-xl">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="project4ModalLabel">AI Movie Review Interpreter</h5>
+                                <h5 class="modal-title" id="project9ModalLabel">Brain Graph Super-Resolution</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <iframe src="project4.html" width="100%" height="600px"></iframe>
+                                <iframe src="project9.html" width="100%" height="600px"></iframe>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -1251,18 +2336,18 @@
                     </div>
                 </div>
 
-                <!-- Project 5 Modal -->
-                <div class="modal fade" id="project5Modal" tabindex="-1" role="dialog" aria-labelledby="project5ModalLabel" aria-hidden="true">
+                <!-- Project 10 Modal — Hospital AKI Detection -->
+                <div class="modal fade" id="project10Modal" tabindex="-1" role="dialog" aria-labelledby="project10ModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-xl">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="project5ModalLabel">Rental JSwing Application</h5>
+                                <h5 class="modal-title" id="project10ModalLabel">Hospital AKI Detection System</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <iframe src="project5.html" width="100%" height="600px"></iframe>
+                                <iframe src="project10.html" width="100%" height="600px"></iframe>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -1271,18 +2356,18 @@
                     </div>
                 </div>
 
-                <!-- Project 6 Modal -->
-                <div class="modal fade" id="project6Modal" tabindex="-1" role="dialog" aria-labelledby="project6ModalLabel" aria-hidden="true">
+                <!-- Project 11 Modal — Optuna OSS Contribution -->
+                <div class="modal fade" id="project11Modal" tabindex="-1" role="dialog" aria-labelledby="project11ModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-xl">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="project6ModalLabel">OpenGL Graphics Scene</h5>
+                                <h5 class="modal-title" id="project11ModalLabel">Optuna Open-Source Contribution</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <iframe src="project6.html" width="100%" height="600px"></iframe>
+                                <iframe src="project11.html" width="100%" height="600px"></iframe>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

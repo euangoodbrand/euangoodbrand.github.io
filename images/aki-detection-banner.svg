@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 260">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8f5e9"/>
+      <stop offset="100%" stop-color="#e0f2f1"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="260" fill="url(#bg)" rx="8"/>
+  <!-- pipeline boxes -->
+  <g font-family="sans-serif" font-size="11">
+    <!-- HL7 stream -->
+    <rect x="40" y="90" width="100" height="50" rx="6" fill="#fff" stroke="#90A4AE" stroke-width="1.5"/>
+    <text x="90" y="112" text-anchor="middle" fill="#455A64" font-size="10">HL7 Lab</text>
+    <text x="90" y="128" text-anchor="middle" fill="#455A64" font-size="10">Stream</text>
+    <!-- arrow -->
+    <line x1="140" y1="115" x2="180" y2="115" stroke="#90A4AE" stroke-width="1.5"/>
+    <polygon points="180,111 188,115 180,119" fill="#90A4AE"/>
+    <!-- Kafka -->
+    <rect x="190" y="90" width="100" height="50" rx="6" fill="#fff" stroke="#90A4AE" stroke-width="1.5"/>
+    <text x="240" y="112" text-anchor="middle" fill="#455A64" font-size="10">Message</text>
+    <text x="240" y="128" text-anchor="middle" fill="#455A64" font-size="10">Broker</text>
+    <!-- arrow -->
+    <line x1="290" y1="115" x2="330" y2="115" stroke="#90A4AE" stroke-width="1.5"/>
+    <polygon points="330,111 338,115 330,119" fill="#90A4AE"/>
+    <!-- ML inference -->
+    <rect x="340" y="80" width="120" height="70" rx="6" fill="#E3F2FD" stroke="#42A5F5" stroke-width="1.5"/>
+    <text x="400" y="108" text-anchor="middle" fill="#1565C0" font-weight="bold" font-size="11">ML Inference</text>
+    <text x="400" y="126" text-anchor="middle" fill="#1565C0" font-size="9">Kubernetes Pods</text>
+    <text x="400" y="140" text-anchor="middle" fill="#1565C0" font-size="9">Auto-scaling</text>
+    <!-- arrow -->
+    <line x1="460" y1="115" x2="500" y2="115" stroke="#90A4AE" stroke-width="1.5"/>
+    <polygon points="500,111 508,115 500,119" fill="#90A4AE"/>
+    <!-- alert -->
+    <rect x="510" y="90" width="100" height="50" rx="6" fill="#FFEBEE" stroke="#EF5350" stroke-width="1.5"/>
+    <text x="560" y="112" text-anchor="middle" fill="#C62828" font-size="10">Pager</text>
+    <text x="560" y="128" text-anchor="middle" fill="#C62828" font-size="10">Alert</text>
+  </g>
+  <!-- monitoring bar -->
+  <rect x="640" y="60" width="120" height="140" rx="6" fill="#fff" stroke="#90A4AE" stroke-width="1"/>
+  <text x="700" y="80" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#607D8B">Monitoring</text>
+  <!-- mini chart lines -->
+  <polyline points="660,100 675,95 690,105 705,92 720,98 740,88" fill="none" stroke="#4CAF50" stroke-width="1.5"/>
+  <polyline points="660,130 675,125 690,135 705,120 720,128 740,122" fill="none" stroke="#2196F3" stroke-width="1.5"/>
+  <polyline points="660,160 675,158 690,162 705,155 720,160 740,153" fill="none" stroke="#FF9800" stroke-width="1.5"/>
+  <!-- stats -->
+  <g font-family="monospace" font-size="12">
+    <text x="120" y="200" fill="#4CAF50" font-weight="bold">F3: 99.9%</text>
+    <text x="300" y="200" fill="#2196F3" font-weight="bold">100% uptime</text>
+    <text x="500" y="200" fill="#FF9800" font-weight="bold">&gt; NHS baseline</text>
+  </g>
+  <text x="400" y="248" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#607D8B">real-time AKI detection pipeline</text>
+</svg>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta content="IE=edge" http-equiv="X-UA-Compatible">
+  <meta content="width=device-width,initial-scale=1" name="viewport">
+  <meta content="description" name="description">
+  <meta name="google" content="notranslate" />
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
+  <link href="./images/favicon.ico" rel="icon">
+
+  <title>Euan Goodbrand</title>
+
+  <link href="./main.3f6952e4.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</head>
+
+
+<style>
+  .button {
+    display: inline-block;
+    padding: 5px 15px;
+    background-color: rgb(164, 221, 234);
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    border-radius: 25px;
+  }
+
+  .button:hover {
+    background-color: rgb(113, 139, 205);
+  }
+</style>
+
+
+<body id="page-top" class="politics_version">
+
+  </header>
+  <div class="section-container">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <img src="./images/aero-field-banner.svg" class="img-fluid" alt=""
+            style="display: block; margin: auto; max-width: 800px;">
+          <div class="card-container">
+            <div class="text-center">
+              <h1 class="h2">3D Aerodynamic Field Prediction</h1>
+            </div>
+            <p>Spatial AI for predicting dense physical fields on high-resolution 3D geometry from sparse sensor inputs.</p>
+
+            <ul class="tech-list">
+              <li>|</li>
+              <li><i class="fab fa-python"></i> Python</li>
+              <li><i class="fas fa-brain"></i> PyTorch</li>
+              <li><i class="fas fa-cubes"></i> PyTorch3D / Open3D</li>
+              <li><i class="fas fa-server"></i> Multi-GPU (DDP)</li>
+            </ul>
+
+            <blockquote>
+              <p>Predicting dense physical fields on high-resolution 3D geometry from sparse sensor inputs using geometric deep learning.</p>
+              <small class="pull-right">This work applies spatial AI to real-world engineering data — learning to infer
+                unobserved physical fields (pressure, velocity, friction) over complex 3D surfaces and volumes from limited
+                instrumentation. Models operate on point-cloud and mesh representations with millions of elements per sample,
+                handling distribution shift from continually evolving geometry and operating conditions.</small>
+            </blockquote>
+          </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2 section-container-spacer">
+          <div class="row">
+            <div class="col-xs-12">
+              <h4>Key Aspects</h4>
+              <ul>
+                <li><strong>Sparse-to-dense prediction</strong> — fusing sparse physical measurements with dense 3D geometry via cross-attention mechanisms to reconstruct full-field outputs.</li>
+                <li><strong>Geometric encodings</strong> — positional encodings aligned to geodesic and adjacency structure, providing stability under extreme geometric variability and supporting reference-frame invariance.</li>
+                <li><strong>Uncertainty estimation</strong> — quantifying prediction confidence to flag regions where model outputs should be treated with caution.</li>
+                <li><strong>Scalable training</strong> — multi-GPU training on NVIDIA H200 clusters with benchmarking across hardware configurations for high-resolution 3D workloads.</li>
+                <li><strong>Inference optimisation</strong> — 5× reduction in end-to-end inference time while preserving prediction quality for latency-sensitive applications.</li>
+                <li><strong>Baseline reproduction</strong> — reproduced state-of-the-art 3D vision and geometric learning methods, delivering up to 10× reductions in memory and training time through architecture modifications.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer-container text-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <p>© 2025 Euan Goodbrand</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function (event) {
+      navActivePage();
+    });
+  </script>
+
+  <script type="text/javascript" src="./main.70a66962.js"></script>
+
+</body>
+</html>
