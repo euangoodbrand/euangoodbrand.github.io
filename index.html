@@ -2061,7 +2061,51 @@
                 })();
                 </script>
 
-                <!-- Three.js: F1 / ML telemetry field (Mercedes-adjacent palette, no team assets) -->
+                <!-- Three.js: CFD aerofoil visualisation -->
+                <style>
+                    .cfd-panel {
+                        position: absolute; top: 10px; right: 10px;
+                        background: rgba(8,12,18,0.88); backdrop-filter: blur(8px);
+                        border: 1px solid rgba(0,196,176,0.2); border-radius: 6px;
+                        padding: 7px 10px; z-index: 6; width: 195px;
+                        font: 10px/1.4 'Roboto Mono', monospace; color: #7a8e9e;
+                        user-select: none;
+                    }
+                    .cfd-panel summary {
+                        cursor: pointer; color: #00c4b0; font-size: 9px;
+                        letter-spacing: 0.8px; text-transform: uppercase;
+                        list-style: none; display: flex; align-items: center; gap: 4px;
+                    }
+                    .cfd-panel summary::before { content: '▾'; font-size: 8px; }
+                    .cfd-panel:not([open]) summary::before { content: '▸'; }
+                    .cfd-panel .cfd-row { display: flex; align-items: center; gap: 5px; margin: 4px 0 0; overflow: hidden; }
+                    .cfd-panel .cfd-row span:first-child { width: 50px; flex-shrink: 0; font-size: 9px; }
+                    .cfd-panel input[type=range] {
+                        flex: 1; min-width: 0; height: 2px; accent-color: #00c4b0;
+                        background: rgba(0,196,176,0.15); border-radius: 1px;
+                        -webkit-appearance: none; appearance: none; cursor: pointer;
+                    }
+                    .cfd-panel input[type=range]::-webkit-slider-thumb {
+                        -webkit-appearance: none; width: 9px; height: 9px;
+                        border-radius: 50%; background: #00c4b0; border: none;
+                    }
+                    .cfd-panel .cfd-v { width: 28px; text-align: right; color: #b0bfc8; font-size: 9px; }
+                    .cfd-panel .cfd-sep { border: none; border-top: 1px solid rgba(0,196,176,0.12); margin: 5px 0 3px; }
+                    .cfd-panel .cfd-toggles { display: flex; gap: 4px; margin: 4px 0 0; flex-wrap: wrap; }
+                    .cfd-panel .cfd-btn {
+                        font: 9px/1 'Roboto Mono', monospace; padding: 3px 7px;
+                        border: 1px solid rgba(0,196,176,0.25); border-radius: 3px;
+                        background: transparent; color: #7a8e9e; cursor: pointer;
+                        transition: all 0.15s;
+                    }
+                    .cfd-panel .cfd-btn.active { background: rgba(0,196,176,0.15); color: #00c4b0; border-color: rgba(0,196,176,0.5); }
+                    .cfd-panel .cfd-btn:hover { border-color: rgba(0,196,176,0.45); color: #00c4b0; }
+                    .cfd-panel .cfd-readout {
+                        display: flex; justify-content: space-between; margin: 5px 0 2px;
+                        font-size: 9px; color: #5a6e7e;
+                    }
+                    .cfd-panel .cfd-readout strong { color: #00c4b0; font-weight: 600; }
+                </style>
                 <script>
                 (function() {
                     const wrap = document.querySelector('.f1-ml-wrap');
@@ -2073,116 +2117,270 @@
                     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
                     const scene = new THREE.Scene();
-                    const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 220);
-                    camera.position.set(0, 3.2, 18);
+                    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 220);
+                    camera.position.set(0, 0.8, 9);
+                    camera.lookAt(0, 0, 0);
 
-                    const grid = new THREE.GridHelper(72, 48, 0x00b8a8, 0x1a2228);
+                    const grid = new THREE.GridHelper(40, 32, 0x00b8a8, 0x1a2228);
                     if (grid.material) {
-                        const mats = Array.isArray(grid.material) ? grid.material : [grid.material];
-                        mats.forEach(function(m) {
-                            m.transparent = true;
-                            m.opacity = 0.38;
-                        });
+                        var gMats = Array.isArray(grid.material) ? grid.material : [grid.material];
+                        gMats.forEach(function(m) { m.transparent = true; m.opacity = 0.28; });
                     }
-                    grid.position.y = -3;
+                    grid.position.y = -3.5;
                     scene.add(grid);
 
-                    const curve = new THREE.CatmullRomCurve3([
-                        new THREE.Vector3(-14, 0.2, -7),
-                        new THREE.Vector3(-6, 0.5, 4),
-                        new THREE.Vector3(5, 0.15, 10),
-                        new THREE.Vector3(14, 0.35, -1),
-                        new THREE.Vector3(10, 0.1, -10),
-                        new THREE.Vector3(-3, 0.25, -11),
-                    ], true);
-                    const lineGeo = new THREE.BufferGeometry().setFromPoints(curve.getPoints(160));
-                    const racingLine = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({
-                        color: 0x00e6cf,
-                        transparent: true,
-                        opacity: 0.88,
-                    }));
-                    scene.add(racingLine);
+                    scene.add(new THREE.AmbientLight(0x607080, 0.6));
+                    var dirLight = new THREE.DirectionalLight(0x88ccbb, 0.5);
+                    dirLight.position.set(2, 4, 5);
+                    scene.add(dirLight);
 
-                    const streakCount = 260;
-                    const streakGeo = new THREE.BufferGeometry();
-                    const streakArr = new Float32Array(streakCount * 3);
-                    const streakVel = [];
-                    for (let i = 0; i < streakCount; i++) {
-                        streakArr[i * 3] = (Math.random() - 0.5) * 46;
-                        streakArr[i * 3 + 1] = (Math.random() - 0.25) * 8;
-                        streakArr[i * 3 + 2] = (Math.random() - 0.5) * 46;
-                        streakVel.push({
-                            vx: 0.07 + Math.random() * 0.24,
-                            vz: (Math.random() - 0.5) * 0.035,
-                        });
+                    // --- mutable simulation parameters ---
+                    var cfg = {
+                        angle: 0.08,
+                        pCount: 5000,
+                        speed: 0.06,
+                        opacity: 0.55,
+                        chord: 8,
+                        thick: 0.12,
+                    };
+                    var foilPos = { x: 0, y: 0 };
+
+                    function nacaY(xc) {
+                        return 5 * cfg.thick * (0.2969 * Math.sqrt(xc) - 0.1260 * xc - 0.3516 * xc * xc + 0.2843 * xc * xc * xc - 0.1015 * xc * xc * xc * xc);
                     }
-                    streakGeo.setAttribute('position', new THREE.BufferAttribute(streakArr, 3));
-                    const streaks = new THREE.Points(streakGeo, new THREE.PointsMaterial({
-                        color: 0x66eedd,
-                        size: 0.11,
-                        transparent: true,
-                        opacity: 0.52,
-                        blending: THREE.AdditiveBlending,
-                        depthWrite: false,
-                        sizeAttenuation: true,
-                    }));
-                    scene.add(streaks);
-
-                    const nodePositions = [
-                        [-7, 1.4, 0], [-1, 2.3, 1.5], [6.5, 1.2, -1], [4, 0.6, 6], [-5, 1.6, 5],
-                    ];
-                    const nodeMeshes = [];
-                    nodePositions.forEach(function(p) {
-                        const g = new THREE.SphereGeometry(0.38, 20, 20);
-                        const m = new THREE.MeshBasicMaterial({ color: 0xd0d8e2, transparent: true, opacity: 0.88 });
-                        const mesh = new THREE.Mesh(g, m);
-                        mesh.position.set(p[0], p[1], p[2]);
-                        scene.add(mesh);
-                        nodeMeshes.push(mesh);
-                    });
-
-                    const edgeVerts = [];
-                    const pairs = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 0], [1, 3], [0, 2]];
-                    pairs.forEach(function(ab) {
-                        const a = nodePositions[ab[0]];
-                        const b = nodePositions[ab[1]];
-                        edgeVerts.push(a[0], a[1], a[2], b[0], b[1], b[2]);
-                    });
-                    const edgeGeo = new THREE.BufferGeometry();
-                    edgeGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(edgeVerts), 3));
-                    const edgeMat = new THREE.LineBasicMaterial({ color: 0x5c6b7a, transparent: true, opacity: 0.48 });
-                    const edges = new THREE.LineSegments(edgeGeo, edgeMat);
-                    scene.add(edges);
-
-                    const barMeshes = [];
-                    for (let i = 0; i < 10; i++) {
-                        const g = new THREE.BoxGeometry(0.2, 1, 0.22);
-                        const m = new THREE.MeshBasicMaterial({
-                            color: 0x009688,
-                            transparent: true,
-                            opacity: 0.42,
-                        });
-                        const mesh = new THREE.Mesh(g, m);
-                        mesh.position.set(16 + (i % 5) * 0.42, -2.45, -4 + Math.floor(i / 5) * 0.5);
-                        barMeshes.push(mesh);
-                        scene.add(mesh);
+                    function nacaDY(xc) {
+                        if (xc < 0.003) xc = 0.003;
+                        return 5 * cfg.thick * (0.14845 / Math.sqrt(xc) - 0.1260 - 0.7032 * xc + 0.8529 * xc * xc - 0.4060 * xc * xc * xc);
                     }
 
-                    scene.add(new THREE.AmbientLight(0x556677, 0.55));
+                    // --- foil geometry (rebuilt on angle/chord change) ---
+                    var foilMat = new THREE.MeshPhongMaterial({
+                        color: 0x16222a, transparent: true, opacity: 0.82,
+                        shininess: 100, specular: 0x44bbaa, side: THREE.DoubleSide,
+                    });
+                    var foilWireMat = new THREE.LineBasicMaterial({ color: 0x00c4b0, transparent: true, opacity: 0.5 });
+                    var foilMesh = null, foilWire = null;
 
-                    let t = 0;
-                    const pointer = { x: 0, y: 0 };
+                    function buildFoil() {
+                        if (foilMesh) { scene.remove(foilMesh); foilMesh.geometry.dispose(); }
+                        if (foilWire) { scene.remove(foilWire); foilWire.geometry.dispose(); }
+                        var shape = new THREE.Shape();
+                        var steps = 48;
+                        for (var i = 0; i <= steps; i++) {
+                            var xc = i / steps, yt = nacaY(xc) * cfg.chord, xp = xc * cfg.chord - cfg.chord * 0.5;
+                            if (i === 0) shape.moveTo(xp, yt); else shape.lineTo(xp, yt);
+                        }
+                        for (var i = steps; i >= 0; i--) {
+                            var xc = i / steps, yt = nacaY(xc) * cfg.chord, xp = xc * cfg.chord - cfg.chord * 0.5;
+                            shape.lineTo(xp, -yt);
+                        }
+                        var geo = new THREE.ExtrudeGeometry(shape, { depth: 0.6, bevelEnabled: false });
+                        foilMesh = new THREE.Mesh(geo, foilMat);
+                        foilMesh.rotation.z = cfg.angle;
+                        foilMesh.position.set(foilPos.x, foilPos.y, -0.3);
+                        scene.add(foilMesh);
+                        var eg = new THREE.EdgesGeometry(geo, 12);
+                        foilWire = new THREE.LineSegments(eg, foilWireMat);
+                        foilWire.rotation.copy(foilMesh.rotation);
+                        foilWire.position.copy(foilMesh.position);
+                        scene.add(foilWire);
+                    }
+                    buildFoil();
+
+                    // --- particles (rebuilt on count change) ---
+                    var xMin = -14, xMax = 14, yMin = -5, yMax = 5;
+                    var posArr, colArr, alpArr, baseSpeed, pGeo, pMat, pPoints;
+                    var MAX_P = 10000;
+
+                    function spawnY() {
+                        var r = Math.random();
+                        r = r * r;
+                        return (Math.random() < 0.5 ? r : -r) * (yMax - yMin) * 0.5;
+                    }
+
+                    function buildParticles() {
+                        if (pPoints) { scene.remove(pPoints); pGeo.dispose(); }
+                        var n = cfg.pCount;
+                        posArr = new Float32Array(n * 3);
+                        colArr = new Float32Array(n * 3);
+                        alpArr = new Float32Array(n);
+                        baseSpeed = new Float32Array(n);
+                        for (var i = 0; i < n; i++) {
+                            posArr[i*3]   = xMin + Math.random() * (xMax - xMin);
+                            posArr[i*3+1] = spawnY();
+                            posArr[i*3+2] = (Math.random() - 0.5) * 0.8;
+                            colArr[i*3] = 1; colArr[i*3+1] = 1; colArr[i*3+2] = 1;
+                            baseSpeed[i] = 0.7 + Math.random() * 0.6;
+                        }
+                        pGeo = new THREE.BufferGeometry();
+                        pGeo.setAttribute('position', new THREE.BufferAttribute(posArr, 3));
+                        pGeo.setAttribute('color', new THREE.BufferAttribute(colArr, 3));
+                        pMat = new THREE.PointsMaterial({
+                            size: 0.07, transparent: true, opacity: cfg.opacity,
+                            vertexColors: true, blending: THREE.AdditiveBlending,
+                            depthWrite: false, sizeAttenuation: true,
+                        });
+                        pPoints = new THREE.Points(pGeo, pMat);
+                        scene.add(pPoints);
+                    }
+                    buildParticles();
+
+                    // --- flow field ---
+                    function flowAt(px, py, U) {
+                        var _ca = Math.cos(cfg.angle), _sa = Math.sin(cfg.angle);
+                        var halfC = cfg.chord * 0.5;
+                        var dx = px - foilPos.x, dy = py - foilPos.y;
+                        var lx = dx * _ca + dy * _sa;
+                        var ly = -dx * _sa + dy * _ca;
+
+                        if (lx < -halfC - 0.15 || lx > halfC + 0.3) return null;
+
+                        var xc = (lx + halfC) / cfg.chord;
+                        xc = Math.max(0.003, Math.min(0.997, xc));
+                        var yt = nacaY(xc) * cfg.chord;
+                        var absLy = Math.abs(ly);
+                        var sign = ly >= 0 ? 1 : -1;
+                        if (sign === 0) sign = 1;
+
+                        var slope = nacaDY(xc) * sign;
+                        var tLen = Math.sqrt(1 + slope * slope);
+                        var tx = 1 / tLen, ty = slope / tLen;
+
+                        if (absLy <= yt) {
+                            var newLy = yt * sign + sign * 0.02;
+                            var wx = lx * _ca + newLy * _sa + foilPos.x;
+                            var wy = -lx * _sa + newLy * _ca + foilPos.y;
+                            var su = U * 1.15;
+                            return { vx: (tx*_ca + ty*_sa)*su, vy: (-tx*_sa + ty*_ca)*su, wx: wx, wy: wy, snap: true, prox: 1.0 };
+                        }
+
+                        var surfDist = absLy - yt;
+                        var boundary = 0.55;
+                        if (surfDist > boundary) return null;
+
+                        var blend = surfDist / boundary;
+                        blend = blend * blend;
+                        var su = U * (1 + (1 - blend) * 0.25);
+                        var lvx = U * blend + tx * su * (1 - blend);
+                        var lvy = ty * su * (1 - blend);
+                        return {
+                            vx: lvx * _ca + lvy * _sa,
+                            vy: -lvx * _sa + lvy * _ca,
+                            snap: false,
+                            prox: 1 - surfDist / boundary,
+                        };
+                    }
+
+                    // --- controls panel ---
+                    cfg.colorMode = 'proximity'; // 'proximity' | 'velocity'
+                    cfg.trails = false;
+                    cfg.gridOn = true;
+
+                    var TRAIL_LEN = 4;
+                    var trailBuf = null, trailGeo = null, trailLines = null;
+                    function buildTrails() {
+                        if (trailLines) { scene.remove(trailLines); trailGeo.dispose(); }
+                        if (!cfg.trails) return;
+                        var n = cfg.pCount;
+                        trailBuf = new Float32Array(n * TRAIL_LEN * 3);
+                        for (var i = 0; i < n; i++) {
+                            for (var s = 0; s < TRAIL_LEN; s++) {
+                                var off = (i * TRAIL_LEN + s) * 3;
+                                trailBuf[off] = posArr[i*3]; trailBuf[off+1] = posArr[i*3+1]; trailBuf[off+2] = posArr[i*3+2];
+                            }
+                        }
+                        trailGeo = new THREE.BufferGeometry();
+                        trailGeo.setAttribute('position', new THREE.BufferAttribute(trailBuf, 3));
+                        var indices = [];
+                        for (var i = 0; i < n; i++) {
+                            for (var s = 0; s < TRAIL_LEN - 1; s++) {
+                                indices.push(i * TRAIL_LEN + s, i * TRAIL_LEN + s + 1);
+                            }
+                        }
+                        trailGeo.setIndex(indices);
+                        trailLines = new THREE.LineSegments(trailGeo, new THREE.LineBasicMaterial({
+                            color: 0x00c4b0, transparent: true, opacity: 0.12,
+                            blending: THREE.AdditiveBlending, depthWrite: false,
+                        }));
+                        scene.add(trailLines);
+                    }
+
+                    var panel = document.createElement('details');
+                    panel.className = 'cfd-panel';
+                    panel.open = true;
+                    panel.innerHTML = '<summary>Simulation</summary>'
+                        + '<div class="cfd-readout"><span>AoA <strong id="cfd-aoa-r">4.6°</strong></span><span>C<sub>L</sub> ≈ <strong id="cfd-cl-r">0.29</strong></span></div>'
+                        + '<hr class="cfd-sep">'
+                        + '<div class="cfd-row"><span>Angle</span><input type="range" id="cfd-angle" min="-0.35" max="0.35" step="0.01" value="'+cfg.angle+'"><span class="cfd-v" id="cfd-angle-v">'+cfg.angle.toFixed(2)+'</span></div>'
+                        + '<div class="cfd-row"><span>Count</span><input type="range" id="cfd-pcount" min="500" max="'+MAX_P+'" step="500" value="'+cfg.pCount+'"><span class="cfd-v" id="cfd-pcount-v">'+cfg.pCount+'</span></div>'
+                        + '<div class="cfd-row"><span>Speed</span><input type="range" id="cfd-speed" min="0.01" max="0.20" step="0.01" value="'+cfg.speed+'"><span class="cfd-v" id="cfd-speed-v">'+cfg.speed.toFixed(2)+'</span></div>'
+                        + '<div class="cfd-row"><span>Opacity</span><input type="range" id="cfd-opacity" min="0.1" max="1.0" step="0.05" value="'+cfg.opacity+'"><span class="cfd-v" id="cfd-opacity-v">'+cfg.opacity.toFixed(2)+'</span></div>'
+                        + '<div class="cfd-row"><span>Profile</span><input type="range" id="cfd-thick" min="0.04" max="0.24" step="0.01" value="'+cfg.thick+'"><span class="cfd-v" id="cfd-thick-v">'+cfg.thick.toFixed(2)+'</span></div>'
+                        + '<hr class="cfd-sep">'
+                        + '<div class="cfd-toggles">'
+                        + '<button class="cfd-btn active" id="cfd-col-prox">Proximity</button>'
+                        + '<button class="cfd-btn" id="cfd-col-vel">Velocity</button>'
+                        + '<button class="cfd-btn" id="cfd-trails">Trails</button>'
+                        + '<button class="cfd-btn active" id="cfd-grid">Grid</button>'
+                        + '</div>';
+                    wrap.appendChild(panel);
+
+                    function bindSlider(id, key, cb) {
+                        var el = document.getElementById(id), vEl = document.getElementById(id + '-v');
+                        el.addEventListener('input', function() {
+                            var v = parseFloat(el.value); cfg[key] = v;
+                            vEl.textContent = v % 1 === 0 ? v : v.toFixed(2);
+                            if (cb) cb();
+                        });
+                    }
+                    function updateCL() {
+                        var deg = (cfg.angle * 180 / Math.PI).toFixed(1);
+                        var cl = (2 * Math.PI * cfg.angle).toFixed(2);
+                        var aoaEl = document.getElementById('cfd-aoa-r');
+                        var clEl = document.getElementById('cfd-cl-r');
+                        if (aoaEl) aoaEl.textContent = deg + '\u00B0';
+                        if (clEl) clEl.textContent = cl;
+                    }
+                    updateCL();
+                    bindSlider('cfd-angle', 'angle', function() {
+                        foilMesh.rotation.z = cfg.angle; foilWire.rotation.z = cfg.angle; updateCL();
+                    });
+                    bindSlider('cfd-pcount', 'pCount', function() { buildParticles(); if (cfg.trails) buildTrails(); });
+                    bindSlider('cfd-speed', 'speed');
+                    bindSlider('cfd-opacity', 'opacity', function() { pMat.opacity = cfg.opacity; });
+                    bindSlider('cfd-thick', 'thick', buildFoil);
+
+                    document.getElementById('cfd-col-prox').addEventListener('click', function() {
+                        cfg.colorMode = 'proximity'; this.classList.add('active');
+                        document.getElementById('cfd-col-vel').classList.remove('active');
+                    });
+                    document.getElementById('cfd-col-vel').addEventListener('click', function() {
+                        cfg.colorMode = 'velocity'; this.classList.add('active');
+                        document.getElementById('cfd-col-prox').classList.remove('active');
+                    });
+                    document.getElementById('cfd-trails').addEventListener('click', function() {
+                        cfg.trails = !cfg.trails; this.classList.toggle('active', cfg.trails);
+                        if (cfg.trails) buildTrails(); else if (trailLines) { scene.remove(trailLines); trailLines = null; }
+                    });
+                    document.getElementById('cfd-grid').addEventListener('click', function() {
+                        cfg.gridOn = !cfg.gridOn; this.classList.toggle('active', cfg.gridOn);
+                        grid.visible = cfg.gridOn;
+                    });
+
+                    // --- animation ---
+                    var t = 0;
+                    var pointer = { x: 0, y: 0 };
                     wrap.addEventListener('mousemove', function(e) {
-                        const r = wrap.getBoundingClientRect();
+                        var r = wrap.getBoundingClientRect();
                         if (r.width < 1 || r.height < 1) return;
                         pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
                         pointer.y = ((e.clientY - r.top) / r.height) * 2 - 1;
                     }, { passive: true });
 
                     function syncSize() {
-                        const r = wrap.getBoundingClientRect();
-                        const w = Math.max(1, Math.round(r.width));
-                        const h = Math.max(1, Math.round(r.height));
+                        var r = wrap.getBoundingClientRect();
+                        var w = Math.max(1, Math.round(r.width));
+                        var h = Math.max(1, Math.round(r.height));
                         renderer.setSize(w, h, false);
                         canvas.style.width = '100%';
                         canvas.style.height = '100%';
@@ -2190,49 +2388,77 @@
                         camera.updateProjectionMatrix();
                     }
 
-                    let running = false;
-                    let rafId = 0;
+                    var running = false, rafId = 0;
 
                     function tick() {
                         if (!running) return;
                         rafId = requestAnimationFrame(tick);
                         t += 0.018;
 
-                        nodeMeshes.forEach(function(mesh, i) {
-                            const s = 1 + Math.sin(t * 2.4 + i * 0.9) * 0.18;
-                            mesh.scale.setScalar(s);
-                            mesh.material.opacity = 0.62 + Math.sin(t * 3.1 + i * 0.8) * 0.22;
-                        });
+                        var n = cfg.pCount;
+                        var boost = 1 + pointer.x * 0.4;
+                        var hasTrails = cfg.trails && trailBuf && trailLines;
 
-                        const pos = streakGeo.attributes.position.array;
-                        const boost = 1 + pointer.x * 0.35;
-                        for (let i = 0; i < streakCount; i++) {
-                            pos[i * 3] += streakVel[i].vx * boost;
-                            pos[i * 3 + 2] += streakVel[i].vz + pointer.y * 0.012;
-                            if (pos[i * 3] > 22) pos[i * 3] = -22;
-                            if (pos[i * 3] < -22) pos[i * 3] = 22;
+                        for (var i = 0; i < n; i++) {
+                            var ix = i * 3, iy = ix + 1, iz = ix + 2;
+                            var U = baseSpeed[i] * cfg.speed * boost;
+                            var vx = U, vy = 0, prox = 0;
+
+                            var fl = flowAt(posArr[ix], posArr[iy], U);
+                            if (fl) {
+                                vx = fl.vx; vy = fl.vy; prox = fl.prox;
+                                if (fl.snap) { posArr[ix] = fl.wx; posArr[iy] = fl.wy; }
+                            }
+
+                            posArr[ix] += vx;
+                            posArr[iy] += vy;
+
+                            var respawn = false;
+                            if (posArr[ix] > xMax) { posArr[ix] = xMin; posArr[iy] = spawnY(); respawn = true; }
+                            if (posArr[ix] < xMin) { posArr[ix] = xMax; respawn = true; }
+                            if (posArr[iy] > yMax) posArr[iy] = yMax;
+                            if (posArr[iy] < yMin) posArr[iy] = yMin;
+
+                            if (cfg.colorMode === 'velocity') {
+                                var spd = Math.sqrt(vx*vx + vy*vy);
+                                var norm = Math.min(spd / (cfg.speed * 1.8), 1);
+                                colArr[ix]   = 0.15 + norm * 0.85;
+                                colArr[iy]   = 0.4 + (1 - Math.abs(norm - 0.5) * 2) * 0.6;
+                                colArr[iz]   = 1.0 - norm * 0.75;
+                            } else {
+                                colArr[ix]   = 1.0;
+                                colArr[iy]   = 1.0 - prox * 0.85;
+                                colArr[iz]   = 1.0 - prox * 0.9;
+                            }
+
+                            if (hasTrails) {
+                                var base = i * TRAIL_LEN;
+                                for (var s = TRAIL_LEN - 1; s > 0; s--) {
+                                    var tOff = (base + s) * 3, tPrev = (base + s - 1) * 3;
+                                    trailBuf[tOff] = trailBuf[tPrev]; trailBuf[tOff+1] = trailBuf[tPrev+1]; trailBuf[tOff+2] = trailBuf[tPrev+2];
+                                }
+                                var t0 = base * 3;
+                                trailBuf[t0] = posArr[ix]; trailBuf[t0+1] = posArr[iy]; trailBuf[t0+2] = posArr[iz];
+                                if (respawn) {
+                                    for (var s = 1; s < TRAIL_LEN; s++) {
+                                        var tOff = (base + s) * 3;
+                                        trailBuf[tOff] = posArr[ix]; trailBuf[tOff+1] = posArr[iy]; trailBuf[tOff+2] = posArr[iz];
+                                    }
+                                }
+                            }
                         }
-                        streakGeo.attributes.position.needsUpdate = true;
+                        pGeo.attributes.position.needsUpdate = true;
+                        pGeo.attributes.color.needsUpdate = true;
+                        if (hasTrails) trailGeo.attributes.position.needsUpdate = true;
 
-                        racingLine.rotation.y = Math.sin(t * 0.12) * 0.18;
-                        racingLine.position.y = Math.sin(t * 0.95) * 0.1;
-
-                        barMeshes.forEach(function(mesh, i) {
-                            const h = 0.35 + Math.abs(Math.sin(t * 2.8 + i * 0.5)) * 1.15;
-                            mesh.scale.y = h;
-                            mesh.position.y = -2.95 + h * 0.5;
-                        });
-
-                        edgeMat.opacity = 0.36 + Math.sin(t * 2) * 0.12;
-
-                        camera.position.x = pointer.x * 2.6 + Math.sin(t * 0.35) * 0.45;
-                        camera.position.y = 3.2 + pointer.y * 0.85 + Math.cos(t * 0.32) * 0.25;
-                        camera.lookAt(0, 0.35, 0);
+                        camera.position.x = pointer.x * 1.4 + Math.sin(t * 0.25) * 0.2;
+                        camera.position.y = 0.8 + pointer.y * 0.5;
+                        camera.lookAt(0, 0, 0);
 
                         renderer.render(scene, camera);
                     }
 
-                    const io = new IntersectionObserver(function(entries) {
+                    var io = new IntersectionObserver(function(entries) {
                         entries.forEach(function(entry) {
                             if (entry.isIntersecting) {
                                 if (!running) {
