@@ -22,9 +22,6 @@
 }
 
 @media (max-width: 767px) {
-    #background-video {
-        display: none;
-    }
     #video-container {
         background: url('./images/jellyfish-poster.jpg') no-repeat center center;
         background-size: cover;
