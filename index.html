@@ -1366,6 +1366,7 @@
 
                 <!-- Three.js for 3D Bubbles + Water Surface -->
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/GLTFLoader.js"></script>
                 <script>
                 (function() {
                     const canvas = document.getElementById('bubble-canvas');
@@ -2508,6 +2509,18 @@
                         font-size: 9px; color: #5a6e7e;
                     }
                     .cfd-panel .cfd-readout strong { color: #00c4b0; font-weight: 600; }
+                    .cfd-panel select {
+                        background: rgba(0,196,176,0.08); color: #b0bfc8;
+                        border: 1px solid rgba(0,196,176,0.25); border-radius: 3px;
+                        font: 9px/1.4 'Roboto Mono', monospace; padding: 3px 6px;
+                        outline: none; cursor: pointer; flex: 1; min-width: 0;
+                        -webkit-appearance: none; appearance: none;
+                        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%2300c4b0'/%3E%3C/svg%3E");
+                        background-repeat: no-repeat; background-position: right 5px center;
+                        padding-right: 16px;
+                    }
+                    .cfd-panel select:focus { border-color: rgba(0,196,176,0.5); }
+                    .cfd-panel select option { background: #0c1018; color: #b0bfc8; }
                     .cfd-joystick {
                         position: absolute;
                         right: 12px;
@@ -2605,6 +2618,7 @@
                         opacity: 0.55,
                         chord: isMobile ? 2 : 8,
                         thick: 0.12,
+                        shape: 'aerofoil',
                     };
                     var foilPos = { x: 0, y: 0 };
 
@@ -2616,17 +2630,106 @@
                         return 5 * cfg.thick * (0.14845 / Math.sqrt(xc) - 0.1260 - 0.7032 * xc + 0.8529 * xc * xc - 0.4060 * xc * xc * xc);
                     }
 
-                    // --- foil geometry (rebuilt on angle/chord change) ---
-                    var foilMat = new THREE.MeshPhongMaterial({
-                        color: 0x16222a, transparent: true, opacity: 0.82,
-                        shininess: 100, specular: 0x44bbaa, side: THREE.DoubleSide,
-                    });
-                    var foilWireMat = new THREE.LineBasicMaterial({ color: 0x00c4b0, transparent: true, opacity: 0.5 });
-                    var foilMesh = null, foilWire = null;
+                    /* =========================================================
+                       SHAPE DEFINITIONS
+                       - Aerofoil: parametric NACA
+                       - F1 Car:   GLB model loaded from GitHub (Alfa Romeo C42)
+                       - Aero Cat: hand-drawn polygon (silly)
+                       ========================================================= */
 
-                    function buildFoil() {
-                        if (foilMesh) { sceneRoot.remove(foilMesh); foilMesh.geometry.dispose(); }
-                        if (foilWire) { sceneRoot.remove(foilWire); foilWire.geometry.dispose(); }
+                    // Helper: build a THREE.Shape from an array of {x,y} points
+                    function shapeFromPoly(pts) {
+                        var s = new THREE.Shape();
+                        s.moveTo(pts[0].x, pts[0].y);
+                        for (var i = 1; i < pts.length; i++) s.lineTo(pts[i].x, pts[i].y);
+                        s.closePath();
+                        return s;
+                    }
+
+                    // --- Aero Cat (ridiculous but lovable) ---
+                    function catProfile(chord) {
+                        var c = chord;
+                        var raw = [
+                            // Nose / muzzle
+                            {x: -0.50, y: 0.00},
+                            {x: -0.48, y: 0.03},
+                            // Whisker bump
+                            {x: -0.44, y: 0.06},
+                            {x: -0.40, y: 0.10},
+                            // Head
+                            {x: -0.37, y: 0.15},
+                            // Left ear
+                            {x: -0.35, y: 0.22},
+                            {x: -0.33, y: 0.30},
+                            {x: -0.30, y: 0.28},
+                            // Between ears
+                            {x: -0.27, y: 0.20},
+                            {x: -0.23, y: 0.18},
+                            // Right ear
+                            {x: -0.21, y: 0.28},
+                            {x: -0.18, y: 0.31},
+                            {x: -0.16, y: 0.26},
+                            // Neck
+                            {x: -0.15, y: 0.18},
+                            {x: -0.10, y: 0.14},
+                            // Shoulder
+                            {x: -0.04, y: 0.16},
+                            {x: 0.04, y: 0.18},
+                            // Back (arched like cats do)
+                            {x: 0.12, y: 0.20},
+                            {x: 0.20, y: 0.19},
+                            {x: 0.28, y: 0.16},
+                            // Rump
+                            {x: 0.34, y: 0.12},
+                            // Tail (curled up!)
+                            {x: 0.38, y: 0.14},
+                            {x: 0.42, y: 0.20},
+                            {x: 0.46, y: 0.26},
+                            {x: 0.50, y: 0.28},
+                            {x: 0.50, y: 0.24},
+                            {x: 0.47, y: 0.18},
+                            {x: 0.44, y: 0.12},
+                            {x: 0.40, y: 0.08},
+                            // Rear leg back
+                            {x: 0.38, y: -0.02},
+                            {x: 0.40, y: -0.12},
+                            {x: 0.41, y: -0.18},
+                            // Rear paw
+                            {x: 0.38, y: -0.20},
+                            {x: 0.35, y: -0.18},
+                            // Rear leg front
+                            {x: 0.34, y: -0.10},
+                            {x: 0.32, y: -0.04},
+                            // Belly
+                            {x: 0.24, y: -0.06},
+                            {x: 0.14, y: -0.08},
+                            {x: 0.04, y: -0.07},
+                            {x: -0.06, y: -0.06},
+                            // Front leg back
+                            {x: -0.12, y: -0.06},
+                            {x: -0.14, y: -0.14},
+                            {x: -0.15, y: -0.18},
+                            // Front paw
+                            {x: -0.18, y: -0.20},
+                            {x: -0.21, y: -0.18},
+                            // Front leg front
+                            {x: -0.20, y: -0.10},
+                            {x: -0.19, y: -0.04},
+                            // Chest
+                            {x: -0.24, y: -0.02},
+                            {x: -0.32, y: -0.04},
+                            // Chin
+                            {x: -0.40, y: -0.04},
+                            {x: -0.46, y: -0.03},
+                        ];
+                        var pts = raw.map(function(p) { return { x: p.x * c, y: p.y * c }; });
+                        return shapeFromPoly(pts);
+                    }
+
+                    /* Build a THREE.Shape for shapes that use the extrude approach */
+                    function currentShape() {
+                        if (cfg.shape === 'cat') return catProfile(cfg.chord);
+                        // Default: aerofoil
                         var shape = new THREE.Shape();
                         var steps = 48;
                         for (var i = 0; i <= steps; i++) {
@@ -2637,6 +2740,170 @@
                             var xc = i / steps, yt = nacaY(xc) * cfg.chord, xp = xc * cfg.chord - cfg.chord * 0.5;
                             shape.lineTo(xp, -yt);
                         }
+                        return shape;
+                    }
+
+                    // --- geometry containers ---
+                    var foilMat = new THREE.MeshPhongMaterial({
+                        color: 0x16222a, transparent: true, opacity: 0.82,
+                        shininess: 100, specular: 0x44bbaa, side: THREE.DoubleSide,
+                    });
+                    var foilWireMat = new THREE.LineBasicMaterial({ color: 0x00c4b0, transparent: true, opacity: 0.5 });
+                    var foilMesh = null, foilWire = null;
+
+                    /* F1 Car GLB model state */
+                    var f1Group = null;       // THREE.Group holding loaded GLB
+                    var f1Loaded = false;
+                    var f1Loading = false;
+                    var F1_MODEL_URL = 'https://raw.githubusercontent.com/markste-in/c42/main/c42.glb';
+
+                    /* Precomputed boundary polygon for flow deflection */
+                    var bodyPoly = [];
+                    var bodyNormals = [];
+
+                    function computeNormals() {
+                        bodyNormals = [];
+                        for (var i = 0; i < bodyPoly.length; i++) {
+                            var a = bodyPoly[i], b = bodyPoly[(i + 1) % bodyPoly.length];
+                            var ex = b.x - a.x, ey = b.y - a.y;
+                            var len = Math.sqrt(ex * ex + ey * ey) || 1;
+                            bodyNormals.push({ x: ey / len, y: -ex / len });
+                        }
+                    }
+
+                    /* Compute a 2D convex hull from an array of {x,y} points (Andrew's monotone chain) */
+                    function convexHull2D(points) {
+                        var pts = points.slice().sort(function(a, b) { return a.x - b.x || a.y - b.y; });
+                        if (pts.length <= 1) return pts;
+                        function cross(O, A, B) { return (A.x - O.x) * (B.y - O.y) - (A.y - O.y) * (B.x - O.x); }
+                        var lower = [];
+                        for (var i = 0; i < pts.length; i++) {
+                            while (lower.length >= 2 && cross(lower[lower.length-2], lower[lower.length-1], pts[i]) <= 0) lower.pop();
+                            lower.push(pts[i]);
+                        }
+                        var upper = [];
+                        for (var i = pts.length - 1; i >= 0; i--) {
+                            while (upper.length >= 2 && cross(upper[upper.length-2], upper[upper.length-1], pts[i]) <= 0) upper.pop();
+                            upper.push(pts[i]);
+                        }
+                        upper.pop(); lower.pop();
+                        return lower.concat(upper);
+                    }
+
+                    /* Extract 2D silhouette from a THREE.Group by projecting all vertices onto XY */
+                    function extractSilhouette(group, targetChord) {
+                        var pts2d = [];
+                        group.traverse(function(child) {
+                            if (child.isMesh && child.geometry) {
+                                var pos = child.geometry.attributes.position;
+                                if (!pos) return;
+                                child.updateMatrixWorld(true);
+                                var v = new THREE.Vector3();
+                                // Sample every Nth vertex to keep it fast
+                                var step = Math.max(1, Math.floor(pos.count / 600));
+                                for (var i = 0; i < pos.count; i += step) {
+                                    v.fromBufferAttribute(pos, i);
+                                    child.localToWorld(v);
+                                    pts2d.push({ x: v.x, y: v.y });
+                                }
+                            }
+                        });
+                        if (pts2d.length < 3) return [];
+                        // Compute bounding box, normalise to fit targetChord
+                        var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+                        pts2d.forEach(function(p) {
+                            if (p.x < minX) minX = p.x; if (p.x > maxX) maxX = p.x;
+                            if (p.y < minY) minY = p.y; if (p.y > maxY) maxY = p.y;
+                        });
+                        var cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+                        var w = maxX - minX || 1;
+                        var scale = targetChord / w;
+                        var normalised = pts2d.map(function(p) {
+                            return { x: (p.x - cx) * scale, y: (p.y - cy) * scale };
+                        });
+                        return convexHull2D(normalised);
+                    }
+
+                    /* Load the F1 GLB model */
+                    function loadF1Model(cb) {
+                        if (f1Loaded && f1Group) { cb(); return; }
+                        if (f1Loading) return;
+                        f1Loading = true;
+                        var loader = new THREE.GLTFLoader();
+                        loader.load(F1_MODEL_URL, function(gltf) {
+                            f1Group = gltf.scene;
+                            // Rotate so the car's length axis aligns with X (flow direction)
+                            // The C42 model has length along Z typically
+                            f1Group.rotation.y = Math.PI / 2;
+                            // Make it slightly translucent with teal tint to match the theme
+                            f1Group.traverse(function(child) {
+                                if (child.isMesh) {
+                                    child.material = new THREE.MeshPhongMaterial({
+                                        color: 0x16222a, transparent: true, opacity: 0.82,
+                                        shininess: 100, specular: 0x44bbaa, side: THREE.DoubleSide,
+                                    });
+                                }
+                            });
+                            f1Loaded = true;
+                            f1Loading = false;
+                            cb();
+                        }, undefined, function(err) {
+                            console.warn('F1 GLB load failed:', err);
+                            f1Loading = false;
+                        });
+                    }
+
+                    /* Clear current body meshes from scene */
+                    function clearBody() {
+                        if (foilMesh) { sceneRoot.remove(foilMesh); foilMesh.geometry.dispose(); foilMesh = null; }
+                        if (foilWire) { sceneRoot.remove(foilWire); foilWire.geometry.dispose(); foilWire = null; }
+                        if (f1Group && f1Group.parent) { sceneRoot.remove(f1Group); }
+                    }
+
+                    function buildFoil() {
+                        clearBody();
+
+                        if (cfg.shape === 'f1car') {
+                            loadF1Model(function() {
+                                clearBody();
+                                // Reset scale to 1 so we always measure the raw model size
+                                f1Group.scale.setScalar(1);
+                                f1Group.position.set(0, 0, 0);
+                                f1Group.updateMatrixWorld(true);
+                                // Measure raw bounding box
+                                var box = new THREE.Box3().setFromObject(f1Group);
+                                var size = new THREE.Vector3(); box.getSize(size);
+                                var maxDim = Math.max(size.x, size.y, size.z) || 1;
+                                var s = cfg.chord / maxDim;
+                                f1Group.scale.setScalar(s);
+                                f1Group.updateMatrixWorld(true);
+                                // Re-centre after scaling
+                                box.setFromObject(f1Group);
+                                var center = new THREE.Vector3(); box.getCenter(center);
+                                f1Group.position.set(
+                                    foilPos.x - center.x,
+                                    foilPos.y - center.y,
+                                    -center.z
+                                );
+                                f1Group.rotation.z = cfg.angle;
+                                sceneRoot.add(f1Group);
+                                // Extract 2D silhouette for flow field
+                                bodyPoly = extractSilhouette(f1Group, cfg.chord);
+                                computeNormals();
+                            });
+                            // While loading, set a simple box placeholder for flow field
+                            if (!f1Loaded) {
+                                var hw = cfg.chord * 0.5, hh = cfg.chord * 0.15;
+                                bodyPoly = [
+                                    {x:-hw,y:-hh},{x:hw,y:-hh},{x:hw,y:hh},{x:-hw,y:hh}
+                                ];
+                                computeNormals();
+                            }
+                            return;
+                        }
+
+                        // Extruded shapes (aerofoil, cat)
+                        var shape = currentShape();
                         var geo = new THREE.ExtrudeGeometry(shape, { depth: 0.6, bevelEnabled: false });
                         foilMesh = new THREE.Mesh(geo, foilMat);
                         foilMesh.rotation.z = cfg.angle;
@@ -2647,6 +2914,11 @@
                         foilWire.rotation.copy(foilMesh.rotation);
                         foilWire.position.copy(foilMesh.position);
                         sceneRoot.add(foilWire);
+
+                        // Extract polygon for flow field
+                        var shPts = shape.getPoints(64);
+                        bodyPoly = shPts.map(function(p) { return { x: p.x, y: p.y }; });
+                        computeNormals();
                     }
                     buildFoil();
 
@@ -2688,49 +2960,90 @@
                     }
                     buildParticles();
 
-                    // --- flow field ---
+                    // --- flow field (generic polygon-based) ---
                     function flowAt(px, py, U) {
                         var _ca = Math.cos(cfg.angle), _sa = Math.sin(cfg.angle);
-                        var halfC = cfg.chord * 0.5;
+                        // Transform point into local (body-aligned) coords
                         var dx = px - foilPos.x, dy = py - foilPos.y;
                         var lx = dx * _ca + dy * _sa;
                         var ly = -dx * _sa + dy * _ca;
 
-                        if (lx < -halfC - 0.15 || lx > halfC + 0.3) return null;
+                        // Quick bounding-box reject (with margin)
+                        var halfC = cfg.chord * 0.5 + 0.6;
+                        if (Math.abs(lx) > halfC || Math.abs(ly) > halfC) return null;
 
-                        var xc = (lx + halfC) / cfg.chord;
-                        xc = Math.max(0.003, Math.min(0.997, xc));
-                        var yt = nacaY(xc) * cfg.chord;
-                        var absLy = Math.abs(ly);
-                        var sign = ly >= 0 ? 1 : -1;
-                        if (sign === 0) sign = 1;
+                        // Find closest edge on the body polygon and signed distance
+                        var minDist = 1e9, closestNx = 0, closestNy = 0;
+                        var inside = false;
+                        var nPts = bodyPoly.length;
+                        if (nPts < 3) return null;
+                        // Ray-cast for inside test + closest edge
+                        for (var i = 0, j = nPts - 1; i < nPts; j = i++) {
+                            var ai = bodyPoly[i], aj = bodyPoly[j];
+                            // Point-in-polygon ray cast
+                            if (((ai.y > ly) !== (aj.y > ly)) &&
+                                (lx < (aj.x - ai.x) * (ly - ai.y) / (aj.y - ai.y) + ai.x)) {
+                                inside = !inside;
+                            }
+                            // Closest point on segment
+                            var ex = aj.x - ai.x, ey = aj.y - ai.y;
+                            var segLen2 = ex * ex + ey * ey;
+                            var t = segLen2 > 0 ? Math.max(0, Math.min(1, ((lx - ai.x) * ex + (ly - ai.y) * ey) / segLen2)) : 0;
+                            var cx = ai.x + t * ex, cy = ai.y + t * ey;
+                            var d2 = (lx - cx) * (lx - cx) + (ly - cy) * (ly - cy);
+                            if (d2 < minDist) {
+                                minDist = d2;
+                                // Normal pointing from surface toward the particle
+                                var toX = lx - cx, toY = ly - cy;
+                                var toLen = Math.sqrt(toX * toX + toY * toY) || 1;
+                                closestNx = toX / toLen;
+                                closestNy = toY / toLen;
+                            }
+                        }
+                        var dist = Math.sqrt(minDist);
 
-                        var slope = nacaDY(xc) * sign;
-                        var tLen = Math.sqrt(1 + slope * slope);
-                        var tx = 1 / tLen, ty = slope / tLen;
+                        // Tangent: perpendicular to normal, but ALWAYS biased in the
+                        // freestream direction (+X in local coords) so particles never reverse.
+                        // The freestream in local coords is just (1, 0).
+                        var rawTx = -closestNy, rawTy = closestNx;
+                        // Flip tangent if it points upstream (negative X component)
+                        if (rawTx < 0) { rawTx = -rawTx; rawTy = -rawTy; }
 
-                        if (absLy <= yt) {
-                            var newLy = yt * sign + sign * 0.02;
-                            var wx = lx * _ca + newLy * _sa + foilPos.x;
-                            var wy = -lx * _sa + newLy * _ca + foilPos.y;
+                        // If particle is inside the body → push it out along normal
+                        if (inside) {
+                            var pushX = lx + closestNx * (dist + 0.05);
+                            var pushY = ly + closestNy * (dist + 0.05);
+                            // Transform push position back to world
+                            var wx = pushX * _ca - pushY * _sa + foilPos.x;
+                            var wy = pushX * _sa + pushY * _ca + foilPos.y;
+                            // Use strong freestream + slight tangent deflection
                             var su = U * 1.15;
-                            return { vx: (tx*_ca + ty*_sa)*su, vy: (-tx*_sa + ty*_ca)*su, wx: wx, wy: wy, snap: true, prox: 1.0 };
+                            var localVx = rawTx * su * 0.5 + U * 0.5;
+                            var localVy = rawTy * su * 0.5;
+                            return {
+                                vx: localVx * _ca - localVy * _sa,
+                                vy: localVx * _sa + localVy * _ca,
+                                wx: wx, wy: wy, snap: true, prox: 1.0
+                            };
                         }
 
-                        var surfDist = absLy - yt;
+                        // Boundary layer influence zone
                         var boundary = 0.55;
-                        if (surfDist > boundary) return null;
+                        if (dist > boundary) return null;
 
-                        var blend = surfDist / boundary;
+                        var blend = dist / boundary;
                         blend = blend * blend;
-                        var su = U * (1 + (1 - blend) * 0.25);
-                        var lvx = U * blend + tx * su * (1 - blend);
-                        var lvy = ty * su * (1 - blend);
+                        // Near surface: mix freestream with surface-tangent flow
+                        // Close to surface → more tangent, far away → more freestream
+                        var surfWeight = 1 - blend;
+                        var su = U * (1 + surfWeight * 0.25);
+                        var localVx = U * blend + rawTx * su * surfWeight;
+                        var localVy = rawTy * su * surfWeight;
                         return {
-                            vx: lvx * _ca + lvy * _sa,
-                            vy: -lvx * _sa + lvy * _ca,
+                            vx: localVx * _ca - localVy * _sa,
+                            vy: localVx * _sa + localVy * _ca,
                             snap: false,
-                            prox: 1 - surfDist / boundary,
+                            prox: 1 - dist / boundary,
                         };
                     }
 
@@ -2771,11 +3084,12 @@
                     var panelHTML = '<summary>Simulation</summary>'
                         + '<div class="cfd-readout"><span>AoA <strong id="cfd-aoa-r">'+(cfg.angle*180/Math.PI).toFixed(1)+'°</strong></span><span>C<sub>L</sub> ≈ <strong id="cfd-cl-r">'+(2*Math.PI*cfg.angle).toFixed(2)+'</strong></span></div>'
                         + '<hr class="cfd-sep">'
+                        + '<div class="cfd-row"><span>Shape</span><select id="cfd-shape"><option value="aerofoil">Aerofoil</option><option value="f1car">F1 Car</option><option value="cat">Aero Cat 🐱</option></select></div>'
                         + '<div class="cfd-row"><span>Angle</span><input type="range" id="cfd-angle" min="-0.35" max="0.35" step="0.01" value="'+cfg.angle+'"><span class="cfd-v" id="cfd-angle-v">'+cfg.angle.toFixed(2)+'</span></div>'
                         + '<div class="cfd-row"><span>Count</span><input type="range" id="cfd-pcount" min="500" max="'+MAX_P+'" step="500" value="'+cfg.pCount+'"><span class="cfd-v" id="cfd-pcount-v">'+cfg.pCount+'</span></div>'
                         + '<div class="cfd-row"><span>Speed</span><input type="range" id="cfd-speed" min="0.01" max="0.20" step="0.01" value="'+cfg.speed+'"><span class="cfd-v" id="cfd-speed-v">'+cfg.speed.toFixed(2)+'</span></div>'
                         + '<div class="cfd-row"><span>Opacity</span><input type="range" id="cfd-opacity" min="0.1" max="1.0" step="0.05" value="'+cfg.opacity+'"><span class="cfd-v" id="cfd-opacity-v">'+cfg.opacity.toFixed(2)+'</span></div>'
-                        + '<div class="cfd-row"><span>Profile</span><input type="range" id="cfd-thick" min="0.04" max="0.24" step="0.01" value="'+cfg.thick+'"><span class="cfd-v" id="cfd-thick-v">'+cfg.thick.toFixed(2)+'</span></div>'
+                        + '<div class="cfd-row" id="cfd-profile-row"><span>Profile</span><input type="range" id="cfd-thick" min="0.04" max="0.24" step="0.01" value="'+cfg.thick+'"><span class="cfd-v" id="cfd-thick-v">'+cfg.thick.toFixed(2)+'</span></div>'
                         + '<hr class="cfd-sep">'
                         + '<div class="cfd-toggles">'
                         + '<button class="cfd-btn active" id="cfd-col-prox">Proximity</button>'
@@ -2887,12 +3201,26 @@
                     }
                     updateCL();
                     bindSlider('cfd-angle', 'angle', function() {
-                        foilMesh.rotation.z = cfg.angle; foilWire.rotation.z = cfg.angle; updateCL();
+                        if (foilMesh) foilMesh.rotation.z = cfg.angle;
+                        if (foilWire) foilWire.rotation.z = cfg.angle;
+                        if (f1Group && f1Group.parent) f1Group.rotation.z = cfg.angle;
+                        updateCL();
                     });
                     bindSlider('cfd-pcount', 'pCount', function() { buildParticles(); if (cfg.trails) buildTrails(); });
                     bindSlider('cfd-speed', 'speed');
                     bindSlider('cfd-opacity', 'opacity', function() { pMat.opacity = cfg.opacity; });
                     bindSlider('cfd-thick', 'thick', buildFoil);
+
+                    // --- shape selector ---
+                    document.getElementById('cfd-shape').addEventListener('change', function() {
+                        cfg.shape = this.value;
+                        // Profile thickness only applies to aerofoil
+                        var profileRow = document.getElementById('cfd-profile-row');
+                        if (profileRow) profileRow.style.display = cfg.shape === 'aerofoil' ? 'flex' : 'none';
+                        buildFoil();
+                        buildParticles();
+                        if (cfg.trails) buildTrails();
+                    });
 
                     document.getElementById('cfd-col-prox').addEventListener('click', function() {
                         cfg.colorMode = 'proximity'; this.classList.add('active');
