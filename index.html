@@ -18,6 +18,7 @@
 <!-- Site Icons -->
 <link rel="shortcut icon" href="images/tab.png" type="image/x-icon" />
 <link rel="tab" href="images/tab.png">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -28,10 +29,6 @@
 <!-- Custom CSS -->
 <link rel="stylesheet" href="css/custom.css">
 <script src="js/modernizr.js"></script>
-
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <style>
     /* Video Background CSS */
@@ -347,6 +344,13 @@
     }
     #contact .footer-company-name a {
         color: #7d8a96;
+    }
+    /* Skip offscreen rendering work for heavy lower sections until needed */
+    #blog,
+    #portfolio,
+    #contact {
+        content-visibility: auto;
+        contain-intrinsic-size: 1000px;
     }
 
     /* ===== GALLERY TITLE OVERLAY ===== */
@@ -1095,7 +1099,7 @@
 
     <section id="home" class="main-banner parallaxie">
         <!-- Video Background -->
-        <video autoplay loop muted playsinline id="background-video">
+        <video autoplay loop muted playsinline preload="metadata" poster="./images/jellyfish-poster.jpg" id="background-video">
             <source src=".\images\jellyfish.mp4" type="video/mp4">
         </video>
         <!-- 3D Bubbles Canvas -->
@@ -1145,16 +1149,7 @@
                         <p class="f1-ml-lead f1-copy-mobile">
                             I build ML tools that turn race and simulation data into fast, reliable decisions on and off track.
                         </p>
-                        <ul class="f1-ml-chips" aria-label="Focus areas">
-                            <li>Telemetry &amp; sensor streams</li>
-                            <li>Simulation &amp; CFD adjacency</li>
-                            <li>Model deployment</li>
-                            <li>Latency-aware inference</li>
-                            <li>Graphics &amp; procedural modelling</li>
-                            <li>AI, CV &amp; NLP</li>
-                            <li>Physics-based simulation</li>
-                            <li>MSc AI &amp; ML — Imperial</li>
-                        </ul>
+
                     </div>
                 </div>
             </div>
@@ -1174,7 +1169,7 @@
                 <!-- 1. Presenting at Sumo Digital -->
                 <div class="post-box">
                     <div class="post-thumb">
-                        <img src="images/SDC23.jpg" class="img-fluid" alt="Sumo Digital Conference" />
+                        <img src="images/SDC23.jpg" class="img-fluid" alt="Sumo Digital Conference" loading="lazy" decoding="async" fetchpriority="low" />
                         <div class="date">
                             <span>23</span>
                             <span>June</span>
@@ -1192,7 +1187,7 @@
                 <!-- 2. Sheffield Graduation -->
                 <div class="post-box">
                     <div class="post-thumb">
-                        <img src="images/graduation-sheffield2.jpg" class="img-fluid" alt="Sheffield Graduation" />
+                        <img src="images/graduation-sheffield2.jpg" class="img-fluid" alt="Sheffield Graduation" loading="lazy" decoding="async" fetchpriority="low" />
                         <div class="date">
                             <span>17</span>
                             <span>July</span>
@@ -1210,7 +1205,7 @@
                 <!-- 3. Imperial College London -->
                 <div class="post-box">
                     <div class="post-thumb">
-                        <img src="images/imperial.jpeg" class="img-fluid" alt="Imperial College London" />
+                        <img src="images/imperial.jpeg" class="img-fluid" alt="Imperial College London" loading="lazy" decoding="async" fetchpriority="low" />
                         <div class="date">
                             <span>30</span>
                             <span>Sept</span>
@@ -1228,7 +1223,7 @@
                 <!-- 4. Mercedes F1 (far right) -->
                 <div class="post-box update-mercedes">
                     <div class="post-thumb">
-                        <img src="images/w16.jpeg" class="img-fluid" alt="Mercedes F1" />
+                        <img src="images/w16.jpeg" class="img-fluid" alt="Mercedes F1" loading="lazy" decoding="async" fetchpriority="low" />
                         <div class="date">
                             <span>01</span>
                             <span>Sept</span>
@@ -1378,6 +1373,32 @@
                     if (!canvas) return;
 
                     const homeSection = document.getElementById('home');
+                    const backgroundVideo = document.getElementById('background-video');
+
+                    // Pause hero video when offscreen to reduce mobile CPU/battery usage.
+                    if (backgroundVideo) {
+                        if ('IntersectionObserver' in window && homeSection) {
+                            const videoObserver = new IntersectionObserver(function(entries) {
+                                entries.forEach(function(entry) {
+                                    if (entry.isIntersecting) {
+                                        var p = backgroundVideo.play();
+                                        if (p && typeof p.catch === 'function') p.catch(function() {});
+                                    } else {
+                                        backgroundVideo.pause();
+                                    }
+                                });
+                            }, { threshold: 0.08 });
+                            videoObserver.observe(homeSection);
+                        }
+                        document.addEventListener('visibilitychange', function() {
+                            if (document.hidden) {
+                                backgroundVideo.pause();
+                            } else if (homeSection && window.scrollY < homeSection.offsetHeight) {
+                                var p = backgroundVideo.play();
+                                if (p && typeof p.catch === 'function') p.catch(function() {});
+                            }
+                        });
+                    }
 
                     // ========================
                     // THREE.JS SCENE SETUP
@@ -2487,6 +2508,57 @@
                         font-size: 9px; color: #5a6e7e;
                     }
                     .cfd-panel .cfd-readout strong { color: #00c4b0; font-weight: 600; }
+                    .cfd-joystick {
+                        position: absolute;
+                        right: 12px;
+                        top: 140px;
+                        width: 86px;
+                        height: 86px;
+                        border-radius: 50%;
+                        border: 1px solid rgba(0, 196, 176, 0.28);
+                        background: radial-gradient(circle at 50% 50%, rgba(8, 12, 18, 0.72) 0%, rgba(8, 12, 18, 0.9) 78%);
+                        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+                        z-index: 7;
+                        touch-action: none;
+                        user-select: none;
+                        -webkit-user-select: none;
+                    }
+                    .cfd-joystick-thumb {
+                        position: absolute;
+                        left: 50%;
+                        top: 50%;
+                        width: 30px;
+                        height: 30px;
+                        margin-left: -15px;
+                        margin-top: -15px;
+                        border-radius: 50%;
+                        border: 1px solid rgba(0, 196, 176, 0.58);
+                        background: radial-gradient(circle at 35% 30%, rgba(0, 210, 190, 0.9), rgba(0, 128, 118, 0.72));
+                        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
+                        transform: translate3d(0, 0, 0);
+                        will-change: transform;
+                    }
+                    .cfd-joystick-label {
+                        position: absolute;
+                        left: 50%;
+                        top: calc(100% + 6px);
+                        transform: translateX(-50%);
+                        font: 9px/1 'Roboto Mono', monospace;
+                        letter-spacing: 0.08em;
+                        text-transform: uppercase;
+                        color: rgba(122, 142, 158, 0.9);
+                        pointer-events: none;
+                        white-space: nowrap;
+                    }
+                    @media (max-width: 768px) {
+                        .cfd-joystick {
+                            width: 82px;
+                            height: 82px;
+                            right: 14px;
+                            top: 62%;
+                            margin-top: 0;
+                        }
+                    }
                 </style>
                 <script>
                 (function() {
@@ -2718,6 +2790,85 @@
                     wrap.appendChild(panel);
                     panel.innerHTML = panelHTML;
 
+                    var joystick = document.createElement('div');
+                    joystick.className = 'cfd-joystick';
+                    joystick.setAttribute('aria-hidden', 'true');
+                    joystick.innerHTML = '<div class="cfd-joystick-thumb"></div><div class="cfd-joystick-label">camera</div>';
+                    wrap.appendChild(joystick);
+                    var joystickThumb = joystick.querySelector('.cfd-joystick-thumb');
+                    var joyState = { active: false, x: 0, y: 0, r: 28, id: null };
+
+                    function setJoyThumb() {
+                        if (joystickThumb) joystickThumb.style.transform = 'translate3d(' + (joyState.x * joyState.r) + 'px,' + (joyState.y * joyState.r) + 'px,0)';
+                    }
+                    function updateJoyFromClient(clientX, clientY) {
+                        var rect = joystick.getBoundingClientRect();
+                        var cx = rect.left + rect.width / 2;
+                        var cy = rect.top + rect.height / 2;
+                        var dx = (clientX - cx) / joyState.r;
+                        var dy = (clientY - cy) / joyState.r;
+                        var mag = Math.sqrt(dx * dx + dy * dy);
+                        if (mag > 1) {
+                            dx /= mag;
+                            dy /= mag;
+                        }
+                        joyState.x = dx;
+                        joyState.y = dy;
+                        setJoyThumb();
+                    }
+                    function resetJoystick() {
+                        joyState.active = false;
+                        joyState.id = null;
+                        joyState.x = 0;
+                        joyState.y = 0;
+                        setJoyThumb();
+                    }
+                    function placeJoystickBelowPanel() {
+                        var wrapRect = wrap.getBoundingClientRect();
+                        var panelRect = panel.getBoundingClientRect();
+                        var joyH = isMobile ? 82 : 86;
+                        var gap = isMobile ? 10 : 12;
+                        var minTop = 8;
+                        var maxTop = Math.max(minTop, wrap.clientHeight - joyH - 10);
+                        var topBelow = (panelRect.bottom - wrapRect.top) + gap;
+                        var topAbove = (panelRect.top - wrapRect.top) - joyH - gap;
+                        var top;
+
+                        // On mobile, never overlap panel: prefer below, fallback above.
+                        if (isMobile) {
+                            if (topBelow <= maxTop) {
+                                top = topBelow;
+                            } else {
+                                top = topAbove;
+                            }
+                        } else {
+                            top = topBelow;
+                        }
+
+                        joystick.style.top = Math.max(minTop, Math.min(top, maxTop)) + 'px';
+                    }
+
+                    joystick.addEventListener('pointerdown', function(e) {
+                        joyState.active = true;
+                        joyState.id = e.pointerId;
+                        if (joystick.setPointerCapture) joystick.setPointerCapture(e.pointerId);
+                        updateJoyFromClient(e.clientX, e.clientY);
+                        e.preventDefault();
+                    });
+                    window.addEventListener('pointermove', function(e) {
+                        if (!joyState.active || joyState.id !== e.pointerId) return;
+                        updateJoyFromClient(e.clientX, e.clientY);
+                    }, { passive: true });
+                    window.addEventListener('pointerup', function(e) {
+                        if (joyState.id === e.pointerId) resetJoystick();
+                    }, { passive: true });
+                    window.addEventListener('pointercancel', function(e) {
+                        if (joyState.id === e.pointerId) resetJoystick();
+                    }, { passive: true });
+                    panel.addEventListener('toggle', function() {
+                        requestAnimationFrame(placeJoystickBelowPanel);
+                    });
+
                     function bindSlider(id, key, cb) {
                         var el = document.getElementById(id), vEl = document.getElementById(id + '-v');
                         el.addEventListener('input', function() {
@@ -2782,6 +2933,7 @@
                         camera.fov = isMobile ? 62 : 42;
                         camera.updateProjectionMatrix();
                         sceneRoot.rotation.z = isMobile ? -Math.PI / 2 : 0;
+                        placeJoystickBelowPanel();
                     }
 
                     var running = false, rafId = 0;
@@ -2848,11 +3000,11 @@
                         if (hasTrails) trailGeo.attributes.position.needsUpdate = true;
 
                         if (isMobile) {
-                            camera.position.x = Math.sin(t * 0.25) * 0.15;
-                            camera.position.y = 0.8;
+                            camera.position.x = Math.sin(t * 0.25) * 0.15 + joyState.x * 2.8;
+                            camera.position.y = 0.8 - joyState.y * 2.2;
                         } else {
-                            camera.position.x = pointer.x * 1.4 + Math.sin(t * 0.25) * 0.2;
-                            camera.position.y = 0.8 + pointer.y * 0.5;
+                            camera.position.x = pointer.x * 1.4 + Math.sin(t * 0.25) * 0.2 + joyState.x * 2.2;
+                            camera.position.y = 0.8 + pointer.y * 0.5 - joyState.y * 2.0;
                         }
                         camera.lookAt(0, 0, 0);
 
