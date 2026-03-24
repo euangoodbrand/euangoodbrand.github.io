@@ -425,6 +425,7 @@
         .f1-ml-section {
             padding-top: 1.5rem;
             padding-bottom: 0;
+            min-height: 100svh;
         }
         .f1-ml-name {
             font-size: 1.4rem;
@@ -439,7 +440,12 @@
             margin-bottom: 0.5rem;
         }
         .f1-ml-wrap {
-            min-height: auto !important;
+            min-height: 100svh !important;
+            height: 100svh;
+        }
+        .f1-ml-content {
+            padding-top: 0.9rem;
+            padding-bottom: 5.75rem;
         }
         .f1-ml-chips {
             display: none !important;
@@ -461,16 +467,20 @@
 
         /* CFD overlay panel: mobile-friendly overrides */
         .cfd-panel {
-            position: relative !important;
+            position: absolute !important;
+            left: 15px !important;
+            right: 15px !important;
+            bottom: max(env(safe-area-inset-bottom), 22px) !important;
             top: auto !important;
-            right: auto !important;
             width: auto !important;
             backdrop-filter: none !important;
             background: rgba(8,12,18,0.95) !important;
             padding: 10px 14px !important;
-            margin: 0.5rem 15px 1.5rem !important;
+            margin: 0 !important;
             font-size: 10px !important;
             z-index: 5;
+            max-height: 40svh;
+            overflow-y: auto;
         }
         .cfd-panel summary { font-size: 10px !important; }
         .cfd-panel .cfd-row { gap: 8px !important; margin: 6px 0 0 !important; }
@@ -806,9 +816,20 @@
         pointer-events: none;
         z-index: 1;
     }
+    .f1-ml-wrap::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 0;
+        pointer-events: none;
+        z-index: 1;
+    }
     @media (max-width: 768px) {
         .f1-ml-wrap {
-            min-height: 520px;
+            min-height: 100svh;
+            height: 100svh;
         }
         .f1-ml-wrap::before {
             height: 36%;
@@ -817,6 +838,16 @@
                 rgba(5, 7, 10, 0.98) 0%,
                 rgba(8, 12, 17, 0.88) 30%,
                 rgba(10, 16, 22, 0.52) 62%,
+                rgba(10, 16, 22, 0) 100%
+            );
+        }
+        .f1-ml-wrap::after {
+            height: 26%;
+            background: linear-gradient(
+                to top,
+                rgba(5, 7, 10, 0.98) 0%,
+                rgba(8, 12, 17, 0.82) 34%,
+                rgba(10, 16, 22, 0.42) 64%,
                 rgba(10, 16, 22, 0) 100%
             );
         }
@@ -2496,7 +2527,7 @@
 
                     // --- mutable simulation parameters ---
                     var cfg = {
-                        angle: isMobile ? 0 : 0.08,
+                        angle: 0,
                         pCount: isMobile ? 2000 : 5000,
                         speed: 0.06,
                         opacity: 0.55,
