@@ -452,6 +452,12 @@
             line-height: 1.5;
             margin-bottom: 0.5rem;
         }
+        .f1-copy-desktop {
+            display: none !important;
+        }
+        .f1-copy-mobile {
+            display: block !important;
+        }
 
         /* CFD overlay panel: mobile-friendly overrides */
         .cfd-panel {
@@ -790,9 +796,29 @@
         position: relative;
         min-height: 580px;
     }
+    .f1-ml-wrap::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 0;
+        pointer-events: none;
+        z-index: 1;
+    }
     @media (max-width: 768px) {
         .f1-ml-wrap {
             min-height: 520px;
+        }
+        .f1-ml-wrap::before {
+            height: 36%;
+            background: linear-gradient(
+                to bottom,
+                rgba(5, 7, 10, 0.98) 0%,
+                rgba(8, 12, 17, 0.88) 30%,
+                rgba(10, 16, 22, 0.52) 62%,
+                rgba(10, 16, 22, 0) 100%
+            );
         }
     }
     #f1-telemetry-canvas {
@@ -819,6 +845,12 @@
         line-height: 1.75;
         color: #c5ccd4;
         margin-bottom: 1.25rem;
+    }
+    .f1-copy-mobile {
+        display: none;
+    }
+    .f1-copy-desktop {
+        display: block;
     }
     .f1-ml-chips {
         list-style: none;
@@ -1071,12 +1103,16 @@
                 <div class="section-title text-left">
                     <h2 class="f1-ml-name">Euan Goodbrand</h2>
                     <h3 class="f1-ml-tagline">Machine learning at the limit</h3>
-                    <p>I am a Machine Learning Engineer at the <strong style="color: #e8eaed;">Mercedes-AMG PETRONAS Formula One Team</strong>, with a passion for simulations, graphics, and visual effects. The scene behind this text is a live, decorative field — the same blend of motion, data, and engineering intuition that shows up in my work on and off the track.</p>
+                    <p class="f1-copy-desktop">I am a Machine Learning Engineer at the <strong style="color: #e8eaed;">Mercedes-AMG PETRONAS Formula One Team</strong>, with a passion for simulations, graphics, and visual effects. The scene behind this text is a live, decorative field — the same blend of motion, data, and engineering intuition that shows up in my work on and off the track.</p>
+                    <p class="f1-copy-mobile">Machine Learning Engineer at <strong style="color: #e8eaed;">Mercedes-AMG PETRONAS Formula One Team</strong>, focused on high-performance ML, simulation, and visual systems.</p>
                 </div>
                 <div class="row">
                     <div class="col-lg-11 col-xl-10">
-                        <p class="f1-ml-lead">
+                        <p class="f1-ml-lead f1-copy-desktop">
                             Day to day I turn <strong style="color: #fff;">telemetry, simulations, and engineering data</strong> into systems that support decisions at trackside and in the factory — where lap-time margins are milliseconds and models have to be as disciplined as the car. That same appetite for <strong style="color: #fff;">rigorous ML, performance, and physics</strong> feeds how I think about graphics pipelines, procedural worlds, and numerical simulation outside F1.
+                        </p>
+                        <p class="f1-ml-lead f1-copy-mobile">
+                            I build ML tools that turn race and simulation data into fast, reliable decisions on and off track.
                         </p>
                         <ul class="f1-ml-chips" aria-label="Focus areas">
                             <li>Telemetry &amp; sensor streams</li>
