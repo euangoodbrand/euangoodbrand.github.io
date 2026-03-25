@@ -1409,6 +1409,24 @@
                     });
                 </script>
 
+                <!-- Lazy-load modal iframes: only fetch project page when modal opens, destroy on close -->
+                <script>
+                $(document).ready(function() {
+                    $('.modal').on('show.bs.modal', function() {
+                        var iframe = $(this).find('iframe[data-src]');
+                        if (iframe.length && !iframe.attr('src')) {
+                            iframe.attr('src', iframe.data('src'));
+                        }
+                    });
+                    $('.modal').on('hidden.bs.modal', function() {
+                        var iframe = $(this).find('iframe[data-src]');
+                        if (iframe.length) {
+                            iframe.attr('src', '');
+                        }
+                    });
+                });
+                </script>
+
                 <!-- Three.js for 3D Bubbles + Water Surface — deferred, skipped on low-end mobile -->
                 <script>
                 (function() {
@@ -1443,12 +1461,14 @@
                         };
                         document.head.appendChild(s1);
 
-                        // Also start the video now
-                        var vid = document.getElementById('background-video');
-                        if (vid) {
-                            vid.preload = 'auto';
-                            var p = vid.play();
-                            if (p && typeof p.catch === 'function') p.catch(function(){});
+                        // On desktop, start the video. On mobile, keep poster-only to free GPU for WebGL.
+                        if (!isMobileDev) {
+                            var vid = document.getElementById('background-video');
+                            if (vid) {
+                                vid.preload = 'auto';
+                                var p = vid.play();
+                                if (p && typeof p.catch === 'function') p.catch(function(){});
+                            }
                         }
                     }
 
@@ -1471,8 +1491,8 @@
                     const homeSection = document.getElementById('home');
                     const backgroundVideo = document.getElementById('background-video');
 
-                    // Pause hero video when offscreen to reduce mobile CPU/battery usage.
-                    if (backgroundVideo) {
+                    // Pause hero video when offscreen (desktop only — mobile uses poster)
+                    if (backgroundVideo && !isMobileDev) {
                         if ('IntersectionObserver' in window && homeSection) {
                             const videoObserver = new IntersectionObserver(function(entries) {
                                 entries.forEach(function(entry) {
@@ -1585,18 +1605,15 @@
                     const WATER_Z = -8;
 
                     const waterGeo = new THREE.PlaneGeometry(WATER_WIDTH, WATER_HEIGHT, WATER_SEG_X, WATER_SEG_Y);
-                    const waterMat = new THREE.MeshPhysicalMaterial({
+                    const waterMat = new THREE.MeshStandardMaterial({
                         color: 0x4dd0e1,
-                        metalness: 0.15,
-                        roughness: 0.1,
+                        metalness: 0.2,
+                        roughness: 0.08,
                         transparent: true,
                         opacity: 0.34,
-                        thickness: 0.5,
-                        clearcoat: 1.0,
-                        clearcoatRoughness: 0.05,
-                        reflectivity: 0.9,
                         side: THREE.DoubleSide,
                         flatShading: false,
+                        envMapIntensity: 1.0,
                     });
                     const waterMesh = new THREE.Mesh(waterGeo, waterMat);
                     waterMesh.position.z = WATER_Z;
@@ -1712,17 +1729,14 @@
                     // BUBBLES
                     // ========================
                     function createBubbleMaterial() {
-                        return new THREE.MeshPhysicalMaterial({
+                        return new THREE.MeshStandardMaterial({
                             color: 0xffffff,
-                            metalness: 0.1,
+                            metalness: 0.15,
                             roughness: 0.05,
                             transparent: true,
                             opacity: 0.45 + Math.random() * 0.2,
-                            thickness: 0.25,
-                            clearcoat: 1.0,
-                            clearcoatRoughness: 0.05,
-                            reflectivity: 1.0,
                             side: THREE.DoubleSide,
+                            envMapIntensity: 1.2,
                         });
                     }
 
@@ -1812,31 +1826,40 @@
                     // ========================
                     // BUBBLE POPPING
                     // ========================
-                    const popParticles = [];
+                    // ========================
+                    // POP PARTICLE POOL (pre-allocated, zero GC)
+                    // ========================
+                    const POP_POOL_SIZE = isMobileDev ? 18 : 56;
+                    const popPool = [];
+                    const popGeo = new THREE.SphereGeometry(0.1, 6, 6);
+                    for (let i = 0; i < POP_POOL_SIZE; i++) {
+                        const mat = new THREE.MeshBasicMaterial({ color: 0x80e0d0, transparent: true, opacity: 0 });
+                        const mesh = new THREE.Mesh(popGeo, mat);
+                        mesh.visible = false;
+                        scene.add(mesh);
+                        popPool.push({ mesh, vx:0, vy:0, vz:0, life:0, age:0, active:false });
+                    }
 
                     function spawnPopParticles(worldX, worldY, worldZ) {
                         const count = isMobileDev ? (3 + Math.floor(Math.random() * 3)) : (8 + Math.floor(Math.random() * 6));
-                        for (let i = 0; i < count; i++) {
+                        let spawned = 0;
+                        for (let i = 0; i < POP_POOL_SIZE && spawned < count; i++) {
+                            const p = popPool[i];
+                            if (p.active) continue;
                             const angle = Math.random() * Math.PI * 2;
                             const speed = 0.15 + Math.random() * 0.3;
-                            const sz = 0.08 + Math.random() * 0.12;
-                            const geo = new THREE.SphereGeometry(sz, 8, 8);
-                            const mat = new THREE.MeshBasicMaterial({
-                                color: new THREE.Color().setHSL(0.5 + Math.random() * 0.2, 0.8, 0.7),
-                                transparent: true,
-                                opacity: 0.9,
-                            });
-                            const mesh = new THREE.Mesh(geo, mat);
-                            mesh.position.set(worldX, worldY, worldZ);
-                            scene.add(mesh);
-                            popParticles.push({
-                                mesh,
-                                vx: Math.cos(angle) * speed * (0.5 + Math.random()),
-                                vy: Math.sin(angle) * speed * (0.5 + Math.random()),
-                                vz: (Math.random() - 0.5) * speed * 0.5,
-                                life: 0.4 + Math.random() * 0.3,
-                                age: 0,
-                            });
+                            p.mesh.material.color.setHSL(0.5 + Math.random() * 0.2, 0.8, 0.7);
+                            p.mesh.material.opacity = 0.9;
+                            p.mesh.scale.setScalar(0.8 + Math.random() * 1.2);
+                            p.mesh.position.set(worldX, worldY, worldZ);
+                            p.mesh.visible = true;
+                            p.vx = Math.cos(angle) * speed * (0.5 + Math.random());
+                            p.vy = Math.sin(angle) * speed * (0.5 + Math.random());
+                            p.vz = (Math.random() - 0.5) * speed * 0.5;
+                            p.life = 0.4 + Math.random() * 0.3;
+                            p.age = 0;
+                            p.active = true;
+                            spawned++;
                         }
                     }
 
@@ -2081,22 +2104,21 @@
                         waveStep();
                         applyHeightsToMesh();
 
-                        // --- Pop particles ---
-                        for (let i = popParticles.length - 1; i >= 0; i--) {
-                            const p = popParticles[i];
+                        // --- Pop particles (pooled) ---
+                        for (let i = 0; i < POP_POOL_SIZE; i++) {
+                            const p = popPool[i];
+                            if (!p.active) continue;
                             p.age += dt;
                             if (p.age >= p.life) {
-                                scene.remove(p.mesh);
-                                p.mesh.geometry.dispose();
-                                p.mesh.material.dispose();
-                                popParticles.splice(i, 1);
+                                p.mesh.visible = false;
+                                p.active = false;
                                 continue;
                             }
                             p.mesh.position.x += p.vx * dt * 4;
                             p.mesh.position.y += p.vy * dt * 4;
                             p.mesh.position.z += p.vz * dt * 4;
                             p.mesh.material.opacity = 0.9 * (1 - p.age / p.life);
-                            p.mesh.scale.setScalar(1 - (p.age / p.life) * 0.6);
+                            p.mesh.scale.setScalar((0.8 + Math.random() * 0.4) * (1 - (p.age / p.life) * 0.6));
                         }
 
                         // --- Bubbles ---
@@ -3505,7 +3527,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <iframe src="project1.html" width="100%" height="600px"></iframe>
+                                <iframe data-src="project1.html" width="100%" height="600px"></iframe>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -3525,7 +3547,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <iframe src="project7.html" width="100%" height="600px"></iframe>
+                                <iframe data-src="project7.html" width="100%" height="600px"></iframe>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -3545,7 +3567,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <iframe src="project8.html" width="100%" height="600px"></iframe>
+                                <iframe data-src="project8.html" width="100%" height="600px"></iframe>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -3565,7 +3587,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <iframe src="project9.html" width="100%" height="600px"></iframe>
+                                <iframe data-src="project9.html" width="100%" height="600px"></iframe>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -3585,7 +3607,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <iframe src="project10.html" width="100%" height="600px"></iframe>
+                                <iframe data-src="project10.html" width="100%" height="600px"></iframe>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -3605,7 +3627,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <iframe src="project11.html" width="100%" height="600px"></iframe>
+                                <iframe data-src="project11.html" width="100%" height="600px"></iframe>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
