@@ -19,16 +19,32 @@
 <link rel="shortcut icon" href="images/tab.png" type="image/x-icon" />
 <link rel="tab" href="images/tab.png">
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" href="css/bootstrap.min.css">
-<!-- Site CSS -->
-<link rel="stylesheet" href="style.css">
-<!-- Responsive CSS -->
-<link rel="stylesheet" href="css/responsive.css">
-<!-- Custom CSS -->
-<link rel="stylesheet" href="css/custom.css">
-<script src="js/modernizr.js"></script>
+<!-- Critical CSS inlined for faster first paint on mobile -->
+<style id="critical-css">
+  body{margin:0;font-family:sans-serif}
+  #preloader{position:fixed;inset:0;z-index:99999;background:#06090d;display:flex;align-items:center;justify-content:center}
+  #mainNav{position:fixed;top:0;width:100%;z-index:1000}
+  #home{position:relative;overflow:hidden;min-height:100vh}
+  #background-video{position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;transform:translate(-50%,-50%);object-fit:cover}
+  .heading{position:relative;z-index:3}
+  .heading h1{color:#fff}
+</style>
+
+<!-- Non-critical CSS loaded asynchronously -->
+<link rel="stylesheet" href="css/bootstrap.min.css" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="css/responsive.css" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="css/custom.css" media="print" onload="this.media='all'">
+<!-- Fallback for non-JS -->
+<noscript>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/custom.css">
+</noscript>
+<script src="js/modernizr.js" defer></script>
 
 <style>
     /* Video Background CSS */
@@ -351,6 +367,35 @@
     #contact {
         content-visibility: auto;
         contain-intrinsic-size: 1000px;
+    }
+
+    /* GPU layer promotion for animated elements */
+    #bubble-canvas,
+    #f1-telemetry-canvas,
+    #portfolio-canvas {
+        will-change: transform;
+    }
+
+    /* Mobile: disable heavy backdrop-filter, reduce animation complexity */
+    @media (max-width: 768px) {
+        .portfolio-graph-tooltip {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+        /* Throttle non-essential animations on mobile */
+        .hero-fluid-glow {
+            animation-duration: 14s !important;
+        }
+        .hero-wave-back {
+            animation-duration: 24s !important;
+        }
+        .hero-wave-front {
+            animation-duration: 18s !important;
+        }
+        /* Simplify box-shadows on mobile */
+        .post-box:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
     }
 
     /* ===== GALLERY TITLE OVERLAY ===== */
@@ -1098,11 +1143,11 @@
     </nav>
 
     <section id="home" class="main-banner parallaxie">
-        <!-- Video Background -->
-        <video autoplay loop muted playsinline preload="metadata" poster="./images/jellyfish-poster.jpg" id="background-video">
+        <!-- Video Background — mobile gets poster-only by default, video loads on interaction -->
+        <video loop muted playsinline preload="none" poster="./images/jellyfish-poster.jpg" id="background-video">
             <source src=".\images\jellyfish.mp4" type="video/mp4">
         </video>
-        <!-- 3D Bubbles Canvas -->
+        <!-- 3D Bubbles Canvas (disabled on low-end mobile via JS) -->
         <canvas id="bubble-canvas"></canvas>
         <!-- Click layer for bubble popping -->
         <div id="bubble-click-layer"></div>
@@ -1321,19 +1366,19 @@
                 <a href="#" id="scroll-to-top" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
 
                 <!-- ALL JS FILES -->
-                <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+                <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js" defer></script>
                 <script src="js/all.js"></script>
                 <!-- Camera Slider -->
-                <script src="js/jquery.mobile.customized.min.js"></script>
-                <script src="js/jquery.easing.1.3.js"></script>
-                <script src="js/parallaxie.js"></script>
-                <script src="js/headline.js"></script>
+                <script src="js/jquery.mobile.customized.min.js" defer></script>
+                <script src="js/jquery.easing.1.3.js" defer></script>
+                <script src="js/parallaxie.js" defer></script>
+                <script src="js/headline.js" defer></script>
                 <!-- Contact form JavaScript -->
-                <script src="js/jqBootstrapValidation.js"></script>
-                <script src="js/contact_me.js"></script>
+                <script src="js/jqBootstrapValidation.js" defer></script>
+                <script src="js/contact_me.js" defer></script>
                 <!-- ALL PLUGINS -->
-                <script src="js/custom.js"></script>
-                <script src="js/jquery.vide.js"></script>
+                <script src="js/custom.js" defer></script>
+                <script src="js/jquery.vide.js" defer></script>
 
                 <!-- Initialize Updates Carousel -->
                 <script>
@@ -1364,11 +1409,61 @@
                     });
                 </script>
 
-                <!-- Three.js for 3D Bubbles + Water Surface -->
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-                <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/GLTFLoader.js"></script>
+                <!-- Three.js for 3D Bubbles + Water Surface — deferred, skipped on low-end mobile -->
                 <script>
                 (function() {
+                    // --- Device capability gating ---
+                    var isMobileDev = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+                    var isLowEnd = isMobileDev && (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+                    var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+                    // On low-end mobile or reduced motion: show poster only, skip all WebGL
+                    if (isLowEnd || prefersReduced) {
+                        var c = document.getElementById('bubble-canvas');
+                        if (c) c.style.display = 'none';
+                        var cl = document.getElementById('bubble-click-layer');
+                        if (cl) cl.style.display = 'none';
+                        // Start video on non-low-end if visible
+                        if (!isLowEnd) {
+                            var vid = document.getElementById('background-video');
+                            if (vid) { vid.preload = 'metadata'; vid.autoplay = true; }
+                        }
+                        return;
+                    }
+
+                    // Lazy-load Three.js only when hero section is near viewport
+                    function loadThreeAndInit() {
+                        var s1 = document.createElement('script');
+                        s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+                        s1.onload = function() {
+                            var s2 = document.createElement('script');
+                            s2.src = 'https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/GLTFLoader.js';
+                            s2.onload = initBubbleScene;
+                            document.head.appendChild(s2);
+                        };
+                        document.head.appendChild(s1);
+
+                        // Also start the video now
+                        var vid = document.getElementById('background-video');
+                        if (vid) {
+                            vid.preload = 'auto';
+                            var p = vid.play();
+                            if (p && typeof p.catch === 'function') p.catch(function(){});
+                        }
+                    }
+
+                    var heroObs = new IntersectionObserver(function(entries) {
+                        if (entries[0].isIntersecting) {
+                            heroObs.disconnect();
+                            loadThreeAndInit();
+                        }
+                    }, { rootMargin: '200px' });
+                    var home = document.getElementById('home');
+                    if (home) heroObs.observe(home);
+                    else loadThreeAndInit(); // fallback
+
+                    function initBubbleScene() {
+                    var isMobileDev = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
                     const canvas = document.getElementById('bubble-canvas');
                     const clickLayer = document.getElementById('bubble-click-layer');
                     if (!canvas) return;
@@ -1404,8 +1499,8 @@
                     // ========================
                     // THREE.JS SCENE SETUP
                     // ========================
-                    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isMobileDev });
+                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobileDev ? 1.5 : 2));
                     renderer.setClearColor(0x000000, 0);
                     canvas.style.width = '100%';
                     canvas.style.height = '100%';
@@ -1483,8 +1578,8 @@
                     // ========================
                     // 3D WATER SURFACE (height-field wave sim)
                     // ========================
-                    const WATER_SEG_X = 120;
-                    const WATER_SEG_Y = 80;
+                    const WATER_SEG_X = isMobileDev ? 60 : 120;
+                    const WATER_SEG_Y = isMobileDev ? 40 : 80;
                     const WATER_WIDTH = 60;
                     const WATER_HEIGHT = 40;
                     const WATER_Z = -8;
@@ -1598,6 +1693,7 @@
                     }
 
                     let waterNormalFrame = 0;
+                    const NORMAL_INTERVAL = isMobileDev ? 4 : 2;
 
                     function applyHeightsToMesh() {
                         const pos = waterGeo.attributes.position;
@@ -1606,7 +1702,7 @@
                         }
                         pos.needsUpdate = true;
                         waterNormalFrame++;
-                        if (waterNormalFrame >= 2) {
+                        if (waterNormalFrame >= NORMAL_INTERVAL) {
                             waterNormalFrame = 0;
                             waterGeo.computeVertexNormals();
                         }
@@ -1647,9 +1743,9 @@
                         };
                     }
 
-                    const BUBBLE_COUNT = 20;
+                    const BUBBLE_COUNT = isMobileDev ? 8 : 20;
                     const bubbles = [];
-                    const bubbleGeo = new THREE.SphereGeometry(1, 32, 32);
+                    const bubbleGeo = new THREE.SphereGeometry(1, isMobileDev ? 16 : 32, isMobileDev ? 16 : 32);
 
                     onResize();
                     for (let i = 0; i < BUBBLE_COUNT; i++) {
@@ -1719,7 +1815,7 @@
                     const popParticles = [];
 
                     function spawnPopParticles(worldX, worldY, worldZ) {
-                        const count = 8 + Math.floor(Math.random() * 6);
+                        const count = isMobileDev ? (3 + Math.floor(Math.random() * 3)) : (8 + Math.floor(Math.random() * 6));
                         for (let i = 0; i < count; i++) {
                             const angle = Math.random() * Math.PI * 2;
                             const speed = 0.15 + Math.random() * 0.3;
@@ -1877,8 +1973,17 @@
                         waterGeo.computeVertexNormals();
                     };
 
+                    var mobileFrameSkip = isMobileDev ? 1 : 0;
+                    var frameCount = 0;
+
                     function animate() {
                         animationId = requestAnimationFrame(animate);
+
+                        // On mobile, render every other frame (~30fps) to save battery/heat
+                        if (mobileFrameSkip) {
+                            frameCount++;
+                            if (frameCount % 2 !== 0) return;
+                        }
 
                         const now = performance.now();
                         const dt = Math.min((now - lastTime) / 1000, 0.05);
@@ -2068,6 +2173,7 @@
                             animate();
                         }
                     });
+                    } // end initBubbleScene
                 })();
                 </script>
 
@@ -2159,7 +2265,7 @@
                     var W = 1, H = 1;
                     var nodes = [];
                     var particles = [];
-                    var PARTICLE_COUNT = 90;
+                    var PARTICLE_COUNT = (window.innerWidth <= 768) ? 40 : 90;
                     var activeTag = 'all';
                     var pointer = { x: -999, y: -999 };
                     var hoveredNode = -1;
@@ -2577,14 +2683,17 @@
                 (function() {
                     const wrap = document.querySelector('.f1-ml-wrap');
                     const canvas = document.getElementById('f1-telemetry-canvas');
-                    if (!wrap || !canvas || typeof THREE === 'undefined') return;
+                    if (!wrap || !canvas) return;
+
+                    function initCFD() {
+                    if (typeof THREE === 'undefined') return;
 
                     function checkMobile() { return window.innerWidth <= 768; }
                     var isMobile = checkMobile();
 
-                    const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+                    const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: !isMobile });
                     renderer.setClearColor(0x000000, 0);
-                    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+                    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2));
 
                     const scene = new THREE.Scene();
                     const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 220);
@@ -2613,7 +2722,7 @@
                     // --- mutable simulation parameters ---
                     var cfg = {
                         angle: 0,
-                        pCount: isMobile ? 2000 : 5000,
+                        pCount: isMobile ? 1000 : 5000,
                         speed: 0.06,
                         opacity: 0.55,
                         chord: isMobile ? 2 : 8,
@@ -3360,6 +3469,28 @@
                     window.addEventListener('resize', function() {
                         if (running) syncSize();
                     });
+                    } // end initCFD
+
+                    // Wait for Three.js (lazy-loaded by bubble scene), then init when About section is near
+                    var cfdObs = new IntersectionObserver(function(entries) {
+                        if (entries[0].isIntersecting) {
+                            cfdObs.disconnect();
+                            if (typeof THREE !== 'undefined') {
+                                initCFD();
+                            } else {
+                                // Poll until Three.js is loaded (it's being fetched by the hero observer)
+                                var poll = setInterval(function() {
+                                    if (typeof THREE !== 'undefined') {
+                                        clearInterval(poll);
+                                        initCFD();
+                                    }
+                                }, 150);
+                                // Give up after 15s
+                                setTimeout(function() { clearInterval(poll); }, 15000);
+                            }
+                        }
+                    }, { rootMargin: '300px', threshold: 0.01 });
+                    cfdObs.observe(wrap);
                 })();
                 </script>
 
