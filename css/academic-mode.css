@@ -1,0 +1,282 @@
+/* =============================================================
+   ACADEMIC MODE - Jon Barron Style Academic Page
+   https://jonbarron.info/
+   ============================================================= */
+
+/* ===== FONTS (Lato from Jon Barron's stylesheet) ===== */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v15/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Lato Bold'), local('Lato-Bold'), url(https://fonts.gstatic.com/s/lato/v15/S6u9w4BMUTPHh6UVSwiPGQ3q5d0.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Lato';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Lato Italic'), local('Lato-Italic'), url(https://fonts.gstatic.com/s/lato/v15/S6u8w4BMUTPHjxsAXC-qNiXg7Q.woff2) format('woff2');
+}
+
+/* ===== MODE TOGGLE BUTTON ===== */
+.mode-toggle {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 9998;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(6, 9, 13, 0.85);
+    border: 1px solid rgba(0, 196, 176, 0.25);
+    border-radius: 50px;
+    padding: 10px 20px 10px 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #a8b8c4;
+}
+
+.mode-toggle:hover {
+    background: rgba(0, 196, 176, 0.15);
+    border-color: #00c4b0;
+    color: #00d2be;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 210, 190, 0.2);
+}
+
+.mode-toggle-icon {
+    width: 28px;
+    height: 28px;
+    position: relative;
+}
+
+.mode-toggle-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+    transition: transform 0.3s ease;
+}
+
+.mode-toggle:hover .mode-toggle-icon svg {
+    transform: scale(1.1);
+}
+
+/* ===== ACADEMIC MODE VIEW ===== */
+.academic-view {
+    position: fixed;
+    inset: 0;
+    z-index: 9990;
+    background: #ffffff;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+}
+
+body.academic-mode .academic-view {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.4s ease, visibility 0s linear 0s;
+}
+
+body.academic-mode .mode-toggle {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(0, 0, 0, 0.15);
+    color: #333;
+}
+
+body.academic-mode .mode-toggle:hover {
+    background: rgba(23, 114, 208, 0.1);
+    border-color: #1772d0;
+    color: #1772d0;
+    box-shadow: 0 8px 24px rgba(23, 114, 208, 0.15);
+}
+
+/* ===== JON BARRON STYLE BASE ===== */
+.academic-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0;
+    border: 0;
+    border-spacing: 0;
+    border-collapse: separate;
+}
+
+.academic-container,
+.academic-container td,
+.academic-container th,
+.academic-container tr,
+.academic-container p,
+.academic-container a {
+    font-family: 'Lato', Verdana, Helvetica, sans-serif;
+    font-size: 14px;
+}
+
+.academic-container a {
+    color: #1772d0;
+    text-decoration: none;
+}
+
+.academic-container a:hover,
+.academic-container a:focus {
+    color: #f09228;
+    text-decoration: none;
+}
+
+.academic-container strong {
+    font-family: 'Lato', Verdana, Helvetica, sans-serif;
+    font-size: 14px;
+}
+
+/* Name style */
+.name {
+    padding-top: 20px;
+    margin: 0;
+    font-family: 'Lato', Verdana, Helvetica, sans-serif;
+    font-size: 32px;
+    text-align: center;
+}
+
+/* Section headings */
+.academic-container h2 {
+    margin: 0;
+    font-weight: normal;
+    font-family: 'Lato', Verdana, Helvetica, sans-serif;
+    font-size: 22px;
+}
+
+/* Paper title */
+.papertitle {
+    font-family: 'Lato', Verdana, Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* Highlight for featured papers */
+span.highlight {
+    background-color: #ffffd0;
+}
+
+/* Image container for hover effects */
+.one {
+    width: 160px;
+    height: 160px;
+    position: relative;
+}
+
+.two {
+    width: 160px;
+    height: 160px;
+    position: absolute;
+    transition: opacity .2s ease-in-out;
+    -moz-transition: opacity .2s ease-in-out;
+    -webkit-transition: opacity .2s ease-in-out;
+}
+
+.fade {
+    transition: opacity .2s ease-in-out;
+    -moz-transition: opacity .2s ease-in-out;
+    -webkit-transition: opacity .2s ease-in-out;
+}
+
+/* Profile photo */
+.profile-photo {
+    width: 100%;
+    max-width: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* Footer */
+.academic-footer {
+    padding: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: #777;
+}
+
+.academic-footer a {
+    color: #1772d0;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .mode-toggle {
+        bottom: 20px;
+        left: 20px;
+        padding: 8px 14px 8px 10px;
+        font-size: 0.65rem;
+    }
+
+    .mode-toggle-icon {
+        width: 22px;
+        height: 22px;
+    }
+
+    .academic-container {
+        padding: 10px;
+    }
+
+    .name {
+        font-size: 26px;
+    }
+
+    .profile-photo {
+        width: 150px !important;
+        max-width: 150px !important;
+    }
+
+    .one {
+        width: 120px;
+        height: 120px;
+    }
+
+    .two {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .mode-toggle span {
+        display: none;
+    }
+
+    .mode-toggle {
+        padding: 12px;
+        border-radius: 50%;
+    }
+
+    .name {
+        font-size: 22px;
+    }
+
+    .profile-photo {
+        width: 120px !important;
+        max-width: 120px !important;
+    }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    body.academic-mode .mode-toggle {
+        display: none !important;
+    }
+
+    .academic-view {
+        position: static;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+}
