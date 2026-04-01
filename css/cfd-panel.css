@@ -1,0 +1,274 @@
+/* =============================================================
+   CFD PANEL STYLES
+   Interactive CFD aerofoil visualization control panel
+   ============================================================= */
+
+.cfd-panel {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(8,12,18,0.88);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0,196,176,0.2);
+    border-radius: 6px;
+    padding: 7px 10px;
+    z-index: 6;
+    width: 195px;
+    font: 10px/1.4 'Roboto Mono', monospace;
+    color: #7a8e9e;
+    user-select: none;
+}
+
+.cfd-panel summary {
+    cursor: pointer;
+    color: #00c4b0;
+    font-size: 9px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.cfd-panel summary::before {
+    content: '▾';
+    font-size: 8px;
+}
+
+.cfd-panel:not([open]) summary::before {
+    content: '▸';
+}
+
+.cfd-panel .cfd-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 4px 0 0;
+    overflow: hidden;
+}
+
+.cfd-panel .cfd-row span:first-child {
+    width: 50px;
+    flex-shrink: 0;
+    font-size: 9px;
+}
+
+.cfd-panel input[type=range] {
+    flex: 1;
+    min-width: 0;
+    height: 2px;
+    accent-color: #00c4b0;
+    background: rgba(0,196,176,0.15);
+    border-radius: 1px;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+}
+
+.cfd-panel input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #00c4b0;
+    border: none;
+}
+
+.cfd-panel .cfd-v {
+    width: 28px;
+    text-align: right;
+    color: #b0bfc8;
+    font-size: 9px;
+}
+
+.cfd-panel .cfd-sep {
+    border: none;
+    border-top: 1px solid rgba(0,196,176,0.12);
+    margin: 5px 0 3px;
+}
+
+.cfd-panel .cfd-toggles {
+    display: flex;
+    gap: 4px;
+    margin: 4px 0 0;
+    flex-wrap: wrap;
+}
+
+.cfd-panel .cfd-btn {
+    font: 9px/1 'Roboto Mono', monospace;
+    padding: 3px 7px;
+    border: 1px solid rgba(0,196,176,0.25);
+    border-radius: 3px;
+    background: transparent;
+    color: #7a8e9e;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.cfd-panel .cfd-btn.active {
+    background: rgba(0,196,176,0.15);
+    color: #00c4b0;
+    border-color: rgba(0,196,176,0.5);
+}
+
+.cfd-panel .cfd-btn:hover {
+    border-color: rgba(0,196,176,0.45);
+    color: #00c4b0;
+}
+
+.cfd-panel .cfd-readout {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0 2px;
+    font-size: 9px;
+    color: #5a6e7e;
+}
+
+.cfd-panel .cfd-readout strong {
+    color: #00c4b0;
+    font-weight: 600;
+}
+
+.cfd-panel select {
+    background: rgba(0,196,176,0.08);
+    color: #b0bfc8;
+    border: 1px solid rgba(0,196,176,0.25);
+    border-radius: 3px;
+    font: 9px/1.4 'Roboto Mono', monospace;
+    padding: 3px 6px;
+    outline: none;
+    cursor: pointer;
+    flex: 1;
+    min-width: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%2300c4b0'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 5px center;
+    padding-right: 16px;
+}
+
+.cfd-panel select:focus {
+    border-color: rgba(0,196,176,0.5);
+}
+
+.cfd-panel select option {
+    background: #0c1018;
+    color: #b0bfc8;
+}
+
+/* ===== CFD JOYSTICK ===== */
+.cfd-joystick {
+    position: absolute;
+    right: 12px;
+    top: 140px;
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 196, 176, 0.28);
+    background: radial-gradient(circle at 50% 50%, rgba(8, 12, 18, 0.72) 0%, rgba(8, 12, 18, 0.9) 78%);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+    z-index: 7;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.cfd-joystick-thumb {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 30px;
+    height: 30px;
+    margin-left: -15px;
+    margin-top: -15px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 196, 176, 0.58);
+    background: radial-gradient(circle at 35% 30%, rgba(0, 210, 190, 0.9), rgba(0, 128, 118, 0.72));
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+}
+
+.cfd-joystick-label {
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 6px);
+    transform: translateX(-50%);
+    font: 9px/1 'Roboto Mono', monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(122, 142, 158, 0.9);
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+/* ===== CFD PANEL MOBILE OVERRIDES ===== */
+@media (max-width: 768px) {
+    .cfd-panel {
+        position: absolute !important;
+        left: 15px !important;
+        right: 15px !important;
+        bottom: max(env(safe-area-inset-bottom), 22px) !important;
+        top: auto !important;
+        width: auto !important;
+        backdrop-filter: none !important;
+        background: rgba(8,12,18,0.95) !important;
+        padding: 10px 14px !important;
+        margin: 0 !important;
+        font-size: 10px !important;
+        z-index: 5;
+        max-height: 40svh;
+        overflow-y: auto;
+    }
+
+    .cfd-panel summary {
+        font-size: 10px !important;
+    }
+
+    .cfd-panel .cfd-row {
+        gap: 8px !important;
+        margin: 6px 0 0 !important;
+    }
+
+    .cfd-panel .cfd-row span:first-child {
+        width: 55px !important;
+        font-size: 10px !important;
+    }
+
+    .cfd-panel input[type=range] {
+        height: 3px !important;
+    }
+
+    .cfd-panel input[type=range]::-webkit-slider-thumb {
+        width: 14px !important;
+        height: 14px !important;
+    }
+
+    .cfd-panel .cfd-v {
+        width: 32px !important;
+        font-size: 10px !important;
+    }
+
+    .cfd-panel .cfd-toggles {
+        gap: 6px !important;
+    }
+
+    .cfd-panel .cfd-btn {
+        font-size: 10px !important;
+        padding: 5px 10px !important;
+    }
+
+    .cfd-panel .cfd-readout {
+        font-size: 10px !important;
+    }
+
+    .cfd-joystick {
+        width: 82px;
+        height: 82px;
+        right: 14px;
+        top: 62%;
+        margin-top: 0;
+    }
+}
