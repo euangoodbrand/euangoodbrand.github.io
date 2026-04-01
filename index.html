@@ -109,13 +109,10 @@
                     <table style="width:100%;border:0px;border-spacing:0px 10px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
 
                         <!-- SLB Paper - Highlighted -->
-                        <tr bgcolor="#ffffd0">
-                            <td style="padding:16px;width:25%;vertical-align:middle">
-                                <div class="one" style="width:160px;height:120px;">
-                                    <img src='images/slb_paper.png' width="160" style="border:1px solid #ddd;border-radius:4px;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                                    <div style="display:none;width:160px;height:120px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:4px;align-items:center;justify-content:center;color:white;font-size:11px;text-align:center;padding:10px;box-sizing:border-box;">
-                                        SLB<br>Malware<br>Detection
-                                    </div>
+                        <tr class="paper-row highlight-paper">
+                            <td style="padding:20px;width:25%;vertical-align:middle">
+                                <div class="paper-img-container">
+                                    <img src='images/slb_paper.svg' alt="SLB Paper Figure" class="paper-img">
                                 </div>
                             </td>
                             <td style="padding:20px;width:75%;vertical-align:middle">
@@ -123,17 +120,20 @@
                                     <span class="papertitle">Deep Learning from Imperfectly Labeled Malware Data</span>
                                 </a>
                                 <br>
-                                <a href="#">Fahad Alotaibi</a>,
-                                <strong>Euan Goodbrand</strong>,
-                                <a href="https://www.imperial.ac.uk/people/sergio.maffeis">Sergio Maffeis</a>
+                                <span class="paper-authors">
+                                    <a href="#">Fahad Alotaibi</a>,
+                                    <strong>Euan Goodbrand</strong>,
+                                    <a href="https://www.imperial.ac.uk/people/sergio.maffeis">Sergio Maffeis</a>
+                                </span>
                                 <br>
-                                <em>ACM CCS</em>, 2025
+                                <em class="paper-venue">ACM CCS</em>, 2025
                                 <br>
-                                <a href="https://doi.org/10.1145/3719027.3765197">paper</a> /
-                                <a href="#">code</a>
-                                <p></p>
-                                <p>
-                                    SLB is a framework designed to robustly train deep learning–based malware systems while simultaneously refining dataset labels, achieving significant improvements on noisy malware datasets.
+                                <span class="paper-links">
+                                    <a href="https://doi.org/10.1145/3719027.3765197">paper</a> /
+                                    <a href="#">code</a>
+                                </span>
+                                <p class="paper-abstract">
+                                    SLB is a framework designed to robustly train deep learning–based malware detection systems while simultaneously refining dataset labels, achieving significant improvements on noisy malware datasets.
                                 </p>
                             </td>
                         </tr>
