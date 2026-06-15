@@ -259,6 +259,17 @@
   .legend .bar{width:72px; height:6px; border-radius:3px;
     background:linear-gradient(90deg,#1c3a8a,#1e9fd6,#28e0c2,#f3a84c);}
 
+  /* F1 car / flow toggle */
+  .toggle-chip{
+    position:fixed; right:22px; bottom:20px; z-index:30;
+    font-family:"JetBrains Mono",monospace; font-size:0.62rem; letter-spacing:0.08em;
+    text-transform:uppercase; color:var(--muted); cursor:pointer;
+    background:rgba(5,7,13,0.5); padding:8px 12px; border:1px solid var(--line);
+    border-radius:8px; backdrop-filter:blur(6px); transition:color .2s ease, border-color .2s ease;
+  }
+  .toggle-chip:hover{color:var(--teal); border-color:var(--line-strong);}
+  .toggle-chip[aria-pressed="false"]{color:var(--faint);}
+
   a:focus-visible, button:focus-visible{outline:2px solid var(--teal); outline-offset:3px; border-radius:4px;}
 
   @media (max-width:820px){
@@ -477,6 +488,8 @@
   <span>Cp</span><span class="bar"></span><span>pressure field</span>
 </div>
 
+<button id="carToggle" class="toggle-chip" type="button" aria-pressed="true" title="Toggle the F1 car obstacle and upward flow">F1 flow: on</button>
+
 <script>
 /* =========================================================================
    Stable-fluids solver (WebGL2). Navier–Stokes via advection + vorticity
@@ -496,19 +509,32 @@
     PRESSURE_ITERATIONS: 20,
     CURL: 26,
     SPLAT_RADIUS: 0.24,
-    SPLAT_FORCE: 6200
+    SPLAT_FORCE: 6200,
+    FLOW: 10,           // steady upward drift so the car reads as moving through fluid
+    PAN_PER_SCREEN: 0.55, // how far the fluid world pans per screen-height of scroll
+    CAR_EMIT: 0.05      // how strongly the car edge stirs the fluid (like the cursor)
   };
 
-  function fail(){ canvas.style.display='none'; if(staticBg) staticBg.style.display='block'; }
-  if (reduce){ fail(); return; }
+  /* car obstacle + upward flow are user-toggleable */
+  let carOn = true;
+  let pan = 0;          // vertical pan of the fluid world, driven by scroll
+  let lastPan = 0;      // previous frame's pan, to detect car motion
+
+  const carBtn = document.getElementById('carToggle');
+
+  /* diagnostics log quietly to the console (no on-screen overlay) */
+  function dbg(msg){ if(window.console && console.debug) console.debug('[fluid] ' + msg); }
+
+  function fail(reason){ canvas.style.display='none'; if(staticBg) staticBg.style.display='block'; if(carBtn) carBtn.style.display='none'; dbg('FALLBACK: ' + (reason||'unknown')); }
+  if (reduce){ fail('prefers-reduced-motion'); return; }
 
   const gl = canvas.getContext('webgl2', {alpha:true, depth:false, stencil:false, antialias:false, preserveDrawingBuffer:false});
-  if (!gl){ fail(); return; }
+  if (!gl){ fail('no webgl2'); return; }
   const ext = {
     colorBufferFloat: gl.getExtension('EXT_color_buffer_float'),
     halfFloatLinear: gl.getExtension('OES_texture_float_linear')
   };
-  if (!ext.colorBufferFloat){ fail(); return; }
+  if (!ext.colorBufferFloat){ fail('no EXT_color_buffer_float'); return; }
 
   const texType = gl.HALF_FLOAT;
   const filtering = ext.halfFloatLinear ? gl.LINEAR : gl.NEAREST;
@@ -535,12 +561,43 @@
 
   const displayShader = `
     precision highp float; precision highp sampler2D;
-    varying vec2 vUv; uniform sampler2D uTexture;
+    varying vec2 vUv; uniform sampler2D uTexture; uniform sampler2D uMask;
+    uniform float uCarOn; uniform float uPan;
     void main(){
-      vec3 c = texture2D(uTexture, vUv).rgb;
+      // fluid is a wrapping world panned vertically by scroll; car stays fixed on screen
+      vec3 c = texture2D(uTexture, vec2(vUv.x, fract(vUv.y + uPan))).rgb;
       // gentle tone curve so glow stays rich but not blown out
       c = c / (c + vec3(0.55)) * 1.55;
+      if(uCarOn > 0.5){
+        float solid = texture2D(uMask, vUv).r;          // car mask in fixed screen space
+        float s = smoothstep(0.42, 0.58, solid);         // anti-aliased (smooth) edge
+        c = mix(c, vec3(0.0), s);                         // solid black car
+      }
       gl_FragColor = vec4(c, 1.0);
+    }`;
+
+  const boundaryShader = `
+    precision highp float; precision highp sampler2D;
+    varying vec2 vUv; uniform sampler2D uVelocity; uniform sampler2D uMask;
+    uniform float flow; uniform float dt; uniform float uPan;
+    void main(){
+      // obstacle lives in the panned world so it stays under the on-screen car
+      float solid = texture2D(uMask, vec2(vUv.x, fract(vUv.y - uPan))).r;
+      float m = 1.0 - step(0.5, solid);   // hard: 0 inside car, 1 in fluid
+      vec2 v = texture2D(uVelocity, vUv).xy;
+      v += vec2(0.0, flow*dt);   // steady upward drift
+      v *= m;                    // zero velocity inside the car so flow deflects around it
+      gl_FragColor = vec4(v, 0.0, 1.0);
+    }`;
+
+  // physically block the dye inside the car so ink piles/parts around it
+  const dyeMaskShader = `
+    precision highp float; precision highp sampler2D;
+    varying vec2 vUv; uniform sampler2D uTexture; uniform sampler2D uMask; uniform float uPan;
+    void main(){
+      float solid = texture2D(uMask, vec2(vUv.x, fract(vUv.y - uPan))).r;
+      float m = 1.0 - step(0.5, solid);
+      gl_FragColor = texture2D(uTexture, vUv) * m;
     }`;
 
   const splatShader = `
@@ -694,9 +751,12 @@
     curl: program(vertSrc, curlShader),
     vorticity: program(vertSrc, vorticityShader),
     pressure: program(vertSrc, pressureShader),
-    gradient: program(vertSrc, gradientSubtractShader)
+    gradient: program(vertSrc, gradientSubtractShader),
+    boundary: program(vertSrc, boundaryShader),
+    dyeMask: program(vertSrc, dyeMaskShader)
   };
-  for(const k in progs){ if(!progs[k]){ fail(); return; } }
+  for(const k in progs){ if(!progs[k]){ fail('shader compile failed: '+k); return; } }
+  dbg('shaders ok');
 
   /* fullscreen quad */
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
@@ -749,11 +809,33 @@
     return gl.drawingBufferWidth > gl.drawingBufferHeight ? {width:max, height:min} : {width:min, height:max};
   }
 
+  // copy one FBO's contents into another (rescales), so the field survives a resize
+  function copyTo(src, dst){
+    const p = progs.clear; gl.useProgram(p.program);
+    gl.uniform1i(p.uniforms.uTexture, src.attach(0));
+    gl.uniform1f(p.uniforms.value, 1.0);
+    blit(dst);
+  }
+
+  // wrap a double-FBO's textures vertically (REPEAT on T) for the toroidal pan
+  function setVerticalRepeat(dbl){
+    [dbl.read, dbl.write].forEach(function(f){
+      gl.bindTexture(gl.TEXTURE_2D, f.tex);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+    });
+  }
+
   function initFramebuffers(){
     const simRes = getResolution(config.SIM_RESOLUTION);
     const dyeRes = getResolution(config.DYE_RESOLUTION);
+    const oldDye = dye, oldVel = velocity;
     dye      = createDoubleFBO(dyeRes.width, dyeRes.height, RGBA, gl.RGBA, texType, filtering);
     velocity = createDoubleFBO(simRes.width, simRes.height, RG, gl.RG, texType, filtering);
+    // wrap vertically so the world is a seamless torus the scroll can pan through
+    setVerticalRepeat(dye); setVerticalRepeat(velocity);
+    // preserve the existing ink/velocity across a resize instead of clearing to black
+    if(oldDye) copyTo(oldDye.read, dye.read);
+    if(oldVel) copyTo(oldVel.read, velocity.read);
     divergence = createFBO(simRes.width, simRes.height, R, gl.RED, texType, gl.NEAREST);
     curl       = createFBO(simRes.width, simRes.height, R, gl.RED, texType, gl.NEAREST);
     pressure   = createDoubleFBO(simRes.width, simRes.height, R, gl.RED, texType, gl.NEAREST);
@@ -766,8 +848,59 @@
     return false;
   }
 
+  /* ---- car obstacle mask: a top-down F1 silhouette drawn to a texture ---- */
+  let carMaskTex = null;
+  let carMaskHasImage = false;          // becomes true once the image is baked into the mask
+  let carEmitPts = [];                  // perimeter points (screen-normalised) the car stirs from
+  const carImg = new Image();
+  carImg.src = 'data:image/png;base64,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';
+  function buildCarMask(){
+    const cw = Math.max(160, Math.round(window.innerWidth * 0.5));
+    const chh = Math.max(160, Math.round(window.innerHeight * 0.5));
+    const cv = document.createElement('canvas'); cv.width = cw; cv.height = chh;
+    const x2d = cv.getContext('2d');
+    x2d.clearRect(0,0,cw,chh);
+    // Pre-baked top-down F1 mask (white car on black, already nose-down).
+    // Drawn centred and scaled; .r channel reads 1 inside the car, 0 elsewhere.
+    // Until the image has decoded the mask stays empty (no car drawn).
+    if(carImg.naturalWidth > 0){
+      const dw = cw * 0.35;                            // ~35% of screen width
+      const dh = dw * (carImg.height / carImg.width);  // car length -> vertical extent
+      x2d.fillStyle = '#000';
+      x2d.fillRect(0,0,cw,chh);
+      x2d.imageSmoothingEnabled = true;
+      x2d.drawImage(carImg, cw/2 - dw/2, chh/2 - dh/2, dw, dh);   // crisp, no blur
+
+      // collect perimeter points (fluid pixels touching the car) for car-driven stirring
+      carEmitPts = [];
+      try {
+        const data = x2d.getImageData(0,0,cw,chh).data;
+        const rAt = (px,py)=> data[(py*cw+px)*4];
+        const stp = Math.max(2, Math.round(chh/240));
+        for(let py=stp; py<chh-stp; py+=stp){
+          for(let px=stp; px<cw-stp; px+=stp){
+            if(rAt(px,py) < 128 &&
+              (rAt(px+stp,py)>=128 || rAt(px-stp,py)>=128 || rAt(px,py+stp)>=128 || rAt(px,py-stp)>=128)){
+              carEmitPts.push({ u: px/cw, v: 1 - py/chh });   // screen-normalised, v up
+            }
+          }
+        }
+      } catch(e){ carEmitPts = []; }
+    }
+    if(!carMaskTex) carMaskTex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, carMaskTex);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, cv);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  }
+
   resizeCanvas();
   initFramebuffers();
+  buildCarMask();
 
   /* ---- color: a CFD-style pressure palette (cool blues → teal, rare warm) ---- */
   function HSVtoRGB(h,s,v){
@@ -878,6 +1011,18 @@
     gl.uniform1i(p.uniforms.uVelocity, velocity.read.attach(1));
     blit(velocity.write); velocity.swap();
 
+    // car obstacle + steady upward drift (toggleable)
+    if(carOn){
+      p = progs.boundary; gl.useProgram(p.program);
+      gl.uniform1i(p.uniforms.uVelocity, velocity.read.attach(0));
+      gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, carMaskTex);
+      gl.uniform1i(p.uniforms.uMask, 1);
+      gl.uniform1f(p.uniforms.flow, config.FLOW);
+      gl.uniform1f(p.uniforms.dt, dt);
+      gl.uniform1f(p.uniforms.uPan, pan);
+      blit(velocity.write); velocity.swap();
+    }
+
     // advect velocity
     p = progs.advection; gl.useProgram(p.program);
     gl.uniform2f(p.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
@@ -895,19 +1040,55 @@
     gl.uniform1i(p.uniforms.uSource, dye.read.attach(1));
     gl.uniform1f(p.uniforms.dissipation, config.DENSITY_DISSIPATION);
     blit(dye.write); dye.swap();
+
+    // block dye inside the car so ink visibly piles and parts around it
+    if(carOn){
+      p = progs.dyeMask; gl.useProgram(p.program);
+      gl.uniform1i(p.uniforms.uTexture, dye.read.attach(0));
+      gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, carMaskTex);
+      gl.uniform1i(p.uniforms.uMask, 1);
+      gl.uniform1f(p.uniforms.uPan, pan);
+      blit(dye.write); dye.swap();
+    }
   }
 
   function render(){
     gl.disable(gl.BLEND);
     const p = progs.display; gl.useProgram(p.program);
     gl.uniform1i(p.uniforms.uTexture, dye.read.attach(0));
+    gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, carMaskTex);
+    gl.uniform1i(p.uniforms.uMask, 1);
+    gl.uniform1f(p.uniforms.uCarOn, carOn ? 1.0 : 0.0);
+    gl.uniform1f(p.uniforms.uPan, pan);
     blit(null);
   }
 
   function applyPointer(){
     if(pointer.moved){
       pointer.moved = false;
-      splat(pointer.x, pointer.y, pointer.dx, pointer.dy, pointer.color);
+      // map the cursor's screen position into the panned world so the splat lands under it
+      splat(pointer.x, (pointer.y + pan) % 1, pointer.dx, pointer.dy, pointer.color);
+    }
+  }
+
+  /* the car stirs the fluid the same way the cursor does: splatting velocity + ink
+     around its silhouette as it travels (downward) through the field */
+  function carEmit(){
+    const dPan = pan - lastPan; lastPan = pan;
+    if(!carOn || !carEmitPts.length) return;
+    const speed = Math.abs(dPan);
+    if(speed < 0.0008) return;                       // car essentially stationary -> no stirring
+    const mag = Math.min(speed, 0.03) / 0.03;        // 0..1 motion intensity
+    const sp = config.SPLAT_FORCE * config.CAR_EMIT * mag;
+    const dirY = dPan > 0 ? -1 : 1;                  // direction the car travels through the field
+    const n = 2 + Math.round(mag * 6);
+    for(let i=0;i<n;i++){
+      const p = carEmitPts[(Math.random()*carEmitPts.length)|0];
+      const wy = (((p.v + pan) % 1) + 1) % 1;        // edge point in the panned world
+      splat(p.u, wy,
+        (Math.random()-0.5) * sp * 0.6,              // lateral jitter
+        dirY * sp,                                   // pushed along the car's travel direction
+        fieldColor());
     }
   }
 
@@ -919,7 +1100,24 @@
     splat(x, y, Math.cos(ang)*f, Math.sin(ang)*f, fieldColor());
   }
   for(let i=0;i<7;i++) ambientSplat(0.18 + Math.random()*0.2);
+  for(let i=0;i<8;i++) ambientSplat(0.18 + Math.random()*0.2);   // extra seeds so the world has ink to reveal
   let idleTimer = 0;
+
+  /* scroll pans the fluid world vertically; the car stays fixed on screen */
+  function applyScroll(){
+    const sy = window.scrollY || window.pageYOffset || 0;
+    // scrolling down = car moving forward, so the fluid streams up the page (air past the car)
+    const target = -(sy / Math.max(1, window.innerHeight)) * config.PAN_PER_SCREEN;
+    pan += (target - pan) * 0.12;   // smooth easing toward the scroll-driven pan
+  }
+
+  if(carBtn){
+    carBtn.addEventListener('click', ()=>{
+      carOn = !carOn;
+      carBtn.setAttribute('aria-pressed', String(carOn));
+      carBtn.textContent = carOn ? 'F1 flow: on' : 'F1 flow: off';
+    });
+  }
 
   let running = true;
   document.addEventListener('visibilitychange', ()=>{ running = !document.hidden; if(running){ lastTime = Date.now(); requestAnimationFrame(loop);} });
@@ -931,13 +1129,19 @@
     dt = Math.min(dt, 0.016666);
     lastTime = now;
 
-    if(resizeCanvas()) initFramebuffers();
+    try {
+      if(resizeCanvas()){ initFramebuffers(); buildCarMask(); }
+      // bake the car image into the mask as soon as it has decoded (robust to load timing)
+      if(!carMaskHasImage && carImg.naturalWidth > 0){ buildCarMask(); carMaskHasImage = true; dbg('car mask built: ' + carImg.naturalWidth + 'x' + carImg.naturalHeight); }
+    } catch(err){ carMaskHasImage = true; dbg('MASK BUILD ERROR: ' + err.message); }
 
     idleTimer += dt;
     if(pointer.moved){ idleTimer = 0; }
     if(idleTimer > 2.4){ ambientSplat(0.12 + Math.random()*0.12); idleTimer = 1.4 + Math.random()*1.2; }
 
     applyPointer();
+    applyScroll();
+    carEmit();
     step(dt);
     render();
     requestAnimationFrame(loop);
