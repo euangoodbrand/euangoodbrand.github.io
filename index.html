@@ -649,8 +649,7 @@
       vec2 C=texture2D(uVelocity,vUv).xy;
       if(vL.x<0.0){L=-C.x;}
       if(vR.x>1.0){R=-C.x;}
-      if(vT.y>1.0){T=-C.y;}
-      if(vB.y<0.0){B=-C.y;}
+      // vertical axis is periodic (the fluid world wraps), so no top/bottom wall
       float div=0.5*(R-L+T-B);
       gl_FragColor=vec4(div,0.0,0.0,1.0);
     }`;
@@ -839,6 +838,7 @@
     divergence = createFBO(simRes.width, simRes.height, R, gl.RED, texType, gl.NEAREST);
     curl       = createFBO(simRes.width, simRes.height, R, gl.RED, texType, gl.NEAREST);
     pressure   = createDoubleFBO(simRes.width, simRes.height, R, gl.RED, texType, gl.NEAREST);
+    setVerticalRepeat(pressure);   // periodic pressure solve -> no seam at the wrap
   }
 
   function resizeCanvas(){
@@ -1067,7 +1067,9 @@
     if(pointer.moved){
       pointer.moved = false;
       // map the cursor's screen position into the panned world so the splat lands under it
-      splat(pointer.x, (pointer.y + pan) % 1, pointer.dx, pointer.dy, pointer.color);
+      // (positive modulo so it stays in [0,1) for any pan, including negative)
+      const wy = (((pointer.y + pan) % 1) + 1) % 1;
+      splat(pointer.x, wy, pointer.dx, pointer.dy, pointer.color);
     }
   }
 
