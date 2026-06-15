@@ -1,600 +1,949 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-<!-- Basic -->
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Euan Goodbrand: Machine Learning &amp; Geometric Deep Learning</title>
+<meta name="description" content="Euan Goodbrand, ML Research Engineer at Mercedes-AMG Petronas F1 and incoming DPhil candidate in Oxford's Visual Geometry Group. Geometric deep learning, 3D transformers for CFD, and physical simulation." />
+<meta name="author" content="Euan Goodbrand" />
+<link rel="icon" href="images/tab.png" type="image/png" />
 
-<!-- Mobile Metas -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Open Graph / Twitter -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Euan Goodbrand: Machine Learning &amp; Geometric Deep Learning" />
+<meta property="og:description" content="ML Research Engineer at Mercedes-AMG Petronas F1, incoming DPhil candidate at Oxford's Visual Geometry Group. Geometric deep learning, 3D transformers for CFD, and physical simulation." />
+<meta property="og:url" content="https://euangoodbrand.com/" />
+<meta property="og:image" content="https://euangoodbrand.com/images/Euan%20Goodbrand.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Euan Goodbrand: Machine Learning &amp; Geometric Deep Learning" />
+<meta name="twitter:description" content="ML Research Engineer at Mercedes-AMG Petronas F1, incoming DPhil candidate at Oxford's Visual Geometry Group." />
+<meta name="twitter:image" content="https://euangoodbrand.com/images/Euan%20Goodbrand.jpg" />
 
-<!-- Site Metas -->
-<title>Euan Goodbrand — ML Engineer</title>
-<meta name="keywords" content="Euan Goodbrand, Machine Learning, ML Engineer, Graphics, Simulations">
-<meta name="description" content="Euan Goodbrand — Machine Learning Engineer passionate about simulations, graphics, and AI.">
-<meta name="author" content="Euan Goodbrand">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-bg:#05070d;
+    --ink-bg2:#080b14;
+    --panel:rgba(11,15,24,0.50);
+    --panel-solid:rgba(9,12,20,0.72);
+    --line:rgba(150,180,210,0.12);
+    --line-strong:rgba(150,180,210,0.22);
+    --text:#e9eef6;
+    --muted:#8b99af;
+    --faint:#5d6a80;
+    --teal:#28e0c2;
+    --teal-deep:#0fb6a0;
+    --amber:#f3a84c;
+    --maxw:1080px;
+  }
 
-<!-- Site Icons -->
-<link rel="shortcut icon" href="images/tab.png" type="image/x-icon" />
-<link rel="tab" href="images/tab.png">
-<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ink-bg);
+    color:var(--text);
+    font-family:"Inter",system-ui,sans-serif;
+    font-weight:400;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
 
-<!-- Critical CSS inlined for faster first paint on mobile -->
-<style id="critical-css">
-  body{margin:0;font-family:sans-serif}
-  #preloader{position:fixed;inset:0;z-index:99999;background:#06090d;display:flex;align-items:center;justify-content:center}
-  #mainNav{position:fixed;top:0;width:100%;z-index:1000}
-  #home{position:relative;overflow:hidden;min-height:100vh}
-  #background-video{position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;transform:translate(-50%,-50%);object-fit:cover}
-  .heading{position:relative;z-index:3}
-  .heading h1{color:#fff}
+  /* ---------- Fluid canvas + atmosphere ---------- */
+  #fluid{
+    position:fixed; inset:0;
+    width:100vw; height:100vh;
+    z-index:-2; display:block;
+    background:var(--ink-bg);
+  }
+  .vignette{
+    position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(120% 90% at 50% 8%, transparent 0%, transparent 38%, rgba(5,7,13,0.55) 78%, rgba(5,7,13,0.85) 100%),
+      linear-gradient(180deg, rgba(5,7,13,0.30) 0%, rgba(5,7,13,0.05) 25%, rgba(5,7,13,0.55) 100%);
+  }
+  /* fallback gradient if WebGL unavailable / reduced motion */
+  .static-bg{
+    position:fixed; inset:0; z-index:-2; display:none;
+    background:
+      radial-gradient(80% 60% at 20% 10%, rgba(40,224,194,0.10), transparent 60%),
+      radial-gradient(70% 70% at 85% 30%, rgba(80,120,220,0.12), transparent 60%),
+      radial-gradient(90% 80% at 50% 100%, rgba(243,168,76,0.06), transparent 55%),
+      var(--ink-bg);
+  }
+
+  /* ---------- layout ---------- */
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px;}
+
+  /* ---------- nav ---------- */
+  nav{
+    position:sticky; top:0; z-index:40;
+    backdrop-filter:blur(14px) saturate(140%);
+    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    background:linear-gradient(180deg, rgba(5,7,13,0.78), rgba(5,7,13,0.30));
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:var(--maxw); margin:0 auto; padding:14px 28px;
+    display:flex; align-items:center; justify-content:space-between; gap:18px;
+  }
+  .brand{font-family:"Fraunces",serif; font-weight:500; font-size:1.05rem; letter-spacing:0.01em; color:var(--text); text-decoration:none;}
+  .brand .dot{color:var(--teal);}
+  .nav-links{display:flex; gap:26px; align-items:center;}
+  .nav-links a{
+    font-family:"JetBrains Mono",monospace; font-size:0.74rem;
+    letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--muted); text-decoration:none; transition:color .2s ease;
+  }
+  .nav-links a:hover{color:var(--teal);}
+  .nav-toggle{display:none;}
+
+  /* ---------- hero ---------- */
+  header.hero{
+    min-height:100svh; display:flex; flex-direction:column; justify-content:center;
+    padding:120px 0 80px;
+  }
+  .eyebrow{
+    font-family:"JetBrains Mono",monospace; font-size:0.74rem; letter-spacing:0.22em;
+    text-transform:uppercase; color:var(--teal); margin:0 0 22px;
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+  }
+  .eyebrow::before{content:""; width:34px; height:1px; background:var(--teal-deep); display:inline-block;}
+  h1.name{
+    font-family:"Fraunces",serif; font-weight:400;
+    font-size:clamp(3.2rem,8.5vw,6.4rem); line-height:0.98;
+    letter-spacing:-0.02em; margin:0 0 28px;
+  }
+  h1.name em{font-style:italic; color:var(--teal); font-weight:300;}
+  .thesis{
+    font-family:"Fraunces",serif; font-weight:300; font-style:italic;
+    font-size:clamp(1.3rem,2.6vw,1.85rem); line-height:1.4;
+    color:#cdd7e6; max-width:760px; margin:0 0 34px;
+  }
+  .role-line{
+    font-size:1rem; color:var(--muted); max-width:620px; margin:0;
+  }
+  .role-line strong{color:var(--text); font-weight:500;}
+  .scroll-cue{
+    margin-top:64px; font-family:"JetBrains Mono",monospace; font-size:0.72rem;
+    letter-spacing:0.18em; text-transform:uppercase; color:var(--faint);
+    display:flex; align-items:center; gap:10px;
+  }
+  .scroll-cue .bar{width:1px; height:30px; background:linear-gradient(var(--faint),transparent); display:inline-block;}
+
+  /* ---------- sections ---------- */
+  section{padding:96px 0; position:relative;}
+  .sec-head{display:flex; align-items:baseline; gap:18px; margin-bottom:44px; flex-wrap:wrap;}
+  .sec-num{
+    font-family:"JetBrains Mono",monospace; font-size:0.8rem; color:var(--teal);
+    letter-spacing:0.1em;
+  }
+  .sec-title{
+    font-family:"Fraunces",serif; font-weight:400; font-size:clamp(1.9rem,4vw,2.7rem);
+    letter-spacing:-0.01em; margin:0; line-height:1.05;
+  }
+  .sec-rule{flex:1; height:1px; background:var(--line); min-width:40px; align-self:center;}
+
+  .panel{
+    background:var(--panel);
+    backdrop-filter:blur(10px) saturate(130%);
+    -webkit-backdrop-filter:blur(10px) saturate(130%);
+    border:1px solid var(--line);
+    border-radius:14px;
+  }
+
+  /* about */
+  .about-grid{display:grid; grid-template-columns:1.6fr 1fr; gap:30px;}
+  .about-text p{font-size:1.08rem; color:#cad4e2; margin:0 0 18px;}
+  .about-text p:last-child{margin-bottom:0;}
+  .about-card{padding:26px 26px;}
+  .about-card h4{
+    font-family:"JetBrains Mono",monospace; font-size:0.72rem; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--faint); margin:0 0 14px; font-weight:500;
+  }
+  .meta-row{display:flex; justify-content:space-between; gap:14px; padding:11px 0; border-bottom:1px solid var(--line); font-size:0.92rem;}
+  .meta-row:last-child{border-bottom:none;}
+  .meta-row span:first-child{color:var(--muted);}
+  .meta-row span:last-child{color:var(--text); text-align:right;}
+
+  /* research cards */
+  .research-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:22px;}
+  .rcard{padding:30px 28px; transition:transform .25s ease, border-color .25s ease;}
+  .rcard:hover{transform:translateY(-3px); border-color:var(--line-strong);}
+  .rcard .tag{
+    font-family:"JetBrains Mono",monospace; font-size:0.72rem; color:var(--teal);
+    letter-spacing:0.08em; display:block; margin-bottom:14px;
+  }
+  .rcard h3{font-family:"Fraunces",serif; font-weight:400; font-size:1.45rem; margin:0 0 12px; letter-spacing:-0.01em;}
+  .rcard p{color:var(--muted); font-size:0.97rem; margin:0;}
+  .rcard .kw{margin-top:16px; display:flex; flex-wrap:wrap; gap:7px;}
+  .kw span{
+    font-family:"JetBrains Mono",monospace; font-size:0.68rem; color:var(--faint);
+    border:1px solid var(--line); padding:3px 8px; border-radius:5px;
+  }
+
+  /* publications */
+  .pub{
+    display:grid; grid-template-columns:auto 1fr auto; gap:22px; align-items:baseline;
+    padding:24px 0; border-top:1px solid var(--line);
+  }
+  .pub:last-child{border-bottom:1px solid var(--line);}
+  .pub .venue{
+    font-family:"JetBrains Mono",monospace; font-size:0.74rem; letter-spacing:0.04em;
+    color:var(--teal); border:1px solid var(--teal-deep); padding:4px 10px; border-radius:6px;
+    white-space:nowrap; align-self:start;
+  }
+  .pub h3{font-family:"Fraunces",serif; font-weight:400; font-size:1.25rem; margin:0 0 6px; line-height:1.3;}
+  .pub h3 a{color:inherit; text-decoration:none; border-bottom:1px solid var(--teal-deep); transition:color .2s ease;}
+  .pub h3 a:hover{color:var(--teal);}
+  .pub .authors{color:var(--muted); font-size:0.92rem; margin:0;}
+  .pub .authors b{color:var(--text); font-weight:500;}
+  .pub .yr{font-family:"JetBrains Mono",monospace; font-size:0.85rem; color:var(--faint); white-space:nowrap;}
+
+  /* timeline */
+  .timeline{position:relative; padding-left:30px;}
+  .timeline::before{content:""; position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line-strong);}
+  .tl-item{position:relative; padding:0 0 34px;}
+  .tl-item:last-child{padding-bottom:0;}
+  .tl-item::before{
+    content:""; position:absolute; left:-30px; top:6px; width:11px; height:11px; border-radius:50%;
+    background:var(--ink-bg); border:2px solid var(--teal); transform:translateX(1px);
+  }
+  .tl-item.now::before{background:var(--teal); box-shadow:0 0 0 4px rgba(40,224,194,0.18);}
+  .tl-date{font-family:"JetBrains Mono",monospace; font-size:0.74rem; color:var(--teal); letter-spacing:0.06em;}
+  .tl-item h3{font-family:"Fraunces",serif; font-weight:400; font-size:1.3rem; margin:6px 0 4px;}
+  .tl-item .org{color:var(--muted); font-size:0.95rem; margin:0 0 8px;}
+  .tl-item p{color:var(--faint); font-size:0.94rem; margin:0; max-width:640px;}
+
+  /* projects */
+  .proj-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:22px;}
+  .proj{padding:26px 26px; display:flex; flex-direction:column; transition:transform .25s ease, border-color .25s ease;}
+  .proj:hover{transform:translateY(-3px); border-color:var(--line-strong);}
+  .proj .ptop{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;}
+  .proj .ptop .idx{font-family:"JetBrains Mono",monospace; font-size:0.72rem; color:var(--faint);}
+  .proj .ptop .arrow{color:var(--muted); font-size:1.1rem; transition:transform .2s ease, color .2s ease;}
+  .proj:hover .ptop .arrow{transform:translate(2px,-2px); color:var(--teal);}
+  .proj h3{font-family:"Fraunces",serif; font-weight:400; font-size:1.3rem; margin:0 0 10px;}
+  .proj p{color:var(--muted); font-size:0.95rem; margin:0 0 18px; flex:1;}
+  .proj .stack{display:flex; flex-wrap:wrap; gap:7px;}
+  .stack span{font-family:"JetBrains Mono",monospace; font-size:0.68rem; color:var(--faint); border:1px solid var(--line); padding:3px 8px; border-radius:5px;}
+
+  /* contact */
+  .contact{text-align:center; padding:110px 0 90px;}
+  .contact .eyebrow{justify-content:center;}
+  .contact .eyebrow::before{display:none;}
+  .contact h2{font-family:"Fraunces",serif; font-weight:300; font-size:clamp(2.2rem,6vw,3.8rem); margin:0 0 26px; letter-spacing:-0.02em;}
+  .contact h2 a{color:var(--teal); text-decoration:none; border-bottom:1px solid var(--teal-deep);}
+  .clinks{display:flex; gap:28px; justify-content:center; flex-wrap:wrap; margin-top:8px;}
+  .clinks a{
+    font-family:"JetBrains Mono",monospace; font-size:0.8rem; letter-spacing:0.05em;
+    color:var(--muted); text-decoration:none; transition:color .2s ease;
+  }
+  .clinks a:hover{color:var(--teal);}
+
+  footer{border-top:1px solid var(--line); padding:30px 0 60px;}
+  .foot-inner{display:flex; justify-content:space-between; gap:18px; flex-wrap:wrap; align-items:center;}
+  footer p{font-family:"JetBrains Mono",monospace; font-size:0.72rem; color:var(--faint); margin:0; letter-spacing:0.03em; max-width:560px; line-height:1.7;}
+
+  /* field legend (pressure colorbar) */
+  .legend{
+    position:fixed; left:22px; bottom:20px; z-index:30;
+    font-family:"JetBrains Mono",monospace; font-size:0.62rem; color:var(--faint);
+    letter-spacing:0.08em; display:flex; align-items:center; gap:9px;
+    background:rgba(5,7,13,0.5); padding:7px 11px; border:1px solid var(--line); border-radius:8px;
+    backdrop-filter:blur(6px);
+  }
+  .legend .bar{width:72px; height:6px; border-radius:3px;
+    background:linear-gradient(90deg,#1c3a8a,#1e9fd6,#28e0c2,#f3a84c);}
+
+  a:focus-visible, button:focus-visible{outline:2px solid var(--teal); outline-offset:3px; border-radius:4px;}
+
+  @media (max-width:820px){
+    .about-grid{grid-template-columns:1fr;}
+    .research-grid,.proj-grid{grid-template-columns:1fr;}
+    .nav-links{display:none;}
+    .pub{grid-template-columns:1fr; gap:8px;}
+    .pub .yr{display:none;}
+    .legend{display:none;}
+    section{padding:72px 0;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    #fluid{display:none;}
+    .static-bg{display:block;}
+  }
 </style>
-
-<!-- Non-critical CSS loaded asynchronously -->
-<link rel="stylesheet" href="css/bootstrap.min.css" media="print" onload="this.media='all'">
-<link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
-<link rel="stylesheet" href="css/responsive.css" media="print" onload="this.media='all'">
-<link rel="stylesheet" href="css/custom.css" media="print" onload="this.media='all'">
-<link rel="stylesheet" href="css/main.css" media="print" onload="this.media='all'">
-<link rel="stylesheet" href="css/cfd-panel.css" media="print" onload="this.media='all'">
-<link rel="stylesheet" href="css/academic-mode.css" media="print" onload="this.media='all'">
-
-<!-- Fallback for non-JS -->
-<noscript>
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="css/responsive.css">
-  <link rel="stylesheet" href="css/custom.css">
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/cfd-panel.css">
-  <link rel="stylesheet" href="css/academic-mode.css">
-</noscript>
-
-<script src="js/modernizr.js" defer></script>
 </head>
+<body>
+<canvas id="fluid"></canvas>
+<div class="static-bg" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
 
-<body id="page-top" class="politics_version">
-
-    <!-- ===== ACADEMIC MODE VIEW (Jon Barron Style) ===== -->
-    <div class="academic-view" id="academic-view">
-        <table class="academic-container" style="width:100%;max-width:800px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-            <tr style="padding:0px">
-                <td style="padding:0px">
-                    
-                    <!-- Bio Section -->
-                    <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-                        <tr style="padding:0px">
-                            <td style="padding:2.5%;width:63%;vertical-align:middle">
-                                <p class="name" style="text-align: center;">
-                                    Euan Goodbrand
-                                </p>
-                                <p>
-                                    I am a PhD student at the <a href="https://www.robots.ox.ac.uk/~vgg/">Visual Geometry Group</a> at the University of Oxford.
-                                </p>
-                                <p>
-                                    Previously, I worked as a Machine Learning Engineer at <a href="https://www.mercedesamgf1.com/">Mercedes-AMG PETRONAS Formula One Team</a>, where I developed ML systems for aerodynamic simulation and race strategy. I received my MSc in Computing (AI & Machine Learning) from <a href="https://www.imperial.ac.uk/">Imperial College London</a> in 2024.
-                                </p>
-                                <p>
-                                    My research interests include computer vision, 3D reconstruction, neural rendering, and physics-informed machine learning.
-                                </p>
-                                <p style="text-align:center">
-                                    <a href="mailto:euan@robots.ox.ac.uk">Email</a> &nbsp;/&nbsp;
-                                    <a href="uploads/Euan_Goodbrand_CV_resume.pdf">CV</a> &nbsp;/&nbsp;
-                                    <a href="https://scholar.google.com/">Scholar</a> &nbsp;/&nbsp;
-                                    <a href="https://www.linkedin.com/in/euangoodbrand/">LinkedIn</a> &nbsp;/&nbsp;
-                                    <a href="https://github.com/euangoodbrand">Github</a>
-                                </p>
-                            </td>
-                            <td style="padding:2.5%;width:37%;max-width:37%">
-                                <a href="uploads/Euan Goodbrand.jpeg"><img class="profile-photo" style="width:100%;max-width:100%;object-fit:cover;border-radius:50%;" alt="profile photo" src="uploads/Euan Goodbrand.jpeg"></a>
-                            </td>
-                        </tr>
-                    </tbody></table>
-
-                    <!-- Research Section -->
-                    <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-                        <tr>
-                            <td style="padding:16px;width:100%;vertical-align:middle">
-                                <h2>Research</h2>
-                                <p>
-                                    I'm interested in computer vision, machine learning, and their applications to real-world problems. Some papers are <span class="highlight">highlighted</span>.
-                                </p>
-                            </td>
-                        </tr>
-                    </tbody></table>
-
-                    <!-- Publications -->
-                    <table style="width:100%;border:0px;border-spacing:0px 10px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-
-                        <!-- SLB Paper - Highlighted -->
-                        <tr bgcolor="#ffffd0">
-                            <td style="padding:16px;width:25%;vertical-align:middle">
-                                <div class="one" style="width:160px;height:120px;">
-                                    <img src='images/slb_paper.png' width="160" style="border:1px solid #ddd;border-radius:4px;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                                    <div style="display:none;width:160px;height:120px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:4px;align-items:center;justify-content:center;color:white;font-size:11px;text-align:center;padding:10px;box-sizing:border-box;">
-                                        SLB<br>Malware<br>Detection
-                                    </div>
-                                </div>
-                            </td>
-                            <td style="padding:20px;width:75%;vertical-align:middle">
-                                <a href="https://doi.org/10.1145/3719027.3765197">
-                                    <span class="papertitle">Deep Learning from Imperfectly Labeled Malware Data</span>
-                                </a>
-                                <br>
-                                <a href="#">Fahad Alotaibi</a>,
-                                <strong>Euan Goodbrand</strong>,
-                                <a href="https://www.imperial.ac.uk/people/sergio.maffeis">Sergio Maffeis</a>
-                                <br>
-                                <em>ACM CCS</em>, 2025
-                                <br>
-                                <a href="https://doi.org/10.1145/3719027.3765197">paper</a> /
-                                <a href="#">code</a>
-                                <p></p>
-                                <p>
-                                    SLB is a framework designed to robustly train deep learning–based malware systems while simultaneously refining dataset labels, achieving significant improvements on noisy malware datasets.
-                                </p>
-                            </td>
-                        </tr>
-
-                    </tbody></table>
-
-                    <!-- Education Section -->
-                    <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-                        <tr>
-                            <td style="padding:16px;width:100%;vertical-align:middle">
-                                <h2>Education</h2>
-                            </td>
-                        </tr>
-                    </tbody></table>
-                    <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-                        <tr>
-                            <td style="padding:8px 20px;width:25%;vertical-align:top">
-                                <strong>2026 — Present</strong>
-                            </td>
-                            <td style="padding:8px 20px;width:75%;vertical-align:top">
-                                <strong>PhD in Computer Vision</strong><br>
-                                University of Oxford, Visual Geometry Group
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding:8px 20px;width:25%;vertical-align:top">
-                                <strong>2024</strong>
-                            </td>
-                            <td style="padding:8px 20px;width:75%;vertical-align:top">
-                                <strong>MSc Computing (AI & Machine Learning)</strong> — Distinction<br>
-                                Imperial College London
-                            </td>
-                        </tr>
-                    </tbody></table>
-
-                    <!-- Footer -->
-                    <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-                        <tr>
-                            <td style="padding:20px">
-                                <p style="text-align:center;font-size:12px;color:#777;">
-                                    Design based on <a href="https://jonbarron.info/">Jon Barron's website</a>.
-                                </p>
-                            </td>
-                        </tr>
-                    </tbody></table>
-
-                </td>
-            </tr>
-        </tbody></table>
+<nav aria-label="Primary">
+  <div class="nav-inner">
+    <a href="#top" class="brand">Euan&nbsp;Goodbrand<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#research">Research</a>
+      <a href="#publications">Publications</a>
+      <a href="#path">Path</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
     </div>
+  </div>
+</nav>
 
-    <!-- LOADER -->
-    <div id="preloader">
-        <div id="main-ld">
-            <div id="loader"></div>
-        </div>
+<div id="top"></div>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Machine Learning · Geometric Deep Learning · Fluid Dynamics</p>
+    <h1 class="name">Euan<br>Good<em>brand</em></h1>
+    <p class="thesis">I build models that learn the geometry of moving air, from Formula&nbsp;1 aerodynamics to the foundations of 3D deep learning.</p>
+    <p class="role-line"><strong>ML Research Engineer</strong> at Mercedes-AMG Petronas Formula One Team. Incoming <strong>DPhil</strong> candidate in the Visual Geometry Group, University of Oxford.</p>
+    <div class="scroll-cue"><span class="bar"></span>Move your cursor to perturb the field</div>
+  </div>
+</header>
+
+<main>
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2 class="sec-title">About</h2>
+      <span class="sec-rule"></span>
     </div>
-
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
-        <div class="container">
-            <a class="navbar-brand js-scroll-trigger" href="#page-top" aria-label="Back to top"></a>
-            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-                aria-label="Toggle navigation">
-                Menu
-                <i class="fa fa-bars"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav text-uppercase ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger active" href="#home">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#about">About Me</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#blog">Updates</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#portfolio">Portfolio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#contact">Contact</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- ===== HERO SECTION ===== -->
-    <section id="home" class="main-banner parallaxie">
-        <!-- Video Background — mobile gets poster-only by default, video loads on interaction -->
-        <video loop muted playsinline preload="none" poster="./images/jellyfish-poster.jpg" id="background-video">
-            <source src=".\images\jellyfish.mp4" type="video/mp4">
-        </video>
-        <!-- 3D Bubbles Canvas (disabled on low-end mobile via JS) -->
-        <canvas id="bubble-canvas"></canvas>
-        <!-- Click layer for bubble popping -->
-        <div id="bubble-click-layer"></div>
-        <div class="heading">
-            <h1>Euan Goodbrand</h1>
-            <p class="hero-subtitle">ML Engineer — Mercedes F1<span class="hero-sep">/</span>Spatial &amp; Physical AI</p>
-        </div>
-        <div class="hero-fluid-bridge" aria-hidden="true">
-            <div class="hero-fluid-glow"></div>
-            <svg class="hero-fluid-svg" viewBox="0 0 1200 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="heroFluidGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0" stop-color="#7ed4e0" stop-opacity="0.5"/>
-                        <stop offset="0.28" stop-color="#2a8a8f" stop-opacity="0.45"/>
-                        <stop offset="0.55" stop-color="#0f2229" stop-opacity="0.88"/>
-                        <stop offset="1" stop-color="#06090d" stop-opacity="1"/>
-                    </linearGradient>
-                </defs>
-                <path class="hero-wave-back" fill="url(#heroFluidGrad)" opacity="0.75"
-                    d="M0,52 C220,18 380,88 600,48 C820,8 980,78 1200,42 L1200,100 L0,100 Z"/>
-                <path class="hero-wave-front" fill="url(#heroFluidGrad)" opacity="0.95"
-                    d="M0,62 C200,92 420,28 620,58 C820,88 1000,32 1200,54 L1200,100 L0,100 Z"/>
-            </svg>
-            <div class="hero-fluid-track"></div>
-        </div>
-    </section>
-
-    <!-- ===== ABOUT (bio + F1 / ML Three.js field) ===== -->
-    <div id="about" class="section f1-ml-section">
-        <div class="f1-ml-wrap">
-            <canvas id="f1-telemetry-canvas" aria-hidden="true"></canvas>
-            <div class="container f1-ml-content">
-                <div class="section-title text-left">
-                    <h2 class="f1-ml-name">Euan Goodbrand</h2>
-                    <h3 class="f1-ml-tagline">Machine learning at the limit</h3>
-                    <p class="f1-copy-desktop">I am a Machine Learning Engineer at the <strong style="color: #e8eaed;">Mercedes-AMG PETRONAS Formula One Team</strong>, with a passion for simulations, graphics, and visual effects. The scene behind this text is a live, decorative field — the same blend of motion, data, and engineering intuition that shows up in my work on and off the track.</p>
-                    <p class="f1-copy-mobile">Machine Learning Engineer at <strong style="color: #e8eaed;">Mercedes-AMG PETRONAS Formula One Team</strong>, focused on high-performance ML, simulation, and visual systems.</p>
-                </div>
-                <div class="row">
-                    <div class="col-lg-11 col-xl-10">
-                        <p class="f1-ml-lead f1-copy-desktop">
-                            Day to day I turn <strong style="color: #fff;">telemetry, simulations, and engineering data</strong> into systems that support decisions at trackside and in the factory — where lap-time margins are milliseconds and models have to be as disciplined as the car. That same appetite for <strong style="color: #fff;">rigorous ML, performance, and physics</strong> feeds how I think about graphics pipelines, procedural worlds, and numerical simulation outside F1.
-                        </p>
-                        <p class="f1-ml-lead f1-copy-mobile">
-                            I build ML tools that turn race and simulation data into fast, reliable decisions on and off track.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>I work at the intersection of deep learning and computational fluid dynamics. At Mercedes-AMG Petronas I build aerodynamic ML, from graph-based learning on meshes to 3D transformer surrogates that predict pressure and flow fields directly from geometry.</p>
+        <p>This autumn I begin a DPhil in Oxford's Visual Geometry Group, where my interests sit where geometry, representation learning, and physical simulation meet.</p>
+      </div>
+      <aside class="about-card panel">
+        <h4>At a glance</h4>
+        <div class="meta-row"><span>Role</span><span>ML Research Engineer</span></div>
+        <div class="meta-row"><span>Now</span><span>Mercedes-AMG Petronas F1</span></div>
+        <div class="meta-row"><span>Next</span><span>DPhil at VGG, Oxford</span></div>
+        <div class="meta-row"><span>Focus</span><span>3D / geometric DL</span></div>
+        <div class="meta-row"><span>Based</span><span>United Kingdom</span></div>
+      </aside>
     </div>
+  </div>
+</section>
 
-    <!-- ===== RECENT UPDATES (Carousel) ===== -->
-    <div id="blog" class="section section-surface-muted section-after-dark">
-        <div class="container">
-            <div class="section-title text-left">
-                <h3>Recent Updates</h3>
-                <p>Catch up with my latest adventures and career milestones.</p>
-            </div>
-
-            <div class="updates-carousel owl-carousel owl-theme">
-
-                <!-- 1. Presenting at Sumo Digital -->
-                <div class="post-box">
-                    <div class="post-thumb">
-                        <img src="images/SDC23.jpg" class="img-fluid" alt="Sumo Digital Conference" loading="lazy" decoding="async" fetchpriority="low" />
-                        <div class="date">
-                            <span>23</span>
-                            <span>June</span>
-                        </div>
-                    </div>
-                    <div class="post-info">
-                        <h4>Presenting at Sumo Digital</h4>
-                        <ul>
-                            <li>Jun 23, 2023</li>
-                        </ul>
-                        <p>I had the privilege of presenting my thesis at Sumo Digital's Developer Conference. Engaging with industry veterans was enlightening!</p>
-                    </div>
-                </div>
-
-                <!-- 2. Sheffield Graduation -->
-                <div class="post-box">
-                    <div class="post-thumb">
-                        <img src="images/graduation-sheffield2.jpg" class="img-fluid" alt="Sheffield Graduation" loading="lazy" decoding="async" fetchpriority="low" />
-                        <div class="date">
-                            <span>17</span>
-                            <span>July</span>
-                        </div>
-                    </div>
-                    <div class="post-info">
-                        <h4>First Class Honours from Sheffield</h4>
-                        <ul>
-                            <li>Jul 17, 2023</li>
-                        </ul>
-                        <p>Graduated with First Class Honours in Computer Science from The University of Sheffield.</p>
-                    </div>
-                </div>
-
-                <!-- 3. Imperial College London -->
-                <div class="post-box">
-                    <div class="post-thumb">
-                        <img src="images/imperial.jpeg" class="img-fluid" alt="Imperial College London" loading="lazy" decoding="async" fetchpriority="low" />
-                        <div class="date">
-                            <span>30</span>
-                            <span>Sept</span>
-                        </div>
-                    </div>
-                    <div class="post-info">
-                        <h4>New Adventures at Imperial College London</h4>
-                        <ul>
-                            <li>Sep 30, 2023</li>
-                        </ul>
-                        <p>Embarked on my MSc in Computing at Imperial College London, specialising in AI and Machine Learning.</p>
-                    </div>
-                </div>
-
-                <!-- 4. Mercedes F1 (far right) -->
-                <div class="post-box update-mercedes">
-                    <div class="post-thumb">
-                        <img src="images/w16.jpeg" class="img-fluid" alt="Mercedes F1" loading="lazy" decoding="async" fetchpriority="low" />
-                        <div class="date">
-                            <span>01</span>
-                            <span>Sept</span>
-                        </div>
-                    </div>
-                    <div class="post-info">
-                        <h4>Joined Mercedes-AMG PETRONAS F1 Team</h4>
-                        <ul>
-                            <li>Sep 01, 2024</li>
-                        </ul>
-                        <p>Started my role as an ML Engineer at the Mercedes-AMG PETRONAS Formula One Team, applying machine learning to the cutting edge of motorsport.</p>
-                    </div>
-                </div>
-
-            </div>
-        </div>
+<section id="research">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2 class="sec-title">Research interests</h2>
+      <span class="sec-rule"></span>
     </div>
-
-    <!-- ===== PORTFOLIO — interactive spatial graph ===== -->
-    <div id="portfolio" class="section portfolio-graph">
-        <div class="portfolio-graph-wrap">
-            <canvas id="portfolio-canvas"></canvas>
-            <div class="portfolio-graph-tooltip" id="pg-tooltip">
-                <strong id="pg-tt-title"></strong>
-                <span id="pg-tt-desc"></span>
-                <div class="tt-tags" id="pg-tt-tags"></div>
-            </div>
-            <div class="container portfolio-graph-ui">
-                <div class="section-title text-left">
-                    <h3>Portfolio</h3>
-                    <p>Projects shown as a graph — nodes that share a discipline are connected. Hover for details, click to open. Use the filters to highlight a cluster.</p>
-                </div>
-                <div class="portfolio-graph-filters" id="pg-filters">
-                    <button class="active" data-tag="all">All</button>
-                    <button data-tag="web">Web</button>
-                    <button data-tag="ai">AI</button>
-                    <button data-tag="eng">Engineering</button>
-                    <button data-tag="gfx">Graphics</button>
-                </div>
-            </div>
-        </div>
+    <div class="research-grid">
+      <article class="rcard panel">
+        <span class="tag">// geometry</span>
+        <h3>Geometric deep learning</h3>
+        <p>Graph neural networks, node embeddings, and learned representations over meshes and point clouds, the structures that physical simulation actually lives on.</p>
+        <div class="kw"><span>GNNs</span><span>node embeddings</span><span>mesh learning</span><span>point clouds</span></div>
+      </article>
+      <article class="rcard panel">
+        <span class="tag">// surrogates</span>
+        <h3>3D transformers for CFD</h3>
+        <p>Attention over aerodynamic geometry: surrogate models that approximate the solver, predicting pressure coefficients and flow fields orders of magnitude faster than full simulation.</p>
+        <div class="kw"><span>3D transformers</span><span>CFD</span><span>aerodynamics</span><span>surrogate models</span></div>
+      </article>
+      <article class="rcard panel">
+        <span class="tag">// robustness</span>
+        <h3>Learning from imperfect data</h3>
+        <p>Noisy labels, severe class imbalance, and the realities of scientific and security datasets, training models that hold up when the supervision doesn't.</p>
+        <div class="kw"><span>noisy labels</span><span>imbalance</span><span>security ML</span><span>malware</span></div>
+      </article>
+      <article class="rcard panel">
+        <span class="tag">// simulation</span>
+        <h3>Simulation &amp; virtual worlds</h3>
+        <p>Procedural generation, physics-grounded rendering, and visual effects, from real-time fluid solvers to black-hole simulations and small physical test rigs.</p>
+        <div class="kw"><span>Navier–Stokes</span><span>procedural gen</span><span>VFX</span><span>physical sim</span></div>
+      </article>
     </div>
+  </div>
+</section>
 
-    <div class="section-divider-trace" aria-hidden="true">
-        <div class="divider-ticks"></div>
+<section id="publications">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2 class="sec-title">Selected publications</h2>
+      <span class="sec-rule"></span>
     </div>
-
-    <!-- ===== CONTACT ===== -->
-    <div id="contact" class="section">
-        <div class="contact-wrap">
-            <h2>Get in touch</h2>
-            <hr class="contact-rule">
-
-            <div class="contact-channels">
-                <a href="https://www.linkedin.com/in/euangoodbrand/">
-                    <i class="fa fa-linkedin" aria-hidden="true"></i>LinkedIn
-                </a>
-                <a href="https://github.com/euangoodbrand">
-                    <i class="fa fa-github" aria-hidden="true"></i>GitHub
-                </a>
-                <span><i class="fa fa-map-marker" aria-hidden="true"></i>London, UK</span>
-            </div>
-
-            <form class="contact-form-dark" method="post" action="https://formspree.io/f/mqkorpdd">
-                <label for="contact-name">Name</label>
-                <input type="text" id="contact-name" name="name" placeholder="Your name" required />
-
-                <label for="contact-email">Email</label>
-                <input type="email" id="contact-email" name="email" placeholder="you@example.com" required />
-
-                <label for="contact-message">Message</label>
-                <textarea id="contact-message" name="message" placeholder="What's on your mind?"></textarea>
-
-                <input type="hidden" name="_subject" value="New message from your contact form" />
-                <button type="submit">Send message</button>
-            </form>
-        </div>
-
-        <!-- Footer -->
-        <div class="copyrights">
-            <div class="container">
-                <div class="footer-distributed">
-                    <div class="footer-left">
-                        <p class="footer-links">
-                            <a href="#home">Home</a>
-                            <a href="#blog">Updates</a>
-                            <a href="#about">About</a>
-                            <a href="#page-top">Top</a>
-                            <a href="#contact">Contact</a>
-                        </p>
-                        <p class="footer-company-name">All Rights Reserved. &copy; 2025 <a href="#">@Euan Goodbrand</a></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <a href="#" id="scroll-to-top" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
+    <div class="pub">
+      <span class="venue">ACM CCS</span>
+      <div>
+        <h3><a href="https://doi.org/10.1145/3719027.3765197" target="_blank" rel="noopener">Deep Learning from Imperfectly Labeled Malware Data</a></h3>
+        <p class="authors">F. Alotaibi, <b>E. Goodbrand</b>, S. Maffeis. Proceedings of the ACM Conference on Computer and Communications Security (CCS).</p>
+      </div>
+      <span class="yr">2025</span>
     </div>
+  </div>
+</section>
 
-    <!-- ===== PROJECT MODALS ===== -->
-
-    <!-- Project 1 Modal -->
-    <div class="modal fade" id="project1Modal" tabindex="-1" role="dialog" aria-labelledby="project1ModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="project1ModalLabel">Procedural Modelling for Dungeon Levels</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <iframe data-src="project1.html" width="100%" height="600px"></iframe>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
+<section id="path">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2 class="sec-title">Path</h2>
+      <span class="sec-rule"></span>
     </div>
-
-    <!-- Project 7 Modal — 3D Aero Field Prediction -->
-    <div class="modal fade" id="project7Modal" tabindex="-1" role="dialog" aria-labelledby="project7ModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="project7ModalLabel">3D Aerodynamic Field Prediction</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <iframe data-src="project7.html" width="100%" height="600px"></iframe>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
+    <div class="timeline">
+      <div class="tl-item now">
+        <span class="tl-date">2026 →</span>
+        <h3>DPhil candidate, Visual Geometry Group</h3>
+        <p class="org">University of Oxford · Prof. Andrea Vedaldi · DLA funded</p>
+        <p>Beginning doctoral research in 3D and geometric deep learning, bridging learned representations and physical simulation.</p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-date">2024 to present</span>
+        <h3>ML Research Engineer</h3>
+        <p class="org">Mercedes-AMG Petronas Formula One Team · Aerodynamics / Data Science</p>
+        <p>Research engineering for aerodynamic ML, graph-based learning evolving into 3D transformer surrogates, trained on NVIDIA H200 clusters. CFD data pipelines, mesh processing, and inference tooling.</p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-date">2023 to 2024</span>
+        <h3>Master's, Computing (AI &amp; Machine Learning)</h3>
+        <p class="org">Imperial College London · Distinction</p>
+        <p>Deep learning from noisy and imbalanced security data; research later accepted to ACM CCS.</p>
+      </div>
     </div>
+  </div>
+</section>
 
-    <!-- Project 8 Modal — Noisy-Label Deep Learning -->
-    <div class="modal fade" id="project8Modal" tabindex="-1" role="dialog" aria-labelledby="project8ModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="project8ModalLabel">Deep Learning on Noisy &amp; Imbalanced Data</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <iframe data-src="project8.html" width="100%" height="600px"></iframe>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">05</span>
+      <h2 class="sec-title">Projects</h2>
+      <span class="sec-rule"></span>
     </div>
-
-    <!-- Project 9 Modal — Brain Graph Super-Resolution -->
-    <div class="modal fade" id="project9Modal" tabindex="-1" role="dialog" aria-labelledby="project9ModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="project9ModalLabel">Brain Graph Super-Resolution</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <iframe data-src="project9.html" width="100%" height="600px"></iframe>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
+    <div class="proj-grid">
+      <article class="proj panel">
+        <div class="ptop"><span class="idx">P-01</span><span class="arrow">↗</span></div>
+        <h3>CFD post-processing pipeline</h3>
+        <p>End-to-end VTK/VTP/VTM processing for wind-tunnel runs: pressure-coefficient mapping across cut-ups and cutdowns, curvature-normal promotion, and interactive scrollable plots of full runs.</p>
+        <div class="stack"><span>PyVista</span><span>VTK</span><span>FastAPI</span><span>Python 3.11</span></div>
+      </article>
+      <article class="proj panel">
+        <div class="ptop"><span class="idx">P-02</span><span class="arrow">↗</span></div>
+        <h3>Regulation intelligence</h3>
+        <p>Local LLM system for parsing and reasoning over FIA Formula 1 technical regulations, with PDF extraction, vector retrieval, and a vision-capable chat interface, all running on-prem.</p>
+        <div class="stack"><span>Gemma</span><span>vLLM</span><span>Weaviate</span><span>PyMuPDF</span><span>Docker</span></div>
+      </article>
+      <article class="proj panel">
+        <div class="ptop"><span class="idx">P-03</span><span class="arrow">↗</span></div>
+        <h3>Neural tap anomaly detection</h3>
+        <p>Real-time anomaly detection over sensor tap data, served as a lightweight PyTorch inference service behind a FastAPI endpoint.</p>
+        <div class="stack"><span>PyTorch</span><span>FastAPI</span><span>CUDA</span></div>
+      </article>
+      <article class="proj panel">
+        <div class="ptop"><span class="idx">P-04</span><span class="arrow">↗</span></div>
+        <h3>Stable-fluids lab</h3>
+        <p>A GPU Navier–Stokes solver: advection, vorticity confinement, and a Jacobi pressure projection running entirely in WebGL2. It is the ink behind this page, so move your cursor to disturb it.</p>
+        <div class="stack"><span>WebGL2</span><span>GLSL</span><span>fluid sim</span></div>
+      </article>
     </div>
+  </div>
+</section>
 
-    <!-- Project 10 Modal — Hospital AKI Detection -->
-    <div class="modal fade" id="project10Modal" tabindex="-1" role="dialog" aria-labelledby="project10ModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="project10ModalLabel">Hospital AKI Detection System</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <iframe data-src="project10.html" width="100%" height="600px"></iframe>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
+<section id="contact" class="contact">
+  <div class="wrap">
+    <p class="eyebrow">Get in touch</p>
+    <h2>Let's talk about<br>geometry, flow &amp; <a href="mailto:euangoodbrand@gmail.com">learning</a></h2>
+    <div class="clinks">
+      <a href="mailto:euangoodbrand@gmail.com">euangoodbrand@gmail.com</a>
+      <a href="https://github.com/euangoodbrand" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/euangoodbrand/" target="_blank" rel="noopener">LinkedIn</a>
     </div>
+  </div>
+</section>
+</main>
 
-    <!-- Project 11 Modal — Optuna OSS Contribution -->
-    <div class="modal fade" id="project11Modal" tabindex="-1" role="dialog" aria-labelledby="project11ModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="project11ModalLabel">Optuna Open-Source Contribution</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <iframe data-src="project11.html" width="100%" height="600px"></iframe>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+<footer>
+  <div class="wrap foot-inner">
+    <p>Background: a real-time WebGL2 stable-fluids (Navier–Stokes) simulation: GPU advection, vorticity confinement, and a Jacobi pressure-projection solve, tinted with a CFD pressure-field colormap.</p>
+    <p>© 2026 Euan Goodbrand</p>
+  </div>
+</footer>
 
-    <!-- ===== SCRIPTS ===== -->
+<div class="legend" aria-hidden="true">
+  <span>Cp</span><span class="bar"></span><span>pressure field</span>
+</div>
 
-    <!-- Core Libraries -->
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js" defer></script>
-    <script src="js/all.js"></script>
-    
-    <!-- Plugins -->
-    <script src="js/jquery.mobile.customized.min.js" defer></script>
-    <script src="js/jquery.easing.1.3.js" defer></script>
-    <script src="js/parallaxie.js" defer></script>
-    <script src="js/headline.js" defer></script>
-    <script src="js/jqBootstrapValidation.js" defer></script>
-    <script src="js/contact_me.js" defer></script>
-    <script src="js/custom.js" defer></script>
-    <script src="js/jquery.vide.js" defer></script>
+<script>
+/* =========================================================================
+   Stable-fluids solver (WebGL2). Navier–Stokes via advection + vorticity
+   confinement + Jacobi pressure projection. Adapted, compact implementation.
+   ========================================================================= */
+(function(){
+  const canvas = document.getElementById('fluid');
+  const staticBg = document.querySelector('.static-bg');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    <!-- Modular Components -->
-    <script src="js/carousel-init.js" defer></script>
-    <script src="js/modal-lazy-load.js" defer></script>
-    <script src="js/bubble-scene.js" defer></script>
-    <script src="js/portfolio-graph.js" defer></script>
-    <script src="js/cfd-visualization.js" defer></script>
-    <script src="js/academic-mode.js" defer></script>
+  const config = {
+    SIM_RESOLUTION: 140,
+    DYE_RESOLUTION: 1024,
+    DENSITY_DISSIPATION: 1.4,
+    VELOCITY_DISSIPATION: 0.28,
+    PRESSURE: 0.8,
+    PRESSURE_ITERATIONS: 20,
+    CURL: 26,
+    SPLAT_RADIUS: 0.24,
+    SPLAT_FORCE: 6200
+  };
 
+  function fail(){ canvas.style.display='none'; if(staticBg) staticBg.style.display='block'; }
+  if (reduce){ fail(); return; }
+
+  const gl = canvas.getContext('webgl2', {alpha:true, depth:false, stencil:false, antialias:false, preserveDrawingBuffer:false});
+  if (!gl){ fail(); return; }
+  const ext = {
+    colorBufferFloat: gl.getExtension('EXT_color_buffer_float'),
+    halfFloatLinear: gl.getExtension('OES_texture_float_linear')
+  };
+  if (!ext.colorBufferFloat){ fail(); return; }
+
+  const texType = gl.HALF_FLOAT;
+  const filtering = ext.halfFloatLinear ? gl.LINEAR : gl.NEAREST;
+
+  /* ---- shaders ---- */
+  const baseVertex = `
+    precision highp float;
+    attribute vec2 aPosition;
+    varying vec2 vUv; varying vec2 vL; varying vec2 vR; varying vec2 vT; varying vec2 vB;
+    uniform vec2 texelSize;
+    void main(){
+      vUv = aPosition*0.5+0.5;
+      vL = vUv - vec2(texelSize.x,0.0);
+      vR = vUv + vec2(texelSize.x,0.0);
+      vT = vUv + vec2(0.0,texelSize.y);
+      vB = vUv - vec2(0.0,texelSize.y);
+      gl_Position = vec4(aPosition,0.0,1.0);
+    }`;
+
+  const clearShader = `
+    precision mediump float; precision mediump sampler2D;
+    varying vec2 vUv; uniform sampler2D uTexture; uniform float value;
+    void main(){ gl_FragColor = value * texture2D(uTexture, vUv); }`;
+
+  const displayShader = `
+    precision highp float; precision highp sampler2D;
+    varying vec2 vUv; uniform sampler2D uTexture;
+    void main(){
+      vec3 c = texture2D(uTexture, vUv).rgb;
+      // gentle tone curve so glow stays rich but not blown out
+      c = c / (c + vec3(0.55)) * 1.55;
+      gl_FragColor = vec4(c, 1.0);
+    }`;
+
+  const splatShader = `
+    precision highp float; precision highp sampler2D;
+    varying vec2 vUv; uniform sampler2D uTarget; uniform float aspectRatio;
+    uniform vec3 color; uniform vec2 point; uniform float radius;
+    void main(){
+      vec2 p = vUv - point.xy; p.x *= aspectRatio;
+      vec3 splat = exp(-dot(p,p)/radius) * color;
+      vec3 base = texture2D(uTarget, vUv).xyz;
+      gl_FragColor = vec4(base+splat, 1.0);
+    }`;
+
+  const advectionShader = `
+    precision highp float; precision highp sampler2D;
+    varying vec2 vUv;
+    uniform sampler2D uVelocity; uniform sampler2D uSource;
+    uniform vec2 texelSize; uniform vec2 dyeTexelSize;
+    uniform float dt; uniform float dissipation;
+    vec4 bilerp(sampler2D sam, vec2 uv, vec2 tsize){
+      vec2 st = uv/tsize - 0.5; vec2 iuv = floor(st); vec2 fuv = fract(st);
+      vec4 a=texture2D(sam,(iuv+vec2(0.5,0.5))*tsize);
+      vec4 b=texture2D(sam,(iuv+vec2(1.5,0.5))*tsize);
+      vec4 c=texture2D(sam,(iuv+vec2(0.5,1.5))*tsize);
+      vec4 d=texture2D(sam,(iuv+vec2(1.5,1.5))*tsize);
+      return mix(mix(a,b,fuv.x),mix(c,d,fuv.x),fuv.y);
+    }
+    void main(){
+    #ifdef MANUAL_FILTERING
+      vec2 coord = vUv - dt*bilerp(uVelocity,vUv,texelSize).xy*texelSize;
+      vec4 result = bilerp(uSource,coord,dyeTexelSize);
+    #else
+      vec2 coord = vUv - dt*texture2D(uVelocity,vUv).xy*texelSize;
+      vec4 result = texture2D(uSource,coord);
+    #endif
+      float decay = 1.0 + dissipation*dt;
+      gl_FragColor = result/decay;
+    }`;
+
+  const divergenceShader = `
+    precision mediump float; precision mediump sampler2D;
+    varying vec2 vUv; varying vec2 vL; varying vec2 vR; varying vec2 vT; varying vec2 vB;
+    uniform sampler2D uVelocity;
+    void main(){
+      float L=texture2D(uVelocity,vL).x;
+      float R=texture2D(uVelocity,vR).x;
+      float T=texture2D(uVelocity,vT).y;
+      float B=texture2D(uVelocity,vB).y;
+      vec2 C=texture2D(uVelocity,vUv).xy;
+      if(vL.x<0.0){L=-C.x;}
+      if(vR.x>1.0){R=-C.x;}
+      if(vT.y>1.0){T=-C.y;}
+      if(vB.y<0.0){B=-C.y;}
+      float div=0.5*(R-L+T-B);
+      gl_FragColor=vec4(div,0.0,0.0,1.0);
+    }`;
+
+  const curlShader = `
+    precision mediump float; precision mediump sampler2D;
+    varying vec2 vUv; varying vec2 vL; varying vec2 vR; varying vec2 vT; varying vec2 vB;
+    uniform sampler2D uVelocity;
+    void main(){
+      float L=texture2D(uVelocity,vL).y;
+      float R=texture2D(uVelocity,vR).y;
+      float T=texture2D(uVelocity,vT).x;
+      float B=texture2D(uVelocity,vB).x;
+      float vorticity=R-L-T+B;
+      gl_FragColor=vec4(0.5*vorticity,0.0,0.0,1.0);
+    }`;
+
+  const vorticityShader = `
+    precision highp float; precision highp sampler2D;
+    varying vec2 vUv; varying vec2 vL; varying vec2 vR; varying vec2 vT; varying vec2 vB;
+    uniform sampler2D uVelocity; uniform sampler2D uCurl;
+    uniform float curl; uniform float dt;
+    void main(){
+      float L=texture2D(uCurl,vL).x;
+      float R=texture2D(uCurl,vR).x;
+      float T=texture2D(uCurl,vT).x;
+      float B=texture2D(uCurl,vB).x;
+      float C=texture2D(uCurl,vUv).x;
+      vec2 force=0.5*vec2(abs(T)-abs(B),abs(R)-abs(L));
+      force/=length(force)+0.0001;
+      force*=curl*C; force.y*=-1.0;
+      vec2 vel=texture2D(uVelocity,vUv).xy;
+      vel+=force*dt; vel=min(max(vel,-1000.0),1000.0);
+      gl_FragColor=vec4(vel,0.0,1.0);
+    }`;
+
+  const pressureShader = `
+    precision mediump float; precision mediump sampler2D;
+    varying vec2 vUv; varying vec2 vL; varying vec2 vR; varying vec2 vT; varying vec2 vB;
+    uniform sampler2D uPressure; uniform sampler2D uDivergence;
+    void main(){
+      float L=texture2D(uPressure,vL).x;
+      float R=texture2D(uPressure,vR).x;
+      float T=texture2D(uPressure,vT).x;
+      float B=texture2D(uPressure,vB).x;
+      float divergence=texture2D(uDivergence,vUv).x;
+      float pressure=(L+R+B+T-divergence)*0.25;
+      gl_FragColor=vec4(pressure,0.0,0.0,1.0);
+    }`;
+
+  const gradientSubtractShader = `
+    precision mediump float; precision mediump sampler2D;
+    varying vec2 vUv; varying vec2 vL; varying vec2 vR; varying vec2 vT; varying vec2 vB;
+    uniform sampler2D uPressure; uniform sampler2D uVelocity;
+    void main(){
+      float L=texture2D(uPressure,vL).x;
+      float R=texture2D(uPressure,vR).x;
+      float T=texture2D(uPressure,vT).x;
+      float B=texture2D(uPressure,vB).x;
+      vec2 velocity=texture2D(uVelocity,vUv).xy;
+      velocity.xy-=vec2(R-L,T-B);
+      gl_FragColor=vec4(velocity,0.0,1.0);
+    }`;
+
+  /* ---- gl helpers ---- */
+  function compile(type, src){
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    if(!gl.getShaderParameter(s, gl.COMPILE_STATUS)){
+      console.error(gl.getShaderInfoLog(s)); return null;
+    }
+    return s;
+  }
+  function program(vsSrc, fsSrc){
+    const vs = compile(gl.VERTEX_SHADER, vsSrc);
+    const fs = compile(gl.FRAGMENT_SHADER, fsSrc);
+    const p = gl.createProgram();
+    gl.attachShader(p, vs); gl.attachShader(p, fs);
+    gl.bindAttribLocation(p, 0, 'aPosition');
+    gl.linkProgram(p);
+    if(!gl.getProgramParameter(p, gl.LINK_STATUS)){ console.error(gl.getProgramInfoLog(p)); return null; }
+    const uniforms = {};
+    const n = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS);
+    for(let i=0;i<n;i++){ const name = gl.getActiveUniform(p,i).name; uniforms[name]=gl.getUniformLocation(p,name); }
+    return {program:p, uniforms};
+  }
+
+  const vertSrc = baseVertex;
+  const advSrc = ext.halfFloatLinear ? advectionShader : ('#define MANUAL_FILTERING\n'+advectionShader);
+
+  const progs = {
+    clear: program(vertSrc, clearShader),
+    display: program(vertSrc, displayShader),
+    splat: program(vertSrc, splatShader),
+    advection: program(vertSrc, advSrc),
+    divergence: program(vertSrc, divergenceShader),
+    curl: program(vertSrc, curlShader),
+    vorticity: program(vertSrc, vorticityShader),
+    pressure: program(vertSrc, pressureShader),
+    gradient: program(vertSrc, gradientSubtractShader)
+  };
+  for(const k in progs){ if(!progs[k]){ fail(); return; } }
+
+  /* fullscreen quad */
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, -1,1, 1,1, 1,-1]), gl.STATIC_DRAW);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([0,1,2, 0,2,3]), gl.STATIC_DRAW);
+  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(0);
+
+  function blit(target){
+    if(target==null){ gl.viewport(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight); gl.bindFramebuffer(gl.FRAMEBUFFER,null); }
+    else { gl.viewport(0,0,target.width,target.height); gl.bindFramebuffer(gl.FRAMEBUFFER,target.fbo); }
+    gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
+  }
+
+  function createFBO(w,h,internal,format,type,param){
+    gl.activeTexture(gl.TEXTURE0);
+    const tex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, param);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, param);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texImage2D(gl.TEXTURE_2D, 0, internal, w, h, 0, format, type, null);
+    const fbo = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+    gl.viewport(0,0,w,h); gl.clear(gl.COLOR_BUFFER_BIT);
+    return { tex, fbo, width:w, height:h, texelSizeX:1/w, texelSizeY:1/h,
+      attach(id){ gl.activeTexture(gl.TEXTURE0+id); gl.bindTexture(gl.TEXTURE_2D, tex); return id; } };
+  }
+  function createDoubleFBO(w,h,internal,format,type,param){
+    let fbo1 = createFBO(w,h,internal,format,type,param);
+    let fbo2 = createFBO(w,h,internal,format,type,param);
+    return {
+      width:w, height:h, texelSizeX:1/w, texelSizeY:1/h,
+      get read(){return fbo1;}, set read(v){fbo1=v;},
+      get write(){return fbo2;}, set write(v){fbo2=v;},
+      swap(){ const t=fbo1; fbo1=fbo2; fbo2=t; }
+    };
+  }
+
+  let dye, velocity, divergence, curl, pressure;
+  const RGBA = gl.RGBA16F, RG = gl.RG16F, R = gl.R16F;
+
+  function getResolution(res){
+    let aspect = gl.drawingBufferWidth / gl.drawingBufferHeight;
+    if(aspect < 1) aspect = 1/aspect;
+    const min = Math.round(res), max = Math.round(res*aspect);
+    return gl.drawingBufferWidth > gl.drawingBufferHeight ? {width:max, height:min} : {width:min, height:max};
+  }
+
+  function initFramebuffers(){
+    const simRes = getResolution(config.SIM_RESOLUTION);
+    const dyeRes = getResolution(config.DYE_RESOLUTION);
+    dye      = createDoubleFBO(dyeRes.width, dyeRes.height, RGBA, gl.RGBA, texType, filtering);
+    velocity = createDoubleFBO(simRes.width, simRes.height, RG, gl.RG, texType, filtering);
+    divergence = createFBO(simRes.width, simRes.height, R, gl.RED, texType, gl.NEAREST);
+    curl       = createFBO(simRes.width, simRes.height, R, gl.RED, texType, gl.NEAREST);
+    pressure   = createDoubleFBO(simRes.width, simRes.height, R, gl.RED, texType, gl.NEAREST);
+  }
+
+  function resizeCanvas(){
+    const w = Math.floor(window.innerWidth * Math.min(window.devicePixelRatio||1, 2));
+    const h = Math.floor(window.innerHeight * Math.min(window.devicePixelRatio||1, 2));
+    if(canvas.width!==w || canvas.height!==h){ canvas.width=w; canvas.height=h; return true; }
+    return false;
+  }
+
+  resizeCanvas();
+  initFramebuffers();
+
+  /* ---- color: a CFD-style pressure palette (cool blues → teal, rare warm) ---- */
+  function HSVtoRGB(h,s,v){
+    let r,g,b; const i=Math.floor(h*6), f=h*6-i, p=v*(1-s), q=v*(1-f*s), t=v*(1-(1-f)*s);
+    switch(i%6){case 0:r=v,g=t,b=p;break;case 1:r=q,g=v,b=p;break;case 2:r=p,g=v,b=t;break;
+      case 3:r=p,g=q,b=v;break;case 4:r=t,g=p,b=v;break;case 5:r=v,g=p,b=q;break;}
+    return {r,g,b};
+  }
+  function fieldColor(){
+    // hue weighted toward 0.50–0.58 (cyan/teal/blue), occasional amber
+    let hue, sat=0.85, val=1.0;
+    const roll = Math.random();
+    if(roll < 0.12){ hue = 0.08 + Math.random()*0.04; sat=0.9; }      // amber
+    else if(roll < 0.4){ hue = 0.46 + Math.random()*0.06; }            // teal/cyan
+    else { hue = 0.55 + Math.random()*0.07; }                          // blue
+    const c = HSVtoRGB(hue, sat, val);
+    c.r*=0.16; c.g*=0.16; c.b*=0.16;
+    return c;
+  }
+
+  function correctRadius(radius){
+    const aspect = canvas.width/canvas.height;
+    if(aspect>1) radius*=aspect;
+    return radius;
+  }
+
+  function splat(x,y,dx,dy,color){
+    const p = progs.splat; gl.useProgram(p.program);
+    gl.uniform1i(p.uniforms.uTarget, velocity.read.attach(0));
+    gl.uniform1f(p.uniforms.aspectRatio, canvas.width/canvas.height);
+    gl.uniform2f(p.uniforms.point, x, y);
+    gl.uniform3f(p.uniforms.color, dx, dy, 0.0);
+    gl.uniform1f(p.uniforms.radius, correctRadius(config.SPLAT_RADIUS/100));
+    blit(velocity.write); velocity.swap();
+
+    gl.uniform1i(p.uniforms.uTarget, dye.read.attach(0));
+    gl.uniform3f(p.uniforms.color, color.r, color.g, color.b);
+    blit(dye.write); dye.swap();
+  }
+
+  /* pointer */
+  const pointer = { x:0, y:0, dx:0, dy:0, down:false, moved:false, color:fieldColor() };
+  function updatePointer(px,py){
+    const x = px/canvas.clientWidth;
+    const y = 1 - py/canvas.clientHeight;
+    pointer.dx = (x - pointer.x) * config.SPLAT_FORCE * 0.55;
+    pointer.dy = (y - pointer.y) * config.SPLAT_FORCE * 0.55;
+    pointer.x = x; pointer.y = y;
+    pointer.moved = Math.abs(pointer.dx) > 0 || Math.abs(pointer.dy) > 0;
+  }
+  window.addEventListener('mousemove', e=>{
+    if(!pointer.init){ pointer.x=e.clientX/canvas.clientWidth; pointer.y=1-e.clientY/canvas.clientHeight; pointer.init=true; return; }
+    updatePointer(e.clientX, e.clientY);
+    if(pointer.moved){ pointer.color=fieldColor(); }
+  }, {passive:true});
+  window.addEventListener('touchmove', e=>{
+    const t = e.touches[0]; if(!t) return;
+    if(!pointer.init){ pointer.x=t.clientX/canvas.clientWidth; pointer.y=1-t.clientY/canvas.clientHeight; pointer.init=true; return; }
+    updatePointer(t.clientX, t.clientY);
+    if(pointer.moved){ pointer.color=fieldColor(); }
+  }, {passive:true});
+
+  /* ---- sim step ---- */
+  let lastTime = Date.now();
+  function step(dt){
+    gl.disable(gl.BLEND);
+
+    // curl
+    let p = progs.curl; gl.useProgram(p.program);
+    gl.uniform2f(p.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
+    gl.uniform1i(p.uniforms.uVelocity, velocity.read.attach(0));
+    blit(curl);
+
+    // vorticity
+    p = progs.vorticity; gl.useProgram(p.program);
+    gl.uniform2f(p.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
+    gl.uniform1i(p.uniforms.uVelocity, velocity.read.attach(0));
+    gl.uniform1i(p.uniforms.uCurl, curl.attach(1));
+    gl.uniform1f(p.uniforms.curl, config.CURL);
+    gl.uniform1f(p.uniforms.dt, dt);
+    blit(velocity.write); velocity.swap();
+
+    // divergence
+    p = progs.divergence; gl.useProgram(p.program);
+    gl.uniform2f(p.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
+    gl.uniform1i(p.uniforms.uVelocity, velocity.read.attach(0));
+    blit(divergence);
+
+    // clear pressure (dissipate)
+    p = progs.clear; gl.useProgram(p.program);
+    gl.uniform1i(p.uniforms.uTexture, pressure.read.attach(0));
+    gl.uniform1f(p.uniforms.value, config.PRESSURE);
+    blit(pressure.write); pressure.swap();
+
+    // pressure jacobi
+    p = progs.pressure; gl.useProgram(p.program);
+    gl.uniform2f(p.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
+    gl.uniform1i(p.uniforms.uDivergence, divergence.attach(0));
+    for(let i=0;i<config.PRESSURE_ITERATIONS;i++){
+      gl.uniform1i(p.uniforms.uPressure, pressure.read.attach(1));
+      blit(pressure.write); pressure.swap();
+    }
+
+    // gradient subtract
+    p = progs.gradient; gl.useProgram(p.program);
+    gl.uniform2f(p.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
+    gl.uniform1i(p.uniforms.uPressure, pressure.read.attach(0));
+    gl.uniform1i(p.uniforms.uVelocity, velocity.read.attach(1));
+    blit(velocity.write); velocity.swap();
+
+    // advect velocity
+    p = progs.advection; gl.useProgram(p.program);
+    gl.uniform2f(p.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
+    if(!ext.halfFloatLinear) gl.uniform2f(p.uniforms.dyeTexelSize, velocity.texelSizeX, velocity.texelSizeY);
+    gl.uniform1i(p.uniforms.uVelocity, velocity.read.attach(0));
+    gl.uniform1i(p.uniforms.uSource, velocity.read.attach(0));
+    gl.uniform1f(p.uniforms.dt, dt);
+    gl.uniform1f(p.uniforms.dissipation, config.VELOCITY_DISSIPATION);
+    blit(velocity.write); velocity.swap();
+
+    // advect dye
+    gl.uniform2f(p.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
+    if(!ext.halfFloatLinear) gl.uniform2f(p.uniforms.dyeTexelSize, dye.texelSizeX, dye.texelSizeY);
+    gl.uniform1i(p.uniforms.uVelocity, velocity.read.attach(0));
+    gl.uniform1i(p.uniforms.uSource, dye.read.attach(1));
+    gl.uniform1f(p.uniforms.dissipation, config.DENSITY_DISSIPATION);
+    blit(dye.write); dye.swap();
+  }
+
+  function render(){
+    gl.disable(gl.BLEND);
+    const p = progs.display; gl.useProgram(p.program);
+    gl.uniform1i(p.uniforms.uTexture, dye.read.attach(0));
+    blit(null);
+  }
+
+  function applyPointer(){
+    if(pointer.moved){
+      pointer.moved = false;
+      splat(pointer.x, pointer.y, pointer.dx, pointer.dy, pointer.color);
+    }
+  }
+
+  /* ambient: seed splats and gently keep it alive when idle */
+  function ambientSplat(strength){
+    const x = Math.random(), y = Math.random();
+    const ang = Math.random()*Math.PI*2;
+    const f = config.SPLAT_FORCE * strength;
+    splat(x, y, Math.cos(ang)*f, Math.sin(ang)*f, fieldColor());
+  }
+  for(let i=0;i<7;i++) ambientSplat(0.18 + Math.random()*0.2);
+  let idleTimer = 0;
+
+  let running = true;
+  document.addEventListener('visibilitychange', ()=>{ running = !document.hidden; if(running){ lastTime = Date.now(); requestAnimationFrame(loop);} });
+
+  function loop(){
+    if(!running) return;
+    const now = Date.now();
+    let dt = (now - lastTime)/1000;
+    dt = Math.min(dt, 0.016666);
+    lastTime = now;
+
+    if(resizeCanvas()) initFramebuffers();
+
+    idleTimer += dt;
+    if(pointer.moved){ idleTimer = 0; }
+    if(idleTimer > 2.4){ ambientSplat(0.12 + Math.random()*0.12); idleTimer = 1.4 + Math.random()*1.2; }
+
+    applyPointer();
+    step(dt);
+    render();
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
 </body>
-
 </html>
