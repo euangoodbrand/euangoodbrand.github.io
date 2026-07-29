@@ -4,19 +4,19 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Euan Goodbrand: Machine Learning &amp; Geometric Deep Learning</title>
-<meta name="description" content="Euan Goodbrand, ML Research Engineer at Mercedes-AMG Petronas F1 and incoming DPhil candidate in Oxford's Visual Geometry Group. Geometric deep learning, 3D transformers for CFD, and physical simulation." />
+<meta name="description" content="Euan Goodbrand, ML Research Engineer and incoming DPhil candidate in Oxford's Visual Geometry Group. Geometric deep learning, spatial AI, and robust machine learning." />
 <meta name="author" content="Euan Goodbrand" />
 <link rel="icon" href="images/tab.png" type="image/png" />
 
 <!-- Open Graph / Twitter -->
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Euan Goodbrand: Machine Learning &amp; Geometric Deep Learning" />
-<meta property="og:description" content="ML Research Engineer at Mercedes-AMG Petronas F1, incoming DPhil candidate at Oxford's Visual Geometry Group. Geometric deep learning, 3D transformers for CFD, and physical simulation." />
+<meta property="og:description" content="ML Research Engineer and incoming DPhil candidate at Oxford's Visual Geometry Group. Geometric deep learning, spatial AI, and robust machine learning." />
 <meta property="og:url" content="https://euangoodbrand.com/" />
 <meta property="og:image" content="https://euangoodbrand.com/images/Euan%20Goodbrand.jpg" />
 <meta name="twitter:card" content="summary_large_image" />
 <!-- <meta name="twitter:title" content="Euan Goodbrand: Machine Learning &amp; Geometric Deep Learning" /> -->
-<meta name="twitter:description" content="ML Research Engineer at Mercedes-AMG Petronas F1, incoming DPhil candidate at Oxford's Visual Geometry Group." />
+<meta name="twitter:description" content="ML Research Engineer and incoming DPhil candidate at Oxford's Visual Geometry Group." />
 <meta name="twitter:image" content="https://euangoodbrand.com/images/Euan%20Goodbrand.jpg" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -218,19 +218,6 @@
   .tl-item .org{color:var(--muted); font-size:0.95rem; margin:0 0 8px;}
   .tl-item p{color:var(--faint); font-size:0.94rem; margin:0; max-width:640px;}
 
-  /* projects */
-  .proj-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:22px;}
-  .proj{padding:26px 26px; display:flex; flex-direction:column; transition:transform .25s ease, border-color .25s ease;}
-  .proj:hover{transform:translateY(-3px); border-color:var(--line-strong);}
-  .proj .ptop{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;}
-  .proj .ptop .idx{font-family:"JetBrains Mono",monospace; font-size:0.72rem; color:var(--faint);}
-  .proj .ptop .arrow{color:var(--muted); font-size:1.1rem; transition:transform .2s ease, color .2s ease;}
-  .proj:hover .ptop .arrow{transform:translate(2px,-2px); color:var(--teal);}
-  .proj h3{font-family:"Fraunces",serif; font-weight:400; font-size:1.3rem; margin:0 0 10px;}
-  .proj p{color:var(--muted); font-size:0.95rem; margin:0 0 18px; flex:1;}
-  .proj .stack{display:flex; flex-wrap:wrap; gap:7px;}
-  .stack span{font-family:"JetBrains Mono",monospace; font-size:0.68rem; color:var(--faint); border:1px solid var(--line); padding:3px 8px; border-radius:5px;}
-
   /* contact */
   .contact{text-align:center; padding:110px 0 90px;}
   .contact .eyebrow{justify-content:center;}
@@ -248,37 +235,14 @@
   .foot-inner{display:flex; justify-content:space-between; gap:18px; flex-wrap:wrap; align-items:center;}
   footer p{font-family:"JetBrains Mono",monospace; font-size:0.72rem; color:var(--faint); margin:0; letter-spacing:0.03em; max-width:560px; line-height:1.7;}
 
-  /* field legend (pressure colorbar) */
-  .legend{
-    position:fixed; left:22px; bottom:20px; z-index:30;
-    font-family:"JetBrains Mono",monospace; font-size:0.62rem; color:var(--faint);
-    letter-spacing:0.08em; display:flex; align-items:center; gap:9px;
-    background:rgba(5,7,13,0.5); padding:7px 11px; border:1px solid var(--line); border-radius:8px;
-    backdrop-filter:blur(6px);
-  }
-  .legend .bar{width:72px; height:6px; border-radius:3px;
-    background:linear-gradient(90deg,#1c3a8a,#1e9fd6,#28e0c2,#f3a84c);}
-
-  /* F1 car / flow toggle */
-  .toggle-chip{
-    position:fixed; right:22px; bottom:20px; z-index:30;
-    font-family:"JetBrains Mono",monospace; font-size:0.62rem; letter-spacing:0.08em;
-    text-transform:uppercase; color:var(--muted); cursor:pointer;
-    background:rgba(5,7,13,0.5); padding:8px 12px; border:1px solid var(--line);
-    border-radius:8px; backdrop-filter:blur(6px); transition:color .2s ease, border-color .2s ease;
-  }
-  .toggle-chip:hover{color:var(--teal); border-color:var(--line-strong);}
-  .toggle-chip[aria-pressed="false"]{color:var(--faint);}
-
   a:focus-visible, button:focus-visible{outline:2px solid var(--teal); outline-offset:3px; border-radius:4px;}
 
   @media (max-width:820px){
     .about-grid{grid-template-columns:1fr;}
-    .research-grid,.proj-grid{grid-template-columns:1fr;}
+    .research-grid{grid-template-columns:1fr;}
     .nav-links{display:none;}
     .pub{grid-template-columns:1fr; gap:8px;}
     .pub .yr{display:none;}
-    .legend{display:none;}
     section{padding:72px 0;}
   }
   @media (prefers-reduced-motion: reduce){
@@ -301,7 +265,6 @@
       <a href="#research">Research</a>
       <a href="#publications">Publications</a>
       <a href="#path">Path</a>
-      <a href="#projects">Projects</a>
       <a href="#contact">Contact</a>
     </div>
   </div>
@@ -311,11 +274,11 @@
 
 <header class="hero">
   <div class="wrap">
-    <p class="eyebrow">Machine Learning · Geometric Deep Learning · Fluid Dynamics</p>
+    <p class="eyebrow">Machine Learning · Geometric Deep Learning · Spatial AI</p>
     <h1 class="name">Euan<br>Good<em>brand</em></h1>
-    <p class="thesis">I build models that learn the geometry of moving air, from Formula&nbsp;1 aerodynamics to the foundations of 3D deep learning.</p>
+    <p class="thesis">I work on machine learning for complex spatial and physical systems, with a focus on geometric deep learning.</p>
     <p class="role-line"><strong>ML Research Engineer</strong> at Mercedes-AMG Petronas Formula One Team. Incoming <strong>DPhil</strong> candidate in the Visual Geometry Group, University of Oxford.</p>
-    <div class="scroll-cue"><span class="bar"></span>Move your cursor to perturb the field</div>
+    <div class="scroll-cue"><span class="bar"></span>Move your cursor to interact</div>
   </div>
 </header>
 
@@ -329,14 +292,13 @@
     </div>
     <div class="about-grid">
       <div class="about-text">
-        <p>I work at the intersection of deep learning and computational fluid dynamics. At Mercedes-AMG Petronas I build aerodynamic ML, from graph-based learning on meshes to 3D transformer surrogates that predict pressure and flow fields directly from geometry.</p>
-        <p>This autumn I begin a DPhil in Oxford's Visual Geometry Group, where my interests sit where geometry, representation learning, and physical simulation meet.</p>
+        <p>I am an ML Research Engineer at Mercedes-AMG Petronas, working on applied machine learning and research engineering.</p>
+        <p>My research interests span geometric deep learning, spatial and physical AI, and robust learning. I will continue this work through a DPhil in Oxford's Visual Geometry Group.</p>
       </div>
       <aside class="about-card panel">
         <h4>At a glance</h4>
-        <div class="meta-row"><span>Role</span><span>ML Research Engineer</span></div>
-        <div class="meta-row"><span>Now</span><span>Mercedes-AMG Petronas F1</span></div>
-        <div class="meta-row"><span>Next</span><span>DPhil at VGG, Oxford</span></div>
+        <div class="meta-row"><span>Work</span><span>ML Research Engineer · Mercedes-AMG Petronas</span></div>
+        <div class="meta-row"><span>Research</span><span>DPhil · Visual Geometry Group, Oxford</span></div>
         <div class="meta-row"><span>Focus</span><span>3D / geometric DL</span></div>
         <div class="meta-row"><span>Based</span><span>United Kingdom</span></div>
       </aside>
@@ -359,22 +321,16 @@
         <div class="kw"><span>GNNs</span><span>node embeddings</span><span>mesh learning</span><span>point clouds</span></div>
       </article>
       <article class="rcard panel">
-        <span class="tag">// surrogates</span>
-        <h3>3D transformers for CFD</h3>
-        <p>Attention over aerodynamic geometry: surrogate models that approximate the solver, predicting pressure coefficients and flow fields orders of magnitude faster than full simulation.</p>
-        <div class="kw"><span>3D transformers</span><span>CFD</span><span>aerodynamics</span><span>surrogate models</span></div>
+        <span class="tag">// spatial intelligence</span>
+        <h3>Spatial &amp; physical AI</h3>
+        <p>Learning representations that connect geometry, perception, and physical structure.</p>
+        <div class="kw"><span>3D learning</span><span>spatial reasoning</span><span>physical AI</span></div>
       </article>
       <article class="rcard panel">
         <span class="tag">// robustness</span>
         <h3>Learning from imperfect data</h3>
         <p>Noisy labels, severe class imbalance, and the realities of scientific and security datasets, training models that hold up when the supervision doesn't.</p>
         <div class="kw"><span>noisy labels</span><span>imbalance</span><span>security ML</span><span>malware</span></div>
-      </article>
-      <article class="rcard panel">
-        <span class="tag">// simulation</span>
-        <h3>Simulation &amp; virtual worlds</h3>
-        <p>Procedural generation, physics-grounded rendering, and visual effects, from real-time fluid solvers to black-hole simulations and small physical test rigs.</p>
-        <div class="kw"><span>Navier–Stokes</span><span>procedural gen</span><span>VFX</span><span>physical sim</span></div>
       </article>
     </div>
   </div>
@@ -410,13 +366,13 @@
         <span class="tl-date">2026 →</span>
         <h3>DPhil candidate, Visual Geometry Group</h3>
         <p class="org">University of Oxford · Prof. Andrea Vedaldi · DLA funded</p>
-        <p>Beginning doctoral research in 3D and geometric deep learning, bridging learned representations and physical simulation.</p>
+        <p>Beginning doctoral research in 3D and geometric deep learning.</p>
       </div>
       <div class="tl-item">
         <span class="tl-date">2024 to present</span>
         <h3>ML Research Engineer</h3>
-        <p class="org">Mercedes-AMG Petronas Formula One Team · Aerodynamics / Data Science</p>
-        <p>Research engineering for aerodynamic ML, graph-based learning evolving into 3D transformer surrogates, trained on NVIDIA H200 clusters. CFD data pipelines, mesh processing, and inference tooling.</p>
+        <p class="org">Mercedes-AMG Petronas Formula One Team</p>
+        <p>Applied machine learning research and engineering in a high-performance technical environment.</p>
       </div>
       <div class="tl-item">
         <span class="tl-date">2023 to 2024</span>
@@ -428,46 +384,10 @@
   </div>
 </section>
 
-<section id="projects">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-num">05</span>
-      <h2 class="sec-title">Projects</h2>
-      <span class="sec-rule"></span>
-    </div>
-    <div class="proj-grid">
-      <article class="proj panel">
-        <div class="ptop"><span class="idx">P-01</span><span class="arrow">↗</span></div>
-        <h3>CFD post-processing pipeline</h3>
-        <p>End-to-end VTK/VTP/VTM processing for wind-tunnel runs: pressure-coefficient mapping across cut-ups and cutdowns, curvature-normal promotion, and interactive scrollable plots of full runs.</p>
-        <div class="stack"><span>PyVista</span><span>VTK</span><span>FastAPI</span><span>Python 3.11</span></div>
-      </article>
-      <article class="proj panel">
-        <div class="ptop"><span class="idx">P-02</span><span class="arrow">↗</span></div>
-        <h3>Regulation intelligence</h3>
-        <p>Local LLM system for parsing and reasoning over FIA Formula 1 technical regulations, with PDF extraction, vector retrieval, and a vision-capable chat interface, all running on-prem.</p>
-        <div class="stack"><span>Gemma</span><span>vLLM</span><span>Weaviate</span><span>PyMuPDF</span><span>Docker</span></div>
-      </article>
-      <article class="proj panel">
-        <div class="ptop"><span class="idx">P-03</span><span class="arrow">↗</span></div>
-        <h3>Neural tap anomaly detection</h3>
-        <p>Real-time anomaly detection over sensor tap data, served as a lightweight PyTorch inference service behind a FastAPI endpoint.</p>
-        <div class="stack"><span>PyTorch</span><span>FastAPI</span><span>CUDA</span></div>
-      </article>
-      <article class="proj panel">
-        <div class="ptop"><span class="idx">P-04</span><span class="arrow">↗</span></div>
-        <h3>Stable-fluids lab</h3>
-        <p>A GPU Navier–Stokes solver: advection, vorticity confinement, and a Jacobi pressure projection running entirely in WebGL2. It is the ink behind this page, so move your cursor to disturb it.</p>
-        <div class="stack"><span>WebGL2</span><span>GLSL</span><span>fluid sim</span></div>
-      </article>
-    </div>
-  </div>
-</section>
-
 <section id="contact" class="contact">
   <div class="wrap">
     <p class="eyebrow">Get in touch</p>
-    <h2>Let's talk about<br>geometry, flow &amp; <a href="mailto:euangoodbrand@gmail.com">learning</a></h2>
+    <h2><a href="mailto:euangoodbrand@gmail.com">Let's connect.</a></h2>
     <div class="clinks">
       <a href="mailto:euangoodbrand@gmail.com">euangoodbrand@gmail.com</a>
       <a href="https://github.com/euangoodbrand" target="_blank" rel="noopener">GitHub</a>
@@ -479,16 +399,9 @@
 
 <footer>
   <div class="wrap foot-inner">
-    <p>Background: a real-time WebGL2 stable-fluids (Navier–Stokes) simulation: GPU advection, vorticity confinement, and a Jacobi pressure-projection solve, tinted with a CFD pressure-field colormap.</p>
     <p>© 2026 Euan Goodbrand</p>
   </div>
 </footer>
-
-<div class="legend" aria-hidden="true">
-  <span>Cp</span><span class="bar"></span><span>pressure field</span>
-</div>
-
-<button id="carToggle" class="toggle-chip" type="button" aria-pressed="true" title="Toggle the F1 car obstacle and upward flow">F1 flow: on</button>
 
 <script>
 /* =========================================================================
@@ -515,8 +428,8 @@
     CAR_EMIT: 0.05      // how strongly the car edge stirs the fluid (like the cursor)
   };
 
-  /* car obstacle + upward flow are user-toggleable */
-  let carOn = true;
+  /* Keep the decorative background abstract and unobtrusive. */
+  let carOn = false;
   let pan = 0;          // vertical pan of the fluid world, driven by scroll
   let lastPan = 0;      // previous frame's pan, to detect car motion
 
@@ -848,7 +761,7 @@
     return false;
   }
 
-  /* ---- car obstacle mask: a top-down F1 silhouette drawn to a texture ---- */
+  /* ---- optional decorative obstacle mask ---- */
   let carMaskTex = null;
   let carMaskHasImage = false;          // becomes true once the image is baked into the mask
   let carEmitPts = [];                  // perimeter points (screen-normalised) the car stirs from
@@ -860,7 +773,7 @@
     const cv = document.createElement('canvas'); cv.width = cw; cv.height = chh;
     const x2d = cv.getContext('2d');
     x2d.clearRect(0,0,cw,chh);
-    // Pre-baked top-down F1 mask (white car on black, already nose-down).
+    // Pre-baked mask (white shape on black).
     // Drawn centred and scaled; .r channel reads 1 inside the car, 0 elsewhere.
     // Until the image has decoded the mask stays empty (no car drawn).
     if(carImg.naturalWidth > 0){
@@ -1117,7 +1030,7 @@
     carBtn.addEventListener('click', ()=>{
       carOn = !carOn;
       carBtn.setAttribute('aria-pressed', String(carOn));
-      carBtn.textContent = carOn ? 'F1 flow: on' : 'F1 flow: off';
+      carBtn.textContent = carOn ? 'Interaction: on' : 'Interaction: off';
     });
   }
 
